@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ヤオヨロクリッカー</title>
+    
+    <script src="cards.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -623,7 +626,6 @@
         }
     }
 
-    // ダミー広告を廃止し、クリーンなボーナス機能に変更
     function openOfflineRewardAd() {
         let btn = document.getElementById('offline-reward-btn');
         let reward = Number(btn.dataset.reward) || 0;
@@ -657,6 +659,7 @@
         closeOverlay('ad-overlay');
         let btn = document.getElementById('offline-reward-btn');
         if(btn) btn.style.display = 'none';
+        alert(`放置報酬として\n${reward.toLocaleString()} 霊貨を獲得しました！`);
     }
 
     function calcPower() {
@@ -776,7 +779,6 @@
     mainBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(e.touches[0].clientX, e.touches[0].clientY); }, {passive: false});
     mainBtn.addEventListener('mousedown', (e) => { handleTap(e.clientX, e.clientY); });
 
-    // ダミー広告を廃止し、クリーンなボーナス機能に変更
     function openAutoClickAd() {
         if (autoClickRemaining > 0) return alert("現在オート観測中です！");
         if (state.autoClickUses >= 3) return alert("本日のオート観測の回数上限（3回）に達しました。\n明日（朝6時以降）またご利用ください。");
@@ -827,11 +829,19 @@
         let pulls = amount === 'max' ? safeMax : amount;
         
         if (pulls > maxPulls || pulls <= 0 || isNaN(pulls)) return alert("お供え物が不足しています");
+        
+        // ガチャを引いたら即座にボタンを無効化（連打フリーズ対策）
+        document.querySelectorAll('.dyn-btn, .btn-outline').forEach(b => b.style.pointerEvents = 'none');
+
         processSummon(type, pulls);
     }
 
     function processSummon(type, times) {
-        if (isNaN(times) || times <= 0) return;
+        if (isNaN(times) || times <= 0) {
+            document.querySelectorAll('.dyn-btn, .btn-outline').forEach(b => b.style.pointerEvents = 'auto');
+            return;
+        }
+
         let cost = type === 'normal' ? 100 * times : 5 * times;
         let curr = type === 'normal' ? 'coins' : 'rareCoins';
         if (type === 'normal') state.spentCoins += cost; else state.spentRareCoins += cost;
@@ -959,6 +969,8 @@
             showGachaResults(rollCounts, leveledUpIds, times, rarityCounts, oldPower, newPower);
             document.getElementById('particles-container').innerHTML = '';
             cutIn.classList.remove('play-star4', 'play-star5');
+            // ガチャボタンの無効化を解除
+            document.querySelectorAll('.dyn-btn, .btn-outline').forEach(b => b.style.pointerEvents = 'auto');
         }, 3200);
     }
 
@@ -1372,7 +1384,8 @@
         el.classList.add('active');
     }
     
-    window.addEventListener('load', initGame);
+    // 【修正】広告の影響を受けないように、DOMの読み込み完了時点で発火
+    window.addEventListener('DOMContentLoaded', initGame);
 </script>
 </body>
 </html>
