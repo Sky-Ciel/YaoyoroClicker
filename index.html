@@ -13,29 +13,30 @@
         #header { background: rgba(20,20,25,0.95); padding: 10px; border-bottom: 1px solid var(--gold); position: fixed; top:0; width:100%; z-index:1000; display: flex; justify-content: space-around; }
         .val { color: var(--gold); font-weight: bold; }
 
-        /* 各画面：スクロール可能に修正 */
-        .screen { display: none; padding: 70px 10px 100px; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        /* 各画面 */
+        .screen { display: none; padding: 70px 10px 100px; height: 100vh; overflow-y: auto; }
         .screen.active { display: block; }
 
-        /* アニメーション：画面揺れ */
-        @keyframes shake { 0% { transform:translate(0,0); } 25% { transform:translate(5px,5px); } 50% { transform:translate(-5px,0); } 75% { transform:translate(5px,-5px); } 100% { transform:translate(0,0); } }
-        .crit-shake { animation: shake 0.2s infinite; background: rgba(255,0,0,0.15) !important; }
+        /* ガチャスライダー */
+        #gacha-container { position: relative; margin: 20px auto; width: 90%; max-width: 400px; }
+        .gacha-card { display: none; background: #1a1a1a; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; animation: slideIn 0.3s; }
+        .gacha-card.active { display: block; }
+        .gacha-illust { height: 180px; background: linear-gradient(45deg, #222, #444); margin-bottom: 15px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 4rem; border: 1px solid #333; }
+        .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--gold); font-size: 2rem; cursor: pointer; z-index: 10; }
+        .arrow-l { left: -15px; } .arrow-r { right: -15px; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* 浮遊数字 */
-        .float-num { position: absolute; color: var(--gold); font-weight: bold; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 2000; }
-        @keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
+        /* ファイリング図鑑 (3x3) */
+        .book-page { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px; width: 100%; aspect-ratio: 1/1.2; margin-top: 10px; }
+        .file-slot { background: #111; border: 1px solid #333; border-radius: 5px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.6rem; overflow: hidden; }
+        .file-slot.owned { border-color: #555; background: #1a1a1a; }
+        .file-slot.empty { opacity: 0.3; }
+        .file-slot img, .file-slot .mini-icon { font-size: 1.5rem; margin-bottom: 5px; }
+        .file-lvl { position: absolute; top: 0; right: 0; background: var(--gold); color: #000; font-size: 0.5rem; padding: 1px 3px; font-weight: bold; }
+        .card-attr-dot { width: 6px; height: 6px; border-radius: 50%; position: absolute; top: 4px; left: 4px; }
 
-        /* メインボタン */
-        #main-btn { width:160px; height:160px; border-radius:50%; background:radial-gradient(#444,#000); border:3px solid var(--gold); color:#fff; font-size:1.2rem; cursor:pointer; }
-
-        /* カードリスト */
-        #inventory { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .card { background: #111; border: 2px solid #444; border-radius: 8px; padding: 10px; position: relative; text-align: left; }
-        .attr-fire { border-color: var(--fire); } .attr-water { border-color: var(--water); } .attr-earth { border-color: var(--earth); } .attr-sky { border-color: var(--sky); } .attr-evil { border-color: var(--evil); }
-        .lvl-badge { position: absolute; top: 5px; right: 5px; background: var(--gold); color: #000; padding: 2px 5px; border-radius: 3px; font-weight: bold; font-size: 0.7rem; }
-
-        /* オーバーレイ */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; flex-direction: column; padding: 20px; }
+        /* 詳細/リザルト オーバーレイ */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; padding: 20px; }
         .modal { width: 100%; max-height: 80vh; background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid var(--gold); overflow-y: auto; }
 
         /* メニュー */
@@ -43,7 +44,14 @@
         .menu-item { flex: 1; padding: 15px; color: #777; font-size: 0.8rem; }
         .menu-item.active { color: var(--gold); background: #1f1f25; }
 
-        button { background: #222; color: #fff; border: 1px solid #555; padding: 10px; border-radius: 5px; margin: 5px; }
+        button { background: #222; color: #fff; border: 1px solid #555; padding: 10px; border-radius: 5px; }
+        .btn-gold { border-color: var(--gold); color: var(--gold); }
+
+        /* アニメーション用 */
+        @keyframes shake { 0%, 100% { transform:translate(0,0); } 25% { transform:translate(4px,4px); } 75% { transform:translate(-4px,-4px); } }
+        .crit-shake { animation: shake 0.1s infinite; background: rgba(255,0,0,0.1) !important; }
+        .float-num { position: absolute; font-weight: bold; pointer-events: none; animation: floatUp 0.6s forwards; z-index: 2000; }
+        @keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-40px); } }
     </style>
 </head>
 <body id="body">
@@ -55,38 +63,58 @@
 
 <div id="screen-home" class="screen active">
     <div style="height:35vh; display:flex; align-items:center; justify-content:center; position:relative;" id="click-area">
-        <button id="main-btn">観測する</button>
+        <button id="main-btn" style="width:140px; height:140px; border-radius:50%; background:radial-gradient(#444,#000); border:2px solid var(--gold); color:#fff;">観測</button>
     </div>
-    <div id="status-panel" style="text-align:left; background:#1a1a1a; padding:15px; border-radius:10px; font-size:0.85rem;">
-        <p>● 観測効率: <span id="st-p" class="val">1</span></p>
-        <p>● 霊貨倍率: <span id="st-m" class="val">1.0</span>x</p>
-        <p>● 会心率: <span id="st-c" class="val">0</span>%</p>
-        <p>● 結晶発見率: <span id="st-r" class="val">0.5</span>%</p>
+    <div id="status-panel" style="text-align:left; background:#1a1a1a; padding:15px; border-radius:10px; font-size:0.8rem; line-height:1.6;">
+        <div>● 観測効率: <span id="st-p" class="val">1</span></div>
+        <div>● 霊貨倍率: <span id="st-m" class="val">1.0</span>x</div>
+        <div>● 会心率: <span id="st-c" class="val">0</span>%</div>
+        <div>● 結晶発見: <span id="st-r" class="val">0.5</span>%</div>
     </div>
 </div>
 
 <div id="screen-gacha" class="screen">
-    <h3>通常招集</h3>
-    <button onclick="gacha('normal', 1)">1連 (100霊貨)</button>
-    <button onclick="gacha('normal', 10)">10連</button>
-    <button onclick="gacha('normal', 100)">100連</button>
-    <hr style="border-color:#333; margin:20px 0;">
-    <h3 style="color:var(--gold);">稀代招集</h3>
-    <button onclick="gacha('rare', 1)" style="border-color:var(--gold); color:var(--gold);">1回 (5神結晶)</button>
+    <h3>招集の儀</h3>
+    <div id="gacha-container">
+        <button class="arrow arrow-l" onclick="switchGacha(-1)">◀</button>
+        <button class="arrow arrow-r" onclick="switchGacha(1)">▶</button>
+        
+        <div id="gacha-0" class="gacha-card active">
+            <div class="gacha-illust">⛩️</div>
+            <h4>通常招集</h4>
+            <p style="font-size:0.7rem; color:#888;">★1〜3 顕現確率高め</p>
+            <button onclick="gacha('normal', 1)">1連 (100霊貨)</button>
+            <button onclick="gacha('normal', 10)">10連</button>
+        </div>
+
+        <div id="gacha-1" class="gacha-card">
+            <div class="gacha-illust" style="background:linear-gradient(45deg, #422, #742);">✨</div>
+            <h4 style="color:var(--gold)">稀代招集</h4>
+            <p style="font-size:0.7rem; color:#888;">★3〜5 確定 / 属性神の加護</p>
+            <button class="btn-gold" onclick="gacha('rare', 1)">1回 (5神結晶)</button>
+        </div>
+    </div>
 </div>
 
 <div id="screen-zukan" class="screen">
-    <h3>顕現リスト</h3>
-    <div id="inventory"></div>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <button onclick="toggleZukanMode()" id="zukan-toggle-btn" style="font-size:0.7rem;">全表示切替</button>
+        <div id="page-info" style="font-size:0.8rem;">Page 1</div>
+        <div style="display:flex; gap:5px;">
+            <button onclick="changePage(-1)">前</button>
+            <button onclick="changePage(1)">次</button>
+        </div>
+    </div>
+    <div id="book-container" class="book-page"></div>
 </div>
 
 <div id="screen-profile" class="screen">
     <h3>観測記録</h3>
-    <div class="modal" style="text-align:left; margin:0 auto;">
-        <p>● 累計獲得霊貨: <span id="stat-total-coins">0</span></p>
-        <p>● 総観測数(Tap): <span id="stat-total-clicks">0</span></p>
-        <p>● 総招集数: <span id="stat-total-gacha">0</span></p>
-        <p>● 神結晶発見数: <span id="stat-total-rare">0</span></p>
+    <div class="modal" style="text-align:left; width:100%;">
+        <p>● 累計霊貨: <span id="stat-total-coins" class="val">0</span></p>
+        <p>● 総観測数: <span id="stat-total-clicks" class="val">0</span></p>
+        <p>● 総招集数: <span id="stat-total-gacha" class="val">0</span></p>
+        <p>● 結晶発見数: <span id="stat-total-rare" class="val">0</span></p>
     </div>
 </div>
 
@@ -105,7 +133,7 @@
     <div class="modal">
         <h4>招集結果</h4>
         <div id="gacha-res-list" style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px;"></div>
-        <button style="width:100%; margin-top:15px;">確認</button>
+        <button style="width:100%; margin-top:15px;">閉じる</button>
     </div>
 </div>
 
@@ -116,17 +144,19 @@
         stats: { p: 1, m: 1.0, c: 0, r: 0.005 },
         totalCoins: 0, totalClicks: 0, totalGacha: 0, totalRare: 0
     };
+    let currentGacha = 0;
+    let currentPage = 0;
+    let showAllMode = true;
 
-    function save() { localStorage.setItem('yaoyoro_final', JSON.stringify(state)); }
+    function save() { localStorage.setItem('yaoyoro_v5', JSON.stringify(state)); }
     function load() {
-        const s = localStorage.getItem('yaoyoro_final');
+        const s = localStorage.getItem('yaoyoro_v5');
         if (s) state = JSON.parse(s);
-        updateStats();
-        updateDisplay();
+        updateStats(); updateDisplay();
     }
 
     function updateStats() {
-        let p = 1; let m = 1.0; let c = 0; let r = 0.005;
+        let p = 1, m = 1.0, c = 0, r = 0.005;
         for (let id in state.inv) {
             const card = cardData.find(x => x.id == id);
             const l = state.inv[id].l;
@@ -145,13 +175,11 @@
         let isCrit = Math.random() < state.stats.c;
         let gain = state.stats.p * state.stats.m * (isCrit ? 5 : 1);
         state.coins += gain; state.totalCoins += gain;
-
         if (Math.random() < state.stats.r) { state.rareCoins++; state.totalRare++; }
-
         showTapEffect(e.clientX, e.clientY, Math.floor(gain), isCrit);
         if (isCrit) {
             document.getElementById('body').classList.add('crit-shake');
-            setTimeout(() => document.getElementById('body').classList.remove('crit-shake'), 200);
+            setTimeout(() => document.getElementById('body').classList.remove('crit-shake'), 150);
         }
         updateDisplay(); save();
     };
@@ -161,9 +189,16 @@
         el.className = 'float-num';
         el.innerText = (crit ? "会心!" : "") + "+" + val;
         el.style.left = x + 'px'; el.style.top = y + 'px';
-        if (crit) el.style.color = "red";
+        if (crit) el.style.color = "#ff4500";
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 600);
+    }
+
+    function switchGacha(dir) {
+        currentGacha = (currentGacha + dir + 2) % 2;
+        document.querySelectorAll('.gacha-card').forEach((c, i) => {
+            c.classList.toggle('active', i === currentGacha);
+        });
     }
 
     function gacha(type, times) {
@@ -174,8 +209,7 @@
 
         let results = [];
         for (let i = 0; i < times; i++) {
-            let roll = Math.random() * 100;
-            let rarity = 1;
+            let roll = Math.random() * 100, rarity = 1;
             if (type === 'normal') {
                 if (roll < 0.0001) rarity = 4; else if (roll < 5) rarity = 3; else if (roll < 25) rarity = 2; else rarity = 1;
             } else {
@@ -183,28 +217,47 @@
             }
             let pool = cardData.filter(x => x.rare === rarity);
             let card = pool.length ? pool[Math.floor(Math.random()*pool.length)] : cardData[0];
-            
             if (!state.inv[card.id]) state.inv[card.id] = { c: 0, l: 0 };
             state.inv[card.id].c++;
-            let next = Math.pow(state.inv[card.id].l + 1, 2);
-            if (state.inv[card.id].c >= next) { state.inv[card.id].l++; state.inv[card.id].c = 0; }
+            if (state.inv[card.id].c >= Math.pow(state.inv[card.id].l + 1, 2)) { state.inv[card.id].l++; state.inv[card.id].c = 0; }
             results.push(card);
         }
-        document.getElementById('gacha-res-list').innerHTML = results.map(c => `<div style="font-size:0.6rem; border:1px solid #444; padding:2px;">★${c.rare}<br>${c.name}</div>`).join('');
+        document.getElementById('gacha-res-list').innerHTML = results.map(c => `<div style="font-size:0.5rem; border:1px solid #444; padding:2px;">★${c.rare}<br>${c.name}</div>`).join('');
         document.getElementById('gacha-overlay').style.display = 'flex';
         updateStats(); updateDisplay(); save();
     }
 
+    function changePage(dir) {
+        const maxPage = Math.ceil(cardData.length / 9) - 1;
+        currentPage = Math.max(0, Math.min(maxPage, currentPage + dir));
+        updateDisplay();
+    }
+
+    function toggleZukanMode() {
+        showAllMode = !showAllMode;
+        document.getElementById('zukan-toggle-btn').innerText = showAllMode ? "全表示中" : "所持のみ表示";
+        updateDisplay();
+    }
+
     function showDetail(id) {
         const c = cardData.find(x => x.id == id);
-        const info = state.inv[id];
+        const info = state.inv[id] || { l: 0, c: 0 };
+        const next = Math.pow(info.l + 1, 2);
         document.getElementById('detail-content').innerHTML = `
             <h3 style="color:var(--gold)">★${c.rare} ${c.name}</h3>
-            <p style="color:#888;">属性: ${c.attr.toUpperCase()} / 強化: +${info.l}</p>
-            <div style="text-align:left; font-size:0.9rem; line-height:1.6; border-top:1px solid #333; padding-top:10px;">${c.story}</div>
-            <button onclick="document.getElementById('detail-overlay').style.display='none'" style="width:100%; margin-top:20px;">戻る</button>
+            <div style="font-size:0.8rem; color:#aaa; margin-bottom:10px;">属性: ${c.attr.toUpperCase()} / 強化: +${info.l}</div>
+            <div style="background:#222; padding:10px; border-radius:5px; margin-bottom:10px; text-align:left;">
+                <b style="color:var(--gold)">効果:</b> ${getEffectName(c.attr)} +${(c.bonus * (info.l||1)).toFixed(3)}
+                <div style="font-size:0.7rem; color:#888;">次まで: ${info.c} / ${next} 枚</div>
+            </div>
+            <div style="text-align:left; font-size:0.85rem; line-height:1.5;">${c.story}</div>
+            <button onclick="document.getElementById('detail-overlay').style.display='none'" style="width:100%; margin-top:20px;">閉じる</button>
         `;
         document.getElementById('detail-overlay').style.display = 'flex';
+    }
+
+    function getEffectName(attr) {
+        return { fire: "効率", water: "倍率", earth: "会心", sky: "結晶率", evil: "深淵倍率" }[attr];
     }
 
     function updateDisplay() {
@@ -220,21 +273,30 @@
         document.getElementById('stat-total-gacha').innerText = state.totalGacha;
         document.getElementById('stat-total-rare').innerText = state.totalRare;
 
-        const invBox = document.getElementById('inventory');
-        invBox.innerHTML = "";
-        for (let id in state.inv) {
-            const c = cardData.find(x => x.id == id);
-            const info = state.inv[id];
+        const book = document.getElementById('book-container');
+        book.innerHTML = "";
+        const start = currentPage * 9;
+        const pageCards = cardData.slice(start, start + 9);
+        
+        pageCards.forEach(c => {
+            const owned = !!state.inv[c.id];
+            if (!showAllMode && !owned) return;
+            
+            const info = state.inv[c.id] || { l: 0, c: 0 };
             const next = Math.pow(info.l + 1, 2);
-            invBox.innerHTML += `
-                <div class="card attr-${c.attr}" onclick="showDetail(${id})">
-                    <div class="lvl-badge">+${info.l}</div>
-                    <small>★${c.rare}</small><br><b>${c.name}</b>
-                    <progress value="${info.c}" max="${next}" style="width:100%"></progress>
-                    <div style="font-size:0.6rem; color:#888; text-align:right;">${info.c} / ${next}</div>
+            book.innerHTML += `
+                <div class="file-slot ${owned ? 'owned' : 'empty'}" onclick="${owned ? `showDetail(${c.id})` : ''}">
+                    ${owned ? `<div class="card-attr-dot" style="background:var(--${c.attr})"></div>` : ''}
+                    ${owned ? `<div class="file-lvl">+${info.l}</div>` : ''}
+                    <div class="mini-icon">${owned ? '📜' : '？'}</div>
+                    <div style="width:100%; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; padding:0 2px;">
+                        ${owned ? c.name : '未確認'}
+                    </div>
+                    ${owned ? `<progress value="${info.c}" max="${next}" style="width:80%; height:3px;"></progress>` : ''}
                 </div>
             `;
-        }
+        });
+        document.getElementById('page-info').innerText = `Page ${currentPage + 1}`;
     }
 
     function changeScreen(id, el) {
