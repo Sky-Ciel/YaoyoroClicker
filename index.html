@@ -58,7 +58,6 @@
         .dyn-btn { width: 100%; background: linear-gradient(45deg, var(--syu), #000); font-size: 1rem; padding: 15px 5px; margin-top: 10px; border-color: var(--gold); color: #fff; text-shadow: 0 0 5px var(--gold); transition: 0.2s;}
         .dyn-btn:disabled { filter: grayscale(1); opacity: 0.3; border-color: #555; }
 
-        /* 3Dガチャ・確定カットイン演出 */
         #summon-scene { display: none; position: absolute; inset: 0; background: radial-gradient(circle, #2a0a0a, #000); z-index: 5000; align-items: center; justify-content: center; perspective: 1000px; overflow: hidden; }
         #summon-scene.scene-star5 { background: #000; }
         
@@ -89,9 +88,22 @@
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         @keyframes explode { 0% { transform: scale(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; } }
 
-        /* 魔導書 */
+        /* 魔導書＆リザルトカード */
         .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; flex: 1; align-content: start; margin-top: 10px; }
-        .file-slot { aspect-ratio: 1/1.4; border-radius: 8px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; border: 2px solid #333; transition: transform 0.2s; overflow: hidden; }
+        /* リザルト用グリッド（表示崩れ対策で height を固定） */
+        .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; grid-auto-rows: min-content; align-items: start; }
+        
+        .file-slot { 
+            border-radius: 8px; position: relative; 
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            background: #111; border: 2px solid #333; transition: transform 0.2s; overflow: hidden;
+            padding: 8px 2px;
+        }
+        /* 図鑑用 */
+        .book-grid .file-slot { aspect-ratio: 1/1.4; }
+        /* リザルト用（潰れ防止） */
+        .res-grid .file-slot { height: 110px; cursor: pointer; }
+
         .file-slot.empty { opacity: 0.15; border-style: dashed; }
         
         .bg-fire { background: linear-gradient(135deg, rgba(230,57,70,0.5), #0d0505); }
@@ -110,15 +122,16 @@
         .rare-5 { border: 2px solid transparent; border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff00ff) 1; animation: rainbow 2s infinite linear; }
         @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        .slot-name { font-size: 0.55rem; width: 95%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; font-weight: bold; text-shadow: 1px 1px 2px #000; z-index: 5;}
-        .slot-stars { font-size: 0.45rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 2px; text-shadow: 0 0 2px #000; z-index: 5;}
+        .slot-name { font-size: 0.55rem; width: 95%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; text-shadow: 1px 1px 2px #000; z-index: 5;}
+        .slot-stars { font-size: 0.45rem; color: var(--gold); letter-spacing: 2px; text-shadow: 0 0 2px #000; z-index: 5;}
         .file-lvl { position: absolute; top: -1px; right: -1px; background: rgba(0,0,0,0.8); color: #fff; font-size: 0.6rem; padding: 2px 6px; font-weight: 900; border-bottom-left-radius: 8px; border: 1px solid var(--gold); border-top:none; border-right:none; z-index: 5;}
 
-        /* 修正箇所：オーバーレイをposition fixedで全画面固定化 */
+        /* オーバーレイ */
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; }
+        /* 詳細画面はリザルトより手前に出すために z-index を高く設定 */
+        #detail-overlay { z-index: 7000; }
+
         .modal { width: 100%; max-width: 450px; max-height: 85vh; background: var(--urushi); padding: 20px; border-radius: 12px; border: 2px solid var(--gold); overflow-y: auto; touch-action: pan-y; text-align: left; }
-        
-        .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; }
         
         .lvl-up-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); color: #ff00ff; font-weight: 900; font-size: 0.9rem; text-shadow: 0 0 5px #fff, 0 0 10px #ff00ff; animation: popUp 1s forwards; pointer-events: none; z-index: 10; white-space: nowrap;}
         @keyframes popUp { 0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -80%) scale(1); opacity: 0; } }
@@ -139,7 +152,7 @@
         @keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-70px) scale(1.3); } }
     </style>
 </head>
-<body id="body">
+<body>
 
 <div id="game-container">
     <div class="crit-flash" id="crit-flash"></div>
@@ -163,15 +176,15 @@
             <h4 style="margin:0 0 8px; color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:5px;">観測の加護</h4>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85rem;">
                 <div>効率: <span id="st-p" class="val">1</span></div>
-                <div>倍率: <span id="st-m" class="val">1.0</span></div>
+                <div>倍率: <span id="st-m" class="val">1.0</span>x</div>
                 <div style="display:flex; align-items:center;">
                     会心: <span id="st-c" class="val" style="margin-left:5px;">0</span> 
                     <button class="tips-btn" onclick="showGlobalTips('crit')">?</button>
                 </div>
-                <div>結晶: <span id="st-r" class="val">0.5</span></div>
+                <div>結晶: <span id="st-r" class="val">0.5</span>%</div>
             </div>
             <div style="margin-top:8px; border-top:1px dashed #555; padding-top:8px; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center;">
-                <div>深淵倍率: <span id="st-e" class="val" style="color:var(--evil);">1.0</span></div>
+                <div>深淵倍率: <span id="st-e" class="val" style="color:var(--evil);">1.0</span>x</div>
                 <button class="tips-btn" onclick="showGlobalTips('evil')">?</button>
             </div>
         </div>
@@ -230,23 +243,14 @@
 
     <div id="screen-profile" class="screen">
         <h3 style="color:var(--gold); text-shadow:0 0 5px var(--gold);">観測者の歩み</h3>
-        <div style="width:100%; background:rgba(30,10,10,0.6); padding:20px; border-radius:10px; border:1px solid var(--gold); text-align:left; line-height:2;">
+        <div style="width:100%; background:rgba(30,10,10,0.6); padding:20px; border-radius:10px; border:1px solid var(--gold); text-align:left; line-height:2.2; font-size: 0.95rem;">
+            <div>図鑑完成度: <span id="stat-collection" class="val">0 / 0 (0%)</span></div>
+            <hr style="border:0; border-top:1px solid #444; margin: 10px 0;">
             <div>累計獲得霊貨: <span id="stat-total-coins" class="val">0</span></div>
             <div>総観測回数: <span id="stat-total-clicks" class="val">0</span></div>
+            <div>総会心発生: <span id="stat-total-crits" class="val" style="color:#ff4500;">0</span></div>
             <div>総招集回数: <span id="stat-total-gacha" class="val">0</span></div>
-            <div>神結晶発見数: <span id="stat-total-rare" class="val">0</span></div>
-        </div>
-    </div>
-
-    <div id="detail-overlay" class="overlay" onclick="this.style.display='none'">
-        <div class="modal" id="detail-content" onclick="event.stopPropagation()"></div>
-    </div>
-
-    <div id="gacha-result-overlay" class="overlay" onclick="closeGachaResult()">
-        <div class="modal" onclick="event.stopPropagation()" id="gacha-result-modal">
-            <h3 style="color:var(--gold); text-align:center; border-bottom:1px solid #444; padding-bottom:10px;">招集結果</h3>
-            <div id="gacha-res-list" class="res-grid" style="max-height:50vh; overflow-y:auto; padding:5px;"></div>
-            <button onclick="closeGachaResult()" style="width:100%; margin-top:20px;">閉じる</button>
+            <div>神結晶発見: <span id="stat-total-rare" class="val">0</span></div>
         </div>
     </div>
 
@@ -256,26 +260,45 @@
         <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
         <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
     </div>
+
+    <div id="detail-overlay" class="overlay" onclick="this.style.display='none'">
+        <div class="modal" id="detail-content" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <div id="gacha-result-overlay" class="overlay" onclick="handleGachaAction(event)">
+        <div class="modal" onclick="event.stopPropagation()" id="gacha-result-modal">
+            <h3 style="color:var(--gold); text-align:center; border-bottom:1px solid #444; padding-bottom:10px;">招集結果</h3>
+            
+            <div id="gacha-res-list" class="res-grid" style="max-height:55vh; overflow-y:auto; padding:5px;"></div>
+            
+            <div id="gacha-res-summary" style="display:none; max-height:50vh; overflow-y:auto; padding:10px; font-size:1.1rem; line-height:2; text-align:center;"></div>
+            
+            <button id="gacha-action-btn" onclick="handleGachaAction(event)" style="width:100%; margin-top:20px;">確認</button>
+        </div>
+    </div>
 </div>
 
 <script src="cards.js"></script>
 <script>
-    let state = { coins: 0, rareCoins: 0, inv: {}, invOrder: [], stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0 }, totalCoins: 0, totalClicks: 0, totalGacha: 0, totalRare: 0 };
+    let state = { coins: 0, rareCoins: 0, inv: {}, invOrder: [], stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0 }, totalCoins: 0, totalClicks: 0, totalCrit: 0, totalGacha: 0, totalRare: 0 };
     let curPage = 0, showAll = true;
+    let gachaSummaryHtml = "";
+    let isShowingSummary = true;
 
     function getAttrIcon(attr) { return { fire: "🔥", water: "💧", earth: "⛰️", sky: "🪽", evil: "🔯" }[attr] || ""; }
 
-    function save() { localStorage.setItem('yaoyoro_max_v7', JSON.stringify(state)); }
+    function save() { localStorage.setItem('yaoyoro_max_v8', JSON.stringify(state)); }
     function load() {
-        const s = localStorage.getItem('yaoyoro_max_v7');
+        const s = localStorage.getItem('yaoyoro_max_v8');
         if (s) {
             let loaded = JSON.parse(s);
             state = { ...state, ...loaded };
             state.totalCoins = state.totalCoins || 0;
             state.totalClicks = state.totalClicks || 0;
+            state.totalCrit = state.totalCrit || 0;
             state.totalGacha = state.totalGacha || 0;
             state.totalRare = state.totalRare || 0;
-            if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); // 旧セーブデータ互換
+            if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
         }
         updateStats(); updateDisplay();
     }
@@ -293,7 +316,6 @@
             if (card.attr === "sky") raw_r += card.bonus * l;
             if (card.attr === "evil") e *= (1 + card.bonus * l);
         }
-        // 神結晶確率は「絶対に50%を超えない」計算式
         let final_r = (raw_r * 0.5) / (raw_r + 0.5);
         state.stats = { p, m, c, r: final_r, e };
     }
@@ -303,17 +325,18 @@
         state.totalClicks++;
         let cRate = state.stats.c;
         let isCrit = false;
-        let critMulti = 5;
+        let critMulti = 2; // デフォルト倍率を2倍に抑制
         
         if (cRate > 1.0) {
             isCrit = true;
-            critMulti = 5 + Math.log10(1 + (cRate - 1.0)) * 2; 
+            critMulti = 2 + Math.log10(1 + (cRate - 1.0)) * 1.5; // マイルドな伸び
         } else {
             isCrit = Math.random() < cRate;
         }
 
         let gain = state.stats.p * state.stats.m * state.stats.e * (isCrit ? critMulti : 1);
         state.coins += gain; state.totalCoins += gain;
+        if (isCrit) state.totalCrit++;
         if (Math.random() < state.stats.r) { state.rareCoins++; state.totalRare++; }
         
         mainBtn.classList.remove('btn-pressed');
@@ -337,7 +360,7 @@
 
         const el = document.createElement('div');
         el.className = 'float-num';
-        el.innerText = (isCrit ? (cRate > 1.0 ? "超会心!" : "会心!") : "") + "+" + Math.floor(gain).toLocaleString();
+        el.innerText = (isCrit ? (cRate > 1.0 ? "神会心!" : "会心!") : "") + "+" + Math.floor(gain).toLocaleString();
         el.style.left = relX + 'px'; el.style.top = relY + 'px';
         if (isCrit) el.style.color = cRate > 1.0 ? "#ff00ff" : "#ff4500";
         document.getElementById('game-container').appendChild(el);
@@ -360,7 +383,7 @@
 
     function triggerDynamicSummon(type, amount) {
         let maxPulls = type === 'normal' ? Math.floor(state.coins / 100) : Math.floor(state.rareCoins / 5);
-        let safeMax = Math.min(100000000, maxPulls); // 1億連まで解禁！！
+        let safeMax = Math.min(100000000, maxPulls); // 1億連
         let pulls = amount === 'max' ? safeMax : amount;
         
         if (pulls > maxPulls || pulls <= 0) return alert("お供え物が不足しています");
@@ -372,11 +395,12 @@
         let curr = type === 'normal' ? 'coins' : 'rareCoins';
         
         let rollCounts = {};
+        let rarityCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
         let isStar4 = false;
         let isStar5 = false;
         let displayCards = [];
 
-        // 期待値スキップアルゴリズム（1億連でも一瞬で終わる）
+        // 高速期待値アルゴリズム
         if (times <= 1000) {
             for(let i=0; i<times; i++) {
                 let roll = Math.random() * 100, rarity = 1;
@@ -387,7 +411,10 @@
                 }
                 let pool = cardData.filter(x => x.rare === rarity);
                 let card = pool.length ? pool[Math.floor(Math.random()*pool.length)] : cardData[0];
+                
                 rollCounts[card.id] = (rollCounts[card.id] || 0) + 1;
+                rarityCounts[card.rare]++;
+                
                 if (card.rare === 4) isStar4 = true;
                 if (card.rare === 5) isStar5 = true;
                 if (displayCards.length < 100) displayCards.push(card);
@@ -401,6 +428,7 @@
                 if (count > 0) {
                     if (rare == 4) isStar4 = true;
                     if (rare == 5) isStar5 = true;
+                    rarityCounts[rare] += count;
                     let pool = cardData.filter(x => x.rare == rare);
                     if (pool.length === 0) pool = [cardData[0]];
                     let base = Math.floor(count / pool.length);
@@ -421,7 +449,7 @@
             let addCount = rollCounts[id];
             if (!state.inv[id]) {
                 state.inv[id] = { c: 0, l: 0 };
-                state.invOrder.push(Number(id)); // 入手順の記録
+                state.invOrder.push(Number(id));
             }
             let currentC = state.inv[id].c + addCount;
             let currentL = state.inv[id].l;
@@ -466,7 +494,7 @@
         setTimeout(() => {
             scene.style.display = 'none';
             scene.className = '';
-            showGachaResults(displayCards, leveledUpIds, times);
+            showGachaResults(displayCards, leveledUpIds, times, rarityCounts);
             document.getElementById('particles-container').innerHTML = '';
             cutIn.classList.remove('play-star4', 'play-star5');
         }, 3200);
@@ -504,28 +532,68 @@
         }
     }
 
-    function showGachaResults(cards, leveledUpIds, totalTimes) {
+    function showGachaResults(cards, leveledUpIds, totalTimes, rarityCounts) {
+        // レア度順にソートして表示
+        cards.sort((a, b) => b.rare - a.rare);
+
         let displayHtml = '';
         cards.forEach(card => {
             let isLevelUp = leveledUpIds.has(card.id);
             displayHtml += `
-                <div class="file-slot owned rare-${card.rare} bg-${card.attr} res-anim-target" style="padding:2px; aspect-ratio:1/1.2;">
+                <div class="file-slot owned rare-${card.rare} bg-${card.attr} res-anim-target" onclick="showDetail(${card.id}, event)">
                     ${isLevelUp ? '<div class="lvl-up-badge">昇華!!</div>' : ''}
                     <div class="attr-icon">${getAttrIcon(card.attr)}</div>
                     <div class="slot-stars" style="font-size:0.35rem;">${"★".repeat(card.rare)}</div>
                     <div style="font-size:1.2rem; margin:2px 0;">📜</div>
-                    <b style="font-size:0.5rem; text-shadow:1px 1px 2px #000; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:90%;">${card.name}</b>
+                    <b style="font-size:0.5rem; text-shadow:1px 1px 2px #000; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:90%; text-align:center;">${card.name}</b>
                 </div>
             `;
         });
 
         if(totalTimes > 100) {
-            displayHtml += `<div style="grid-column: 1 / -1; color: var(--gold); padding: 10px; font-size:0.8rem; font-weight:bold;">他 ${Number(totalTimes - 100).toLocaleString()} 柱の神々を招集しました</div>`;
+            displayHtml += `<div style="grid-column: 1 / -1; color: var(--gold); padding: 10px; font-size:0.8rem; font-weight:bold; text-align:center;">他 ${Number(totalTimes - 100).toLocaleString()} 柱の神々を招集しました</div>`;
         }
 
         document.getElementById('gacha-res-list').innerHTML = displayHtml;
+        
+        // 集計ダイアログ用のHTML構築
+        gachaSummaryHtml = `
+            <div style="margin-bottom:15px; font-weight:bold; color:var(--gold); border-bottom:1px solid #444; padding-bottom:10px;">総招集回数: ${totalTimes.toLocaleString()} 回</div>
+            ${rarityCounts[5] > 0 ? `<div style="color:#ff00ff; text-shadow:0 0 5px #ff00ff;">★★★★★ : ${rarityCounts[5].toLocaleString()} 柱</div>` : ''}
+            ${rarityCounts[4] > 0 ? `<div style="color:#ffaa00; text-shadow:0 0 5px #ffaa00;">★★★★ : ${rarityCounts[4].toLocaleString()} 柱</div>` : ''}
+            ${rarityCounts[3] > 0 ? `<div style="color:#e0e0e0;">★★★ : ${rarityCounts[3].toLocaleString()} 柱</div>` : ''}
+            ${rarityCounts[2] > 0 ? `<div style="color:#a9a9a9;">★★ : ${rarityCounts[2].toLocaleString()} 柱</div>` : ''}
+            ${rarityCounts[1] > 0 ? `<div style="color:#8b4513;">★ : ${rarityCounts[1].toLocaleString()} 柱</div>` : ''}
+        `;
+
+        document.getElementById('gacha-res-list').style.display = 'grid';
+        document.getElementById('gacha-res-summary').style.display = 'none';
+
+        let btn = document.getElementById('gacha-action-btn');
+        if (totalTimes > 1) {
+            btn.innerText = "集計を確認";
+            isShowingSummary = false;
+        } else {
+            btn.innerText = "閉じる";
+            isShowingSummary = true;
+        }
+
         document.getElementById('gacha-result-overlay').style.display = 'flex';
         updateStats(); updateDisplay(); save();
+    }
+
+    function handleGachaAction(event) {
+        if(event) event.stopPropagation();
+        if (!isShowingSummary) {
+            document.getElementById('gacha-res-list').style.display = 'none';
+            let summaryDiv = document.getElementById('gacha-res-summary');
+            summaryDiv.innerHTML = gachaSummaryHtml;
+            summaryDiv.style.display = 'block';
+            document.getElementById('gacha-action-btn').innerText = "閉じる";
+            isShowingSummary = true;
+        } else {
+            closeGachaResult();
+        }
     }
 
     function closeGachaResult() {
@@ -540,7 +608,7 @@
     }
 
     function changePage(dir) {
-        let sortType = document.getElementById('sort-select').value;
+        let sortType = document.getElementById('sort-select') ? document.getElementById('sort-select').value : 'id-asc';
         let displayList = showAll ? [...cardData] : cardData.filter(c => !!state.inv[c.id]);
         const max = Math.ceil(displayList.length / 9) - 1;
         if (max < 0) return;
@@ -573,13 +641,18 @@
         document.getElementById('detail-overlay').style.display = 'flex';
     }
 
-    function showDetail(id) {
-        event.stopPropagation();
+    function showDetail(id, ev) {
+        if(ev) ev.stopPropagation();
         const c = cardData.find(x => x.id == id);
         const info = state.inv[id] || { l: 0, c: 0 };
         const b = (c.bonus * (info.l || 1));
         const bT = (c.attr === "earth" || c.attr === "sky") ? (b * 100).toFixed(2) + "%" : b.toLocaleString(undefined, {maximumFractionDigits:2});
         
+        let tipsHtml = c.attr === "evil" ? `
+            <div style="background:rgba(186,85,211,0.1); border:1px solid var(--evil); border-left:4px solid var(--evil); padding:12px; border-radius:4px; margin-top:15px; font-size:0.75rem; line-height:1.6;">
+                <b style="color:var(--gold);">【秘伝：深淵倍率について】</b><br>深淵倍率は、他の全ての効率や倍率の計算が終わった後に適用される<b>「最終的な掛け算」</b>です。他の加護が育つほど、その力は恐ろしいほどに膨れ上がります。
+            </div>` : '';
+
         document.getElementById('detail-content').innerHTML = `
             <div style="text-align:center; margin-bottom:10px;"><span style="color:var(--gold); font-size:1.2rem; letter-spacing:2px;">${"★".repeat(c.rare)}</span></div>
             <h2 style="color:var(--${c.attr}); margin-top:0; border-bottom:1px solid var(--syu); padding-bottom:10px;">${getAttrIcon(c.attr)} ${c.name}</h2>
@@ -588,6 +661,7 @@
                 <b style="color:var(--gold)">神徳：</b> ${getEffectName(c.attr)} +${bT}<br>
                 <div style="margin-top:8px; font-size:0.75rem; color:#888;">顕現進捗: ${info.c} / ${Math.pow(info.l+1, 2)} 枚</div>
             </div>
+            ${tipsHtml}
             <div style="margin-top:20px; font-style:italic; line-height:1.8; color:#eee; padding:15px; border-left:3px solid var(--${c.attr}); background:rgba(255,255,255,0.05);">「${c.story}」</div>
             <button onclick="document.getElementById('detail-overlay').style.display='none'" style="width:100%; margin-top:25px;">閉じる</button>
         `;
@@ -600,19 +674,25 @@
         document.getElementById('coins').innerText = Math.floor(state.coins).toLocaleString();
         document.getElementById('rare-coins').innerText = Math.floor(state.rareCoins).toLocaleString();
         document.getElementById('st-p').innerText = state.stats.p.toLocaleString();
-        document.getElementById('st-m').innerText = state.stats.m.toLocaleString(undefined, {maximumFractionDigits:2}) + "x";
+        document.getElementById('st-m').innerText = state.stats.m.toLocaleString(undefined, {maximumFractionDigits:2});
         
-        let cText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1}) + "%";
+        let cText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1});
         if(state.stats.c > 1.0) cText += ' <span style="color:#ff00ff; font-size:0.6rem;">(限界突破)</span>';
         document.getElementById('st-c').innerHTML = cText;
         
-        document.getElementById('st-r').innerText = (state.stats.r * 100).toLocaleString(undefined, {maximumFractionDigits:3}) + "%";
-        document.getElementById('st-e').innerText = state.stats.e.toLocaleString(undefined, {maximumFractionDigits:2}) + "x";
+        document.getElementById('st-r').innerText = (state.stats.r * 100).toLocaleString(undefined, {maximumFractionDigits:3});
+        document.getElementById('st-e').innerText = state.stats.e.toLocaleString(undefined, {maximumFractionDigits:2});
         
         document.getElementById('stat-total-coins').innerText = Math.floor(state.totalCoins || 0).toLocaleString();
         document.getElementById('stat-total-clicks').innerText = (state.totalClicks || 0).toLocaleString();
+        document.getElementById('stat-total-crits').innerText = (state.totalCrit || 0).toLocaleString();
         document.getElementById('stat-total-gacha').innerText = (state.totalGacha || 0).toLocaleString();
         document.getElementById('stat-total-rare').innerText = Math.floor(state.totalRare || 0).toLocaleString();
+
+        let collectedCount = Object.keys(state.inv).length;
+        let totalCards = cardData.length;
+        let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
+        document.getElementById('stat-collection').innerText = `${collectedCount} / ${totalCards} (${collectionRate}%)`;
 
         let maxNorm = Math.floor(state.coins / 100);
         let safeMaxNorm = Math.min(100000000, maxNorm); // 1億連
@@ -620,11 +700,11 @@
         btnN.innerText = `全力招集 (${safeMaxNorm.toLocaleString()}連)`; btnN.disabled = safeMaxNorm === 0;
         
         let maxRare = Math.floor(state.rareCoins / 5);
-        let safeMaxRare = Math.min(100000000, maxRare); // 1億連
+        let safeMaxRare = Math.min(100000000, maxRare);
         let btnR = document.getElementById('dyn-btn-rare');
         btnR.innerText = `全力招集 (${safeMaxRare.toLocaleString()}回)`; btnR.disabled = safeMaxRare === 0;
 
-        // 図鑑のソート処理
+        // ソート処理
         let sortType = document.getElementById('sort-select') ? document.getElementById('sort-select').value : 'id-asc';
         let displayList = showAll ? [...cardData] : cardData.filter(c => !!state.inv[c.id]);
 
@@ -656,7 +736,7 @@
             const info = state.inv[c.id] || { l: 0, c: 0 };
             
             book.innerHTML += `
-                <div class="file-slot ${owned ? 'owned rare-'+c.rare+' bg-'+c.attr : 'empty'}" onclick="${owned ? `showDetail(${c.id})` : ''}">
+                <div class="file-slot ${owned ? 'owned rare-'+c.rare+' bg-'+c.attr : 'empty'}" onclick="${owned ? `showDetail(${c.id}, event)` : ''}">
                     ${owned ? `<div class="file-lvl">+${info.l}</div>` : ''}
                     ${owned ? `<div class="attr-icon">${getAttrIcon(c.attr)}</div>` : ''}
                     <div class="slot-stars">${owned ? "★".repeat(c.rare) : ''}</div>
