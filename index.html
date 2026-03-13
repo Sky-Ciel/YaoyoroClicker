@@ -7,60 +7,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --gold: #d4af37; --urushi: #120808; --syu: #a62e2e; --paper: #f0e6d2;
+            --gold: #d4af37; --urushi: #100808; --syu: #a62e2e;
             --fire: #e63946; --water: #457b9d; --earth: #a0522d; --sky: #87ceeb; --evil: #9400d3;
-            --bronze: #cd7f32; --silver: #e0e0e0; 
+            --rare1: #a0522d; --rare2: #708090; --rare3: #c0c0c0; --rare4: #d4af37; 
         }
         
-        /* スクロール完全封印 */
+        /* ズームとスクロールの絶対禁止領域 */
         html, body {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             overflow: hidden; touch-action: none; overscroll-behavior: none;
-            background: var(--urushi); color: var(--paper); font-family: 'Noto Serif JP', serif; margin: 0;
-            background-image: radial-gradient(circle at 20% 30%, rgba(212,175,55,0.08) 0%, transparent 30%),
-                              radial-gradient(circle at 80% 80%, rgba(166,46,46,0.1) 0%, transparent 40%);
+            background: var(--urushi); color: #f0e6d2; font-family: 'Noto Serif JP', serif; margin: 0;
+            background-image: radial-gradient(circle at 10% 20%, rgba(212,175,55,0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(166,46,46,0.08) 0%, transparent 40%);
         }
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; }
 
+        /* クリティカル画面揺れ */
+        @keyframes critShake {
+            0% { transform: translate(5px, 5px); } 25% { transform: translate(-5px, -5px); }
+            50% { transform: translate(5px, -5px); } 75% { transform: translate(-5px, 5px); }
+            100% { transform: translate(0, 0); }
+        }
+        .crit-active { animation: critShake 0.15s cubic-bezier(.36,.07,.19,.97) both; }
+        .crit-flash { position: fixed; inset: 0; background: rgba(255, 69, 0, 0.15); z-index: 100; pointer-events: none; opacity: 0; transition: opacity 0.1s; }
+        .crit-flash.show { opacity: 1; }
+
         /* ヘッダー */
         #header { 
-            background: linear-gradient(180deg, #2a0a0a 0%, #120808 100%);
-            padding: 15px 10px; border-bottom: 3px double var(--gold); 
+            background: linear-gradient(180deg, #1f0a0a 0%, #100808 100%);
+            padding: 15px 10px; border-bottom: 2px solid var(--gold); 
             position: absolute; top:0; width:100%; z-index:1000;
             display: flex; justify-content: space-around; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
         }
         .val { color: var(--gold); font-weight: bold; font-family: sans-serif; text-shadow: 0 0 5px rgba(212,175,55,0.5); }
 
-        /* 画面レイアウト */
+        /* 各画面 */
         .screen { 
             display: none; flex-direction: column; align-items: center; 
             width: 100%; height: 100%; padding: 75px 15px 90px; opacity: 0; 
         }
         .screen.active { display: flex; animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; filter: sepia(1); } to { opacity: 1; filter: sepia(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* メイン観測ボタン */
+        /* メインボタン（タッチイベントで制御） */
         #main-btn-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
         #main-btn { 
-            width: 170px; height: 170px; border-radius: 50%; 
+            width: 180px; height: 180px; border-radius: 50%; 
             background: radial-gradient(circle at 30% 30%, #4a1a1a, #000); 
-            border: 4px solid var(--gold); color: var(--gold); font-size: 1.4rem; 
+            border: 4px solid var(--gold); color: var(--gold); font-size: 1.5rem; font-weight: bold;
             box-shadow: 0 10px 30px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.3);
-            transition: 0.1s; cursor: pointer; text-shadow: 0 0 10px var(--gold); font-weight: bold;
+            text-shadow: 0 0 10px var(--gold); transition: 0.05s; outline: none;
         }
-        #main-btn:active { transform: scale(0.92) translateY(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.9); filter: brightness(1.2); }
+        .btn-pressed { transform: scale(0.92) translateY(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.9) !important; filter: brightness(1.2); }
 
-        /* ガチャ画面装飾 */
+        /* ガチャ祭壇デザイン */
         .gacha-box {
-            width: 100%; background: linear-gradient(135deg, #1f0d0d, #120808); 
-            border: 2px solid var(--gold); border-radius: 15px; padding: 25px 15px; 
-            text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.7); margin: auto;
-            position: relative; overflow: hidden;
-        }
-        .gacha-box::before {
-            content: ""; position: absolute; inset: 0;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212,175,55,0.03) 10px, rgba(212,175,55,0.03) 20px);
-            pointer-events: none;
+            width: 100%; background: linear-gradient(135deg, #1a0d0d, #0d0505); 
+            border: 2px solid var(--gold); border-radius: 12px; padding: 25px 15px; 
+            text-align: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.5);
+            margin: auto; position: relative;
         }
 
         /* 3Dガチャ演出 */
@@ -69,8 +74,7 @@
         .anim-torii.play { animation: toriiGlow 2.5s ease-out forwards; }
         .anim-card { 
             position: absolute; width: 100px; height: 140px; 
-            background: linear-gradient(135deg, var(--paper), var(--gold));
-            border: 3px solid #fff; border-radius: 6px; opacity: 0; box-shadow: 0 0 40px var(--gold);
+            background: linear-gradient(135deg, #fff, var(--gold)); border: 3px solid #fff; border-radius: 6px; opacity: 0; box-shadow: 0 0 40px var(--gold);
         }
         .anim-card.play { animation: cardShoot 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s forwards; }
         .flash-bang { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
@@ -80,55 +84,56 @@
         @keyframes cardShoot { 0% { transform: scale(0.1) translateZ(-500px) rotateY(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: scale(2.5) translateZ(200px) rotateY(1440deg); opacity: 1; } }
         @keyframes flash { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
 
-        /* 魔導書（護符スタイル） */
+        /* 魔導書（属性＆レア度完全反映護符） */
         .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; flex: 1; align-content: start; margin-top: 10px; }
         .file-slot { 
             aspect-ratio: 1/1.4; border-radius: 6px; position: relative; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: #111; box-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            background: #111; box-shadow: 2px 2px 8px rgba(0,0,0,0.8); border: 2px solid transparent;
         }
-        /* レア度ごとの装飾 */
-        .file-slot.owned { background: linear-gradient(180deg, #2a0a0a, #120808); border: 2px solid var(--gold); }
-        .rare-1, .rare-2 { border-color: var(--bronze) !important; }
-        .rare-3 { border-color: var(--silver) !important; box-shadow: inset 0 0 10px rgba(224,224,224,0.3) !important; }
-        .rare-4 { border-color: var(--gold) !important; box-shadow: inset 0 0 15px rgba(212,175,55,0.5) !important; }
-        .rare-5 { 
-            border: 2px solid #fff !important; 
-            animation: rainbowShadow 2s infinite linear; 
-            background: linear-gradient(180deg, #3a1a3a, #120808) !important;
-        }
-        @keyframes rainbowShadow { 
-            0% { box-shadow: 0 0 10px #ff0000, inset 0 0 10px #ff0000; } 33% { box-shadow: 0 0 10px #00ff00, inset 0 0 10px #00ff00; } 66% { box-shadow: 0 0 10px #0000ff, inset 0 0 10px #0000ff; } 100% { box-shadow: 0 0 10px #ff0000, inset 0 0 10px #ff0000; }
-        }
-
         .file-slot.empty { opacity: 0.15; border: 1px dashed #555; }
+        .file-slot.owned { background: linear-gradient(180deg, #1f1f26, #0d0d12); }
+        
+        /* 属性による発光色 */
+        .attr-fire { box-shadow: inset 0 0 15px rgba(230,57,70,0.3); }
+        .attr-water { box-shadow: inset 0 0 15px rgba(69,123,157,0.3); }
+        .attr-earth { box-shadow: inset 0 0 15px rgba(160,82,45,0.3); }
+        .attr-sky { box-shadow: inset 0 0 15px rgba(135,206,235,0.3); }
+        .attr-evil { box-shadow: inset 0 0 15px rgba(148,0,211,0.3); }
+
+        /* レア度による枠色 */
+        .border-1 { border-color: var(--rare1); }
+        .border-2 { border-color: var(--rare2); }
+        .border-3 { border-color: var(--rare3); }
+        .border-4 { border-color: var(--rare4); }
+        .border-5 { border: 2px solid #fff; animation: rainbowBorder 2s infinite linear; }
+        @keyframes rainbowBorder { 0% { border-color: #ff5555; } 33% { border-color: #55ff55; } 66% { border-color: #5555ff; } 100% { border-color: #ff5555; } }
+
         .slot-name { font-size: 0.55rem; width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; font-weight: bold; }
-        .slot-stars { font-size: 0.45rem; color: var(--gold); letter-spacing: 1px; margin-bottom: 2px; }
-        .file-lvl { position: absolute; top: 0; right: 0; background: rgba(0,0,0,0.8); color: var(--paper); border: 1px solid currentColor; font-size: 0.55rem; padding: 1px 4px; font-weight: bold; border-bottom-left-radius: 6px; }
+        .slot-stars { font-size: 0.45rem; color: var(--gold); margin-bottom: 2px; letter-spacing: 1px; }
+        .file-lvl { position: absolute; top: 0; right: 0; background: rgba(0,0,0,0.8); color: #fff; font-size: 0.55rem; padding: 1px 4px; font-weight: bold; border-bottom-left-radius: 6px; border: 1px solid var(--gold); border-top:none; border-right:none;}
 
-        /* オーバーレイ */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 4000; align-items: center; justify-content: center; padding: 15px; }
-        .modal { 
-            width: 100%; max-height: 85vh; background: var(--urushi); padding: 20px; 
-            border-radius: 10px; border: 2px solid var(--gold); 
-            overflow-y: auto; touch-action: pan-y; text-align: left; box-shadow: 0 0 40px rgba(0,0,0,1);
-        }
+        /* オーバーレイ＆リザルト */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; }
+        .modal { width: 100%; max-height: 85vh; background: var(--urushi); padding: 20px; border-radius: 10px; border: 2px solid var(--gold); overflow-y: auto; touch-action: pan-y; text-align: left; }
+        
+        .res-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        
+        /* レベルアップアニメーション */
+        .lvl-up-badge { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); color: #ff4500; font-weight: bold; font-size: 1rem; text-shadow: 0 0 5px #fff; animation: popUp 1s forwards; pointer-events: none; z-index: 10; white-space: nowrap; }
+        @keyframes popUp { 0% { transform: translate(-50%, -30%) scale(0.5); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -70%) scale(1); opacity: 0; } }
 
-        /* 秘伝（Tips）装飾 */
-        .tips-box {
-            background: rgba(166, 46, 46, 0.1); border: 1px solid var(--syu);
-            border-left: 4px solid var(--syu); padding: 12px; border-radius: 4px;
-            margin-top: 15px; font-size: 0.75rem; line-height: 1.6;
-        }
+        /* 吸い込まれるアニメーション */
+        .fly-away { animation: suckIntoMenu 0.5s ease-in forwards; pointer-events: none; }
+        @keyframes suckIntoMenu { to { transform: translate(0, 400px) scale(0.1); opacity: 0; } }
+
+        /* 秘伝Tips */
+        .tips-box { background: rgba(166,46,46,0.1); border: 1px solid var(--syu); border-left: 4px solid var(--syu); padding: 12px; border-radius: 4px; margin-top: 15px; font-size: 0.75rem; line-height: 1.6; }
 
         /* メニューバー */
-        #menu-bar { 
-            position: absolute; bottom: 0; width: 100%; background: #0a0505; 
-            display: flex; border-top: 2px solid var(--gold); z-index: 1000;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .menu-item { flex: 1; padding: 15px 0; color: #888; font-size: 0.8rem; text-align: center; }
-        .menu-item.active { color: var(--gold); font-weight: bold; background: #1f0d0d; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
+        #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080404; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+        .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; }
+        .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
 
         button { background: var(--syu); color: #fff; border: 1px solid var(--gold); padding: 12px; border-radius: 5px; cursor: pointer; font-family: inherit; font-weight: bold; }
         .btn-outline { background: #222; color: var(--gold); }
@@ -136,7 +141,9 @@
         @keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-60px) scale(1.2); } }
     </style>
 </head>
-<body>
+<body id="body">
+
+<div class="crit-flash" id="crit-flash"></div>
 
 <div id="summon-scene">
     <div class="anim-torii" id="anim-torii">⛩️</div>
@@ -173,8 +180,8 @@
     
     <div class="gacha-box" id="gacha-view-0">
         <div style="font-size:4.5rem; filter:drop-shadow(0 0 10px var(--syu)); margin-bottom:10px;">⛩️</div>
-        <h3 style="color:var(--gold); margin:0 0 5px; text-shadow: 0 0 5px var(--syu);">通常招集</h3>
-        <p style="font-size:0.75rem; color:var(--paper); margin-bottom:20px;">100 霊貨（精霊・幼神）</p>
+        <h3 style="color:var(--gold); margin:0 0 5px;">通常招集</h3>
+        <p style="font-size:0.75rem; color:#ccc; margin-bottom:20px;">100 霊貨（精霊・幼神）</p>
         <div style="display:flex; justify-content:center; gap:10px;">
             <button class="btn-outline" onclick="triggerSummon('normal', 1)">壱連</button>
             <button onclick="triggerSummon('normal', 10)">拾連</button>
@@ -183,8 +190,8 @@
     
     <div class="gacha-box" id="gacha-view-1" style="display:none; border-color:var(--evil);">
         <div style="font-size:4.5rem; filter:drop-shadow(0 0 15px var(--evil)); margin-bottom:10px;">✨</div>
-        <h3 style="color:var(--gold); margin:0 0 5px; text-shadow: 0 0 5px var(--evil);">稀代招集</h3>
-        <p style="font-size:0.75rem; color:var(--paper); margin-bottom:20px;">5 神結晶（高位神・概念確定）</p>
+        <h3 style="color:var(--gold); margin:0 0 5px;">稀代招集</h3>
+        <p style="font-size:0.75rem; color:#ccc; margin-bottom:20px;">5 神結晶（高位神・概念確定）</p>
         <button onclick="triggerSummon('rare', 1)" style="width:80%; font-size:1.1rem; padding:15px; background:linear-gradient(45deg, var(--evil), #4b0082);">御神体招集</button>
     </div>
 </div>
@@ -212,9 +219,9 @@
 </div>
 
 <div id="menu-bar">
-    <div class="menu-item active" onclick="changeScreen('home', this)">ホーム</div>
+    <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
     <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
-    <div class="menu-item" onclick="changeScreen('zukan', this)">図鑑</div>
+    <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
     <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
 </div>
 
@@ -222,11 +229,11 @@
     <div class="modal" id="detail-content" onclick="event.stopPropagation()"></div>
 </div>
 
-<div id="gacha-result-overlay" class="overlay" onclick="this.style.display='none'">
-    <div class="modal" onclick="event.stopPropagation()">
+<div id="gacha-result-overlay" class="overlay" onclick="closeGachaResult()">
+    <div class="modal" onclick="event.stopPropagation()" id="gacha-result-modal">
         <h3 style="color:var(--gold); text-align:center; border-bottom:1px solid var(--syu); padding-bottom:10px;">招集結果</h3>
-        <div id="gacha-res-list" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:15px; max-height:50vh; overflow-y:auto;"></div>
-        <button onclick="document.getElementById('gacha-result-overlay').style.display='none'" style="width:100%; margin-top:20px;">確認</button>
+        <div id="gacha-res-list" class="res-grid"></div>
+        <button onclick="closeGachaResult()" style="width:100%; margin-top:20px;">確認</button>
     </div>
 </div>
 
@@ -235,9 +242,9 @@
     let state = { coins: 0, rareCoins: 0, inv: {}, stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0 }, totalCoins: 0, totalClicks: 0, totalGacha: 0, totalRare: 0 };
     let curPage = 0, showAll = true;
 
-    function save() { localStorage.setItem('yaoyoro_final_v3', JSON.stringify(state)); }
+    function save() { localStorage.setItem('yaoyoro_final_v4', JSON.stringify(state)); }
     function load() {
-        const s = localStorage.getItem('yaoyoro_final_v3');
+        const s = localStorage.getItem('yaoyoro_final_v4');
         if (s) state = JSON.parse(s);
         updateStats(); updateDisplay();
     }
@@ -257,17 +264,33 @@
         state.stats = { p, m, c, r, e };
     }
 
-    document.getElementById('main-btn').onclick = (evt) => {
+    // 究極のズーム・ゴーストクリック対策
+    const mainBtn = document.getElementById('main-btn');
+    const handleTap = (x, y) => {
         state.totalClicks++;
         let isCrit = Math.random() < state.stats.c;
         let gain = state.stats.p * state.stats.m * state.stats.e * (isCrit ? 5 : 1);
         state.coins += gain; state.totalCoins += gain;
         if (Math.random() < state.stats.r) { state.rareCoins++; state.totalRare++; }
         
+        mainBtn.classList.remove('btn-pressed');
+        void mainBtn.offsetWidth; 
+        mainBtn.classList.add('btn-pressed');
+        setTimeout(() => mainBtn.classList.remove('btn-pressed'), 50);
+
+        if(isCrit) {
+            document.body.classList.remove('crit-active');
+            void document.body.offsetWidth;
+            document.body.classList.add('crit-active');
+            const flash = document.getElementById('crit-flash');
+            flash.classList.add('show');
+            setTimeout(() => { document.body.classList.remove('crit-active'); flash.classList.remove('show'); }, 150);
+        }
+
         const el = document.createElement('div');
         el.className = 'float-num';
         el.innerText = (isCrit ? "会心!" : "") + "+" + Math.floor(gain);
-        el.style.left = evt.clientX + 'px'; el.style.top = evt.clientY + 'px';
+        el.style.left = x + 'px'; el.style.top = y + 'px';
         if (isCrit) el.style.color = "#ff4500";
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 600);
@@ -275,15 +298,21 @@
         updateDisplay(); save();
     };
 
+    mainBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // これでダブルタップズームを完全に防ぎます
+        handleTap(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive: false});
+    mainBtn.addEventListener('mousedown', (e) => {
+        handleTap(e.clientX, e.clientY);
+    });
+
     function setGachaMode(mode) {
         document.getElementById('gacha-view-0').style.display = mode === 0 ? 'block' : 'none';
         document.getElementById('gacha-view-1').style.display = mode === 1 ? 'block' : 'none';
         document.getElementById('tab-g0').style.background = mode === 0 ? 'var(--gold)' : '#222';
         document.getElementById('tab-g0').style.color = mode === 0 ? '#000' : 'var(--gold)';
-        document.getElementById('tab-g0').style.border = mode === 0 ? 'none' : '1px solid var(--gold)';
         document.getElementById('tab-g1').style.background = mode === 1 ? 'var(--gold)' : '#222';
         document.getElementById('tab-g1').style.color = mode === 1 ? '#000' : 'var(--gold)';
-        document.getElementById('tab-g1').style.border = mode === 1 ? 'none' : '1px solid var(--gold)';
     }
 
     function triggerSummon(type, times) {
@@ -319,19 +348,42 @@
             }
             let pool = cardData.filter(x => x.rare === rarity);
             let card = pool.length ? pool[Math.floor(Math.random()*pool.length)] : cardData[0];
+            
+            let isLevelUp = false;
             if (!state.inv[card.id]) state.inv[card.id] = { c: 0, l: 0 };
             state.inv[card.id].c++;
-            if (state.inv[card.id].c >= Math.pow(state.inv[card.id].l + 1, 2)) { state.inv[card.id].l++; state.inv[card.id].c = 0; }
-            results.push(card);
+            if (state.inv[card.id].c >= Math.pow(state.inv[card.id].l + 1, 2)) { 
+                state.inv[card.id].l++; state.inv[card.id].c = 0; isLevelUp = true; 
+            }
+            results.push({ ...card, isLevelUp });
         }
+        
         document.getElementById('gacha-res-list').innerHTML = results.map(c => `
-            <div class="file-slot owned rare-${c.rare}" style="aspect-ratio:1/1.2; padding:5px;">
+            <div class="file-slot owned border-${c.rare} attr-${c.attr} res-anim-target" style="padding:5px; text-align:center;">
+                ${c.isLevelUp ? '<div class="lvl-up-badge">昇華!</div>' : ''}
                 <div class="slot-stars">${"★".repeat(c.rare)}</div>
-                <b style="font-size:0.65rem;">${c.name}</b>
+                <div style="font-size:1.5rem;">📜</div>
+                <b style="font-size:0.6rem;">${c.name}</b>
             </div>
         `).join('');
         document.getElementById('gacha-result-overlay').style.display = 'flex';
         updateStats(); updateDisplay(); save();
+    }
+
+    // 吸い込まれる演出付きで閉じる
+    function closeGachaResult() {
+        const cards = document.querySelectorAll('.res-anim-target');
+        cards.forEach(c => c.classList.add('fly-away'));
+        
+        // メニューの「図鑑」を少し光らせる
+        const zukanNav = document.getElementById('nav-zukan');
+        zukanNav.style.transition = '0.2s';
+        zukanNav.style.background = 'var(--gold)'; zukanNav.style.color = '#000';
+        
+        setTimeout(() => {
+            document.getElementById('gacha-result-overlay').style.display = 'none';
+            zukanNav.style.background = ''; zukanNav.style.color = '';
+        }, 500);
     }
 
     function changePage(dir) {
@@ -358,8 +410,7 @@
         let tipsHtml = c.attr === "evil" ? `
             <div class="tips-box">
                 <b style="color:var(--gold);">【秘伝：深淵倍率について】</b><br>
-                深淵倍率は、他の全ての効率や倍率の計算が終わった後に適用される<b>「最終的な掛け算」</b>です。<br>
-                他の加護が育つほど、その力は恐ろしいほどに膨れ上がります。
+                深淵倍率は、他の全ての効率や倍率の計算が終わった後に適用される<b>「最終的な掛け算」</b>です。他の加護が育つほど、その力は恐ろしいほどに膨れ上がります。
             </div>` : '';
 
         document.getElementById('detail-content').innerHTML = `
@@ -376,7 +427,7 @@
             
             ${tipsHtml}
             
-            <div style="margin-top:20px; font-style:italic; line-height:1.8; color:var(--paper); padding:15px; border-left:3px solid var(--${c.attr}); background:rgba(255,255,255,0.03);">
+            <div style="margin-top:20px; font-style:italic; line-height:1.8; color:#eee; padding:15px; border-left:3px solid var(--${c.attr}); background:rgba(255,255,255,0.05);">
                 「${c.story}」
             </div>
             
@@ -415,11 +466,11 @@
             const info = state.inv[c.id] || { l: 0, c: 0 };
             
             book.innerHTML += `
-                <div class="file-slot ${owned ? 'owned rare-'+c.rare : 'empty'}" onclick="${owned ? `showDetail(${c.id})` : ''}" style="${owned ? `border-color:var(--${c.attr})` : ''}">
+                <div class="file-slot ${owned ? 'owned border-'+c.rare+' attr-'+c.attr : 'empty'}" onclick="${owned ? `showDetail(${c.id})` : ''}">
                     ${owned ? `<div class="file-lvl">+${info.l}</div>` : ''}
                     <div class="slot-stars">${owned ? "★".repeat(c.rare) : ''}</div>
-                    <div style="font-size:1.6rem; text-shadow:0 0 10px rgba(212,175,55,0.5);">${owned ? '📜' : '？'}</div>
-                    <div class="slot-name" style="color:${owned ? 'var(--paper)' : '#666'};">${owned ? c.name : '未確認'}</div>
+                    <div style="font-size:1.8rem; text-shadow:0 0 10px rgba(212,175,55,0.5);">${owned ? '📜' : '？'}</div>
+                    <div class="slot-name" style="color:${owned ? '#fff' : '#666'};">${owned ? c.name : '未確認'}</div>
                     ${owned ? `<progress value="${info.c}" max="${Math.pow(info.l+1, 2)}" style="width:70%; height:3px; margin-top:5px; background:#000;"></progress>` : ''}
                 </div>
             `;
