@@ -116,8 +116,8 @@
         .rare-4 { border-color: #ffaa00; box-shadow: 0 0 15px #ff8c00, inset 0 0 20px rgba(255,140,0,0.6); animation: goldPulse 1.5s infinite alternate; }
         @keyframes goldPulse { from { box-shadow: 0 0 5px #ffaa00, inset 0 0 15px rgba(255,170,0,0.4); } to { box-shadow: 0 0 20px #ffaa00, inset 0 0 30px rgba(255,170,0,0.8); } }
         
-        /* ★5 超絶虹色発光アニメーション復活 */
-        .rare-5 { border: 2px solid transparent !important; animation: rainbowShadow 2s infinite linear; background: linear-gradient(135deg, #2a0a2a, #0b0b0e); }
+        /* ★5 超絶虹色発光アニメーション完全復活 (transparentの優先度修正) */
+        .rare-5 { border: 2px solid #ff0000; animation: rainbowShadow 2s infinite linear; background: linear-gradient(135deg, #2a0a2a, #0b0b0e); }
         @keyframes rainbowShadow { 
             0% { box-shadow: 0 0 15px #ff0000, inset 0 0 15px #ff0000; border-color: #ff0000; } 
             20% { box-shadow: 0 0 15px #ffaa00, inset 0 0 15px #ffaa00; border-color: #ffaa00; } 
@@ -146,9 +146,9 @@
         .suck-anim { animation: suckIn 0.5s ease-in forwards; pointer-events: none; }
         @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
 
-        /* プロフィール豪華装飾 */
+        /* プロフィール豪華装飾・プログレスバー追加 */
         .profile-card { background: rgba(30,10,10,0.8); padding: 20px; border-radius: 10px; border: 1px solid var(--gold); text-align: left; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); margin-bottom: 15px; }
-        .progress-wrap { width: 100%; height: 8px; background: #222; border-radius: 4px; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
+        .progress-wrap { width: 100%; height: 10px; background: #222; border-radius: 5px; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--syu), var(--gold)); transition: width 0.5s ease-out; }
 
         #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
@@ -286,8 +286,8 @@
                 <b style="font-size:1.2rem; color:#fff; text-shadow: 0 0 5px #fff;" id="display-player-name">名もなき観測者</b>
                 <button onclick="changePlayerName()" style="padding:4px 8px; font-size:0.6rem;" class="btn-outline">名前変更</button>
             </div>
-            <div style="color:#aaa; font-size:0.75rem; margin-bottom:15px; border-bottom: 1px solid #444; padding-bottom: 10px;">
-                総プレイ時間: <span id="stat-playtime" style="color:var(--gold);">0時間 0分 0秒</span>
+            <div style="color:#aaa; font-size:0.75rem; border-bottom: 1px dashed #444; padding-bottom: 10px; margin-bottom:15px;">
+                総プレイ時間: <span id="stat-playtime" style="color:var(--gold);">0日 0時間 0分 0秒</span>
             </div>
             
             <div style="font-size:0.9rem; font-weight:bold; color:var(--gold); display:flex; justify-content:space-between;">
@@ -305,15 +305,20 @@
         </div>
 
         <div class="profile-card" style="font-size: 0.85rem; line-height: 1.8;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+            <h4 style="color:var(--gold); border-bottom:1px dashed var(--syu); padding-bottom:5px; margin-top:0;">観測の軌跡</h4>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div>最大一撃獲得:<br><span id="stat-max-gain" class="val" style="color:#ff00ff;">0</span></div>
-                <div>総会心発生:<br><span id="stat-total-crits" class="val" style="color:#ff4500;">0</span></div>
-                <div>累計獲得霊貨:<br><span id="stat-total-coins" class="val">0</span></div>
-                <div>累計獲得結晶:<br><span id="stat-total-rare" class="val">0</span></div>
+                <div>平均一撃獲得:<br><span id="stat-avg-gain" class="val" style="color:#ffaa00;">0</span></div>
                 <div>総観測回数:<br><span id="stat-total-clicks" class="val">0</span></div>
+                <div>総招集回数:<br><span id="stat-total-gacha" class="val">0</span></div>
+                <div>総会心発生:<br><span id="stat-total-crits" class="val" style="color:#ff4500;">0</span></div>
+                <div>実績会心率:<br><span id="stat-real-crit" class="val">0%</span></div>
+                <div style="border-top: 1px dashed #555; padding-top: 5px;">累計獲得霊貨:<br><span id="stat-total-coins" class="val">0</span></div>
+                <div style="border-top: 1px dashed #555; padding-top: 5px;">消費霊貨:<br><span id="stat-spent-coins" class="val" style="color:#aaa;">0</span></div>
+                <div>累計獲得結晶:<br><span id="stat-total-rare" class="val">0</span></div>
+                <div>消費結晶:<br><span id="stat-spent-rare" class="val" style="color:#aaa;">0</span></div>
                 <div>総昇華回数:<br><span id="stat-total-sub" class="val" style="color:#ff00ff;">0</span></div>
-                <div style="border-top: 1px dashed #555; padding-top: 10px;">消費霊貨:<br><span id="stat-spent-coins" class="val" style="color:#aaa;">0</span></div>
-                <div style="border-top: 1px dashed #555; padding-top: 10px;">消費結晶:<br><span id="stat-spent-rare" class="val" style="color:#aaa;">0</span></div>
+                <div>実績結晶発見:<br><span id="stat-real-rare" class="val">0%</span></div>
             </div>
         </div>
         
@@ -356,7 +361,6 @@
     let gachaSummaryHtml = "";
     let isShowingSummary = true;
     
-    // 画面内金箔エフェクト
     function initInnerParticles() {
         const bg = document.getElementById('inner-particles');
         for(let i=0; i<15; i++) {
@@ -386,7 +390,6 @@
         setTimeout(() => { el.style.display = 'none'; }, 250);
     }
 
-    // セーブデータ簡易暗号化
     function generateHash(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -412,13 +415,7 @@
                     state = { ...state, ...JSON.parse(decodeURIComponent(escape(atob(data.p)))) };
                 } else { console.error("セーブデータ改ざん検知"); }
             } catch(e) { console.error("Load Error", e); }
-        } else if (localStorage.getItem('yaoyoro_secure_v1')) {
-            // 旧セーブ移行
-            const data = JSON.parse(localStorage.getItem('yaoyoro_secure_v1'));
-            if (generateHash(data.p) === data.h) state = { ...state, ...JSON.parse(decodeURIComponent(escape(atob(data.p)))) };
         }
-        
-        // 初期化漏れ対策
         state.maxGain = state.maxGain || 0;
         if(!state.startTime) state.startTime = Date.now();
         if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
@@ -437,10 +434,10 @@
             if (card.attr === "water") m += card.bonus * l;
             if (card.attr === "earth") c += card.bonus * l;
             if (card.attr === "sky") raw_r += card.bonus * l;
-            if (card.attr === "evil") evilBonusSum += card.bonus * l; // 乗算を回避し加算
+            if (card.attr === "evil") evilBonusSum += card.bonus * l;
         }
         
-        let e = 1.0 + evilBonusSum; // 最後に1回だけ掛ける（インフレ制御）
+        let e = 1.0 + evilBonusSum;
         let final_r = (raw_r * 0.5) / (raw_r + 0.5);
         let critPow = 2.0;
         if (c > 1.0) critPow = 2.0 + Math.log10(1 + (c - 1.0)) * 1.5; 
@@ -507,7 +504,7 @@
 
     function triggerDynamicSummon(type, amount) {
         let maxPulls = type === 'normal' ? Math.floor(state.coins / 100) : Math.floor(state.rareCoins / 5);
-        let safeMax = Math.min(1000000000, maxPulls); // 10億連
+        let safeMax = Math.min(1000000000, maxPulls);
         let pulls = amount === 'max' ? safeMax : amount;
         
         if (pulls > maxPulls || pulls <= 0) return alert("お供え物が不足しています");
@@ -523,7 +520,6 @@
         let rarityCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
         let isStar4 = false; let isStar5 = false;
 
-        // 乱数揺らぎ付き高速期待値アルゴリズム
         if (times <= 10) {
             for(let i=0; i<times; i++) {
                 let roll = Math.random() * 100, rarity = 1;
@@ -803,7 +799,7 @@
             desc = "己の限界を超えた時、奇跡はより重みを持つ。<br><br>溢れ出た会心率（100%超過分）は決して失われず、威光となりて一撃の『威力（倍率）』を底上げするだろう。";
         } else if (type === 'evil') {
             title = "神の秘伝：深淵の理";
-            desc = "全てを飲み込む深淵の力。<br><br>他の全ての加護が掛かった後に、最後の『最終倍率』として掛け合わされる禁忌の加護である。";
+            desc = "全てを飲み込む深淵の力。<br><br>他の全ての加護が重なり合った後、最後の最後に『最終倍率』として掛け合わされる禁忌の加護である。";
         }
         
         document.getElementById('detail-content').innerHTML = `
@@ -857,9 +853,12 @@
 
     function formatTime(ms) {
         let totalSec = Math.floor(ms / 1000);
-        let h = Math.floor(totalSec / 3600);
+        let d = Math.floor(totalSec / 86400);
+        let h = Math.floor((totalSec % 86400) / 3600);
         let m = Math.floor((totalSec % 3600) / 60);
         let s = totalSec % 60;
+        
+        if (d > 0) return `${d}日 ${h}時間 ${m}分 ${s}秒`;
         return `${h}時間 ${m}分 ${s}秒`;
     }
     
@@ -882,7 +881,6 @@
     }
 
     function updateDisplay() {
-        // ステータス更新（単位はJS側でのみ付与し重複を防ぐ）
         document.getElementById('coins').innerText = Math.floor(state.coins).toLocaleString();
         document.getElementById('rare-coins').innerText = Math.floor(state.rareCoins).toLocaleString();
         document.getElementById('st-p').innerText = state.stats.p.toLocaleString();
@@ -915,12 +913,25 @@
         document.getElementById('stat-total-sub').innerText = (state.totalSublimation || 0).toLocaleString();
         document.getElementById('stat-max-gain').innerText = Math.floor(state.maxGain || 0).toLocaleString();
 
-        // 図鑑のプログレスと収集率
+        let avgGain = state.totalClicks > 0 ? state.totalCoins / state.totalClicks : 0;
+        let realCrit = state.totalClicks > 0 ? (state.totalCrit / state.totalClicks) * 100 : 0;
+        let realRare = state.totalClicks > 0 ? (state.totalRare / state.totalClicks) * 100 : 0;
+        document.getElementById('stat-avg-gain').innerText = Math.floor(avgGain).toLocaleString();
+        document.getElementById('stat-real-crit').innerText = realCrit.toLocaleString(undefined, {maximumFractionDigits:2}) + "%";
+        document.getElementById('stat-real-rare').innerText = realRare.toLocaleString(undefined, {maximumFractionDigits:3}) + "%";
+
+        // コンプリート率計算
+        let totalCards = typeof cardData !== 'undefined' ? cardData.length : 175;
         let collectedCount = Object.keys(state.inv).length;
-        let totalCards = cardData.length;
         let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
+        
         document.getElementById('stat-collection').innerText = `${collectedCount} / ${totalCards} (${collectionRate}%)`;
         document.getElementById('stat-prog').style.width = `${collectionRate}%`;
+
+        let maxTotals = { rare: {1:0, 2:0, 3:0, 4:0, 5:0}, attr: {fire:0, water:0, earth:0, sky:0, evil:0} };
+        if (typeof cardData !== 'undefined') {
+            cardData.forEach(c => { maxTotals.rare[c.rare]++; maxTotals.attr[c.attr]++; });
+        }
 
         let attrCounts = {fire:0, water:0, earth:0, sky:0, evil:0};
         let rareCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
@@ -928,16 +939,18 @@
             let c = cardData.find(x => x.id == id);
             if(c) { attrCounts[c.attr]++; rareCounts[c.rare]++; }
         }
-        document.getElementById('col-fire').innerText = `火:${attrCounts.fire}`;
-        document.getElementById('col-water').innerText = `水:${attrCounts.water}`;
-        document.getElementById('col-earth').innerText = `地:${attrCounts.earth}`;
-        document.getElementById('col-sky').innerText = `空:${attrCounts.sky}`;
-        document.getElementById('col-evil').innerText = `悪:${attrCounts.evil}`;
-        document.getElementById('col-r5').innerText = `★5:${rareCounts[5]}`;
-        document.getElementById('col-r4').innerText = `★4:${rareCounts[4]}`;
-        document.getElementById('col-r3').innerText = `★3:${rareCounts[3]}`;
-        document.getElementById('col-r2').innerText = `★2:${rareCounts[2]}`;
-        document.getElementById('col-r1').innerText = `★1:${rareCounts[1]}`;
+        
+        document.getElementById('col-fire').innerText = `${attrCounts.fire} / ${maxTotals.attr.fire}`;
+        document.getElementById('col-water').innerText = `${attrCounts.water} / ${maxTotals.attr.water}`;
+        document.getElementById('col-earth').innerText = `${attrCounts.earth} / ${maxTotals.attr.earth}`;
+        document.getElementById('col-sky').innerText = `${attrCounts.sky} / ${maxTotals.attr.sky}`;
+        document.getElementById('col-evil').innerText = `${attrCounts.evil} / ${maxTotals.attr.evil}`;
+        
+        document.getElementById('col-r5').innerText = `${rareCounts[5]} / ${maxTotals.rare[5]}`;
+        document.getElementById('col-r4').innerText = `${rareCounts[4]} / ${maxTotals.rare[4]}`;
+        document.getElementById('col-r3').innerText = `${rareCounts[3]} / ${maxTotals.rare[3]}`;
+        document.getElementById('col-r2').innerText = `${rareCounts[2]} / ${maxTotals.rare[2]}`;
+        document.getElementById('col-r1').innerText = `${rareCounts[1]} / ${maxTotals.rare[1]}`;
 
         let maxNorm = Math.floor(state.coins / 100);
         let safeMaxNorm = Math.min(1000000000, maxNorm); // 10億連
@@ -950,7 +963,6 @@
         btnR.innerText = `全力招集 (${safeMaxRare.toLocaleString()}回)`; btnR.disabled = safeMaxRare === 0;
 
         let displayList = getFilteredAndSortedCards();
-
         let maxP = Math.max(1, Math.ceil(displayList.length / 9));
         if (curPage >= maxP) curPage = Math.max(0, maxP - 1);
 
@@ -986,7 +998,14 @@
         el.classList.add('active');
     }
     
-    window.onload = load;
+    // JS読み込み完了時に実行
+    window.onload = function() {
+        if (typeof cardData === 'undefined' || cardData.length === 0) {
+            alert("【エラー】カードデータ（cards.js）が読み込めませんでした。\n同じフォルダ内に cards.js が存在するか確認してください。");
+            return;
+        }
+        load();
+    };
 </script>
 </body>
 </html>
