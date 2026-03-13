@@ -48,13 +48,20 @@
         .screen.active { display: flex; animation: fadeIn 0.4s forwards; }
         @keyframes fadeIn { from { opacity: 0; filter: sepia(1); } to { opacity: 1; filter: sepia(0); } }
 
-        #main-btn-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40vh; }
+        #main-btn-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40vh; position: relative; }
         #main-btn { 
             width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #3a0808, #000); 
             border: 3px solid var(--gold); color: var(--gold); font-size: 1.4rem; font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4); outline: none; text-shadow: 0 0 10px var(--gold);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4); outline: none; text-shadow: 0 0 10px var(--gold); transition: box-shadow 0.1s, transform 0.1s;
         }
         .btn-pressed { transform: scale(0.92) translateY(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.9) !important; filter: brightness(1.3); }
+
+        /* オート観測ボタン */
+        #auto-click-btn {
+            position: absolute; top: 10px; right: 10px; background: linear-gradient(45deg, #111, #333); border: 1px solid var(--gold); color: var(--gold); border-radius: 20px; padding: 8px 12px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px;
+        }
+        #auto-click-btn.active { background: linear-gradient(45deg, #ff4500, #a62e2e); color: #fff; animation: pulse 1s infinite alternate; }
+        @keyframes pulse { from { box-shadow: 0 0 5px #ff4500; } to { box-shadow: 0 0 20px #ff4500; } }
 
         .gacha-box { width: 100%; background: linear-gradient(135deg, #1f0808, #120404); border: 2px solid var(--gold); border-radius: 12px; padding: 20px 15px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.8); margin: auto; }
         .dyn-btn { width: 100%; background: linear-gradient(45deg, var(--syu), #000); font-size: 1rem; padding: 15px 5px; margin-top: 10px; border-color: var(--gold); color: #fff; text-shadow: 0 0 5px var(--gold); transition: 0.2s;}
@@ -63,7 +70,6 @@
         /* 3Dガチャ演出 */
         #summon-scene { display: none; position: absolute; inset: 0; background: radial-gradient(circle, #2a0a0a, #000); z-index: 5000; align-items: center; justify-content: center; perspective: 1000px; overflow: hidden; }
         #summon-scene.scene-star5 { background: #000; }
-        
         .anim-torii { font-size: 8rem; opacity: 0; filter: drop-shadow(0 0 20px var(--syu)); }
         .anim-torii.play-normal { animation: toriiGlow 2.5s forwards; }
         .anim-torii.play-star4 { animation: toriiHot4 2.5s forwards; }
@@ -81,10 +87,6 @@
         .anim-card { position: absolute; width: 120px; height: 168px; background: linear-gradient(135deg, #fff, var(--gold), #fff); border: 4px solid #fff; border-radius: 8px; opacity: 0; box-shadow: 0 0 50px 20px rgba(212,175,55,0.8); }
         .anim-card.play { animation: cardShoot 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s forwards; }
         @keyframes cardShoot { 0% { transform: scale(0.1) translateZ(-500px) rotateY(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: scale(2.2) translateZ(200px) rotateY(1440deg); opacity: 1; } }
-        
-        .flash-bang { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
-        .flash-bang.play { animation: flash 0.8s 2.2s forwards; }
-        @keyframes flash { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
 
         .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0.8; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
@@ -134,6 +136,7 @@
         .overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; opacity: 0; transition: opacity 0.25s ease-out; }
         .overlay.show { display: flex; opacity: 1; }
         #detail-overlay { z-index: 7000; }
+        #ad-overlay { z-index: 8000; }
 
         .modal { width: 100%; max-width: 450px; max-height: 85vh; background: var(--urushi); padding: 20px; border-radius: 12px; border: 2px solid var(--gold); overflow-y: auto; touch-action: pan-y; text-align: left; transform: scale(0.95); transition: transform 0.25s ease-out; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         .overlay.show .modal { transform: scale(1); }
@@ -144,7 +147,7 @@
         .suck-anim { animation: suckIn 0.5s ease-in forwards; pointer-events: none; }
         @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
 
-        /* プロフィール装飾 */
+        /* プロフィール豪華装飾 */
         .profile-card { background: rgba(30,10,10,0.8); padding: 15px 12px; border-radius: 10px; border: 1px solid var(--gold); text-align: left; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); margin-bottom: 15px; width: 100%; box-sizing: border-box;}
         .profile-title { margin-top: 0; margin-bottom: 12px; color: var(--gold); font-size: 1.1rem; text-align: center; border-bottom: 1px dashed var(--syu); padding-bottom: 8px; }
         .progress-wrap { width: 100%; height: 10px; background: #222; border-radius: 5px; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
@@ -162,6 +165,8 @@
 
         .btn-share { background: #1DA1F2; color: #fff; border: 1px solid #fff; border-radius: 8px; font-weight: bold; padding: 12px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; width: 80%; box-shadow: 0 4px 10px rgba(29,161,242,0.4); transition: 0.2s; }
         .btn-share:hover { filter: brightness(1.2); transform: translateY(-2px); }
+        .btn-ad { background: linear-gradient(45deg, #008000, #004d00); color: #fff; border: 2px solid #00ff00; border-radius: 8px; padding: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 0 15px rgba(0,255,0,0.4); width: 100%; transition: 0.2s;}
+        .btn-ad:hover { filter: brightness(1.2); }
 
         #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
         .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; cursor: pointer; }
@@ -198,7 +203,10 @@
     </div>
 
     <div id="screen-home" class="screen active">
-        <div id="main-btn-container"><button id="main-btn">観測する</button></div>
+        <div id="main-btn-container">
+            <button id="main-btn">観測する</button>
+            <button id="auto-click-btn" onclick="openAutoClickAd()">▶️ オート観測 <span id="auto-rem" style="font-weight:normal;">(3/3)</span></button>
+        </div>
         <div style="width:calc(100% - 20px); background:rgba(20,8,8,0.85); padding:15px; border-radius:10px; border:1px solid #553333; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); text-align:left; margin-bottom:10px;">
             <h4 style="margin:0 0 8px; color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:5px;">観測の加護</h4>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85rem;">
@@ -396,7 +404,6 @@
 
     <div id="gacha-result-overlay" class="overlay" onclick="handleGachaAction(event)">
         <div class="modal" onclick="event.stopPropagation()" id="gacha-result-modal">
-            
             <div id="gacha-power-banner" style="display:none; background: linear-gradient(90deg, transparent, rgba(255,69,0,0.2), transparent); text-align:center; padding:10px; margin-bottom:15px; border-bottom: 1px solid #ff4500; border-top: 1px solid #ff4500;">
                 <div style="font-size:0.75rem; color:#ffaa00; font-weight:bold;">総合神力 上昇</div>
                 <div style="font-size:1.8rem; font-weight:bold; color:#fff; text-shadow:0 0 10px #ff0000; font-family:serif;">
@@ -404,27 +411,35 @@
                     <span style="font-size:1.1rem; color:#00ff00; margin-left:5px;">(+<span id="res-power-diff">0</span>)</span>
                 </div>
             </div>
-
             <h3 style="color:var(--gold); text-align:center; border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">招集結果</h3>
             <div id="gacha-res-list" class="res-grid" style="max-height:50vh; overflow-y:auto; padding:5px;"></div>
             <div id="gacha-res-summary" style="display:none; max-height:45vh; overflow-y:auto; padding:10px; font-size:1.1rem; line-height:2; text-align:center;"></div>
             <button id="gacha-action-btn" onclick="handleGachaAction(event)" style="width:100%; margin-top:20px;">確認</button>
         </div>
     </div>
+
+    <div id="ad-overlay" class="overlay" onclick="closeOverlay('ad-overlay')">
+        <div class="modal" id="ad-content" onclick="event.stopPropagation()" style="text-align:center;">
+            </div>
+    </div>
 </div>
 
 <script>
+    // === グローバル変数 ===
     let state = { 
         coins: 0, rareCoins: 0, inv: {}, invOrder: [], 
         stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0, critPower: 2.0 }, 
         totalCoins: 0, totalClicks: 0, totalCrit: 0, totalGacha: 0, totalRare: 0,
         spentCoins: 0, spentRareCoins: 0, totalSublimation: 0, maxGain: 0,
         maxP: 1, maxM: 1.0, totalStar5: 0,
-        playerName: "名もなき観測者", startTime: Date.now()
+        playerName: "名もなき観測者", startTime: Date.now(),
+        lastSaveTime: Date.now(), autoClickUses: 0, lastAutoDate: "" // 【新規】放置・オート用
     };
     let curPage = 0, showAll = true;
     let gachaSummaryHtml = "";
     let isShowingSummary = true;
+    let autoClickInterval = null;
+    let autoClickRemaining = 0;
     
     function initInnerParticles() {
         const bg = document.getElementById('inner-particles');
@@ -454,7 +469,6 @@
         setTimeout(() => { el.style.display = 'none'; }, 250);
     }
 
-    // カウントアップアニメーション
     function animateValue(id, start, end, duration) {
         let obj = document.getElementById(id);
         if(!obj) return;
@@ -484,10 +498,11 @@
     }
 
     function save() { 
+        state.lastSaveTime = Date.now(); // セーブ時に時刻記録
         const json = JSON.stringify(state);
         const encoded = btoa(unescape(encodeURIComponent(json)));
         const hash = generateHash(encoded);
-        localStorage.setItem('yaoyoro_secure_v6', JSON.stringify({p: encoded, h: hash}));
+        localStorage.setItem('yaoyoro_secure_v7', JSON.stringify({p: encoded, h: hash}));
     }
     
     function initGame() {
@@ -517,7 +532,7 @@
     function proceedInit() {
         initInnerParticles();
 
-        const saved = localStorage.getItem('yaoyoro_secure_v6');
+        const saved = localStorage.getItem('yaoyoro_secure_v7');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
@@ -525,8 +540,8 @@
                     state = { ...state, ...JSON.parse(decodeURIComponent(escape(atob(data.p)))) };
                 } else { console.error("セーブデータ改ざん検知"); }
             } catch(e) { console.error("Load Error", e); }
-        } else if (localStorage.getItem('yaoyoro_secure_v5')) {
-            const data = JSON.parse(localStorage.getItem('yaoyoro_secure_v5'));
+        } else if (localStorage.getItem('yaoyoro_secure_v6')) {
+            const data = JSON.parse(localStorage.getItem('yaoyoro_secure_v6'));
             if (generateHash(data.p) === data.h) state = { ...state, ...JSON.parse(decodeURIComponent(escape(atob(data.p)))) };
         }
         
@@ -537,7 +552,79 @@
         if(!state.startTime) state.startTime = Date.now();
         if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
 
-        updateStats(); updateDisplay();
+        // 日付変更でオートクリック回数リセット
+        let today = new Date().toDateString();
+        if(state.lastAutoDate !== today) {
+            state.autoClickUses = 0;
+            state.lastAutoDate = today;
+        }
+
+        updateStats(); 
+        updateDisplay();
+
+        // 【新規】放置報酬の計算と表示
+        checkOfflineReward();
+    }
+
+    function checkOfflineReward() {
+        if (!state.lastSaveTime) return;
+        let now = Date.now();
+        let diffSec = Math.floor((now - state.lastSaveTime) / 1000);
+        
+        // 1分(60秒)以上の放置で発動
+        if (diffSec >= 60 && state.stats.p > 1) {
+            // 最大12時間(43200秒)まで
+            let effectiveSec = Math.min(diffSec, 43200);
+            
+            // 1時間(3600秒)あたり (効率 × 360) ＝ 1秒あたり (効率 × 0.1)
+            let rewardBase = state.stats.p * 0.1 * effectiveSec;
+            // 倍率や深淵も乗せる
+            let finalReward = Math.floor(rewardBase * state.stats.m * state.stats.e);
+            
+            if (finalReward > 0) {
+                showOfflineRewardDialog(finalReward, effectiveSec);
+            }
+        }
+    }
+
+    function showOfflineRewardDialog(reward, sec) {
+        let h = Math.floor(sec / 3600);
+        let m = Math.floor((sec % 3600) / 60);
+        let timeStr = h > 0 ? `${h}時間 ${m}分` : `${m}分`;
+
+        document.getElementById('ad-content').innerHTML = `
+            <div style="font-size:3rem; margin-bottom:10px;">🎁</div>
+            <h3 style="color:var(--gold); margin-top:0;">神々の恩恵（放置報酬）</h3>
+            <p style="font-size:0.85rem; color:#ccc; line-height:1.6;">
+                観測者が不在の ${timeStr} の間、<br>神々が霊貨を集めておいてくれました。
+            </p>
+            <div style="background:#1a0a0a; border:1px solid #444; border-radius:8px; padding:15px; margin:15px 0;">
+                <span style="color:#aaa; font-size:0.8rem;">獲得予定</span><br>
+                <b style="color:var(--gold); font-size:1.5rem;">${reward.toLocaleString()} 霊貨</b>
+            </div>
+            <button class="btn-ad" onclick="claimOfflineReward(${reward}, true)">▶️ 動画を見て 2倍 受け取る！</button>
+            <button class="btn-outline" style="width:100%; margin-top:10px;" onclick="claimOfflineReward(${reward}, false)">そのまま受け取る</button>
+        `;
+        openOverlay('ad-overlay');
+    }
+
+    function claimOfflineReward(reward, isDouble) {
+        if (isDouble) {
+            playDummyAd(() => {
+                state.coins += reward * 2;
+                state.totalCoins += reward * 2;
+                alert(`神々の恩恵が倍増しました！\n${(reward * 2).toLocaleString()} 霊貨を獲得しました！`);
+                save();
+                updateDisplay();
+                closeOverlay('ad-overlay');
+            });
+        } else {
+            state.coins += reward;
+            state.totalCoins += reward;
+            save();
+            updateDisplay();
+            closeOverlay('ad-overlay');
+        }
     }
 
     function calcPower() {
@@ -603,7 +690,7 @@
     }
 
     const mainBtn = document.getElementById('main-btn');
-    const handleTap = (x, y) => {
+    const handleTap = (x, y, isAuto = false) => {
         state.totalClicks++;
         let cRate = state.stats.c;
         let isCrit = false;
@@ -633,6 +720,13 @@
             setTimeout(() => { container.classList.remove('crit-active'); flash.classList.remove('show'); }, 100);
         }
 
+        // オートの場合は位置をボタン中央付近で散らす
+        if (isAuto && (!x || !y)) {
+            const rect = mainBtn.getBoundingClientRect();
+            x = rect.left + rect.width / 2 + (Math.random() * 40 - 20);
+            y = rect.top + rect.height / 2 + (Math.random() * 40 - 20);
+        }
+
         const rect = document.getElementById('game-container').getBoundingClientRect();
         const relX = x - rect.left; const relY = y - rect.top;
 
@@ -644,11 +738,80 @@
         document.getElementById('game-container').appendChild(el);
         setTimeout(() => el.remove(), 600);
         
-        updateDisplay(); save();
+        updateDisplay(); 
+        if(!isAuto) save(); // オート中は負荷軽減のためセーブ間引く
     };
 
     mainBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(e.touches[0].clientX, e.touches[0].clientY); }, {passive: false});
     mainBtn.addEventListener('mousedown', (e) => { handleTap(e.clientX, e.clientY); });
+
+    // 【新規】オート観測機能
+    function openAutoClickAd() {
+        if (autoClickRemaining > 0) return alert("現在オート観測中です！");
+        if (state.autoClickUses >= 3) return alert("本日のオート観測の回数上限（3回）に達しました。\n明日またご利用ください。");
+
+        document.getElementById('ad-content').innerHTML = `
+            <div style="font-size:3rem; margin-bottom:10px;">▶️</div>
+            <h3 style="color:var(--gold); margin-top:0;">神々の代行（オート観測）</h3>
+            <p style="font-size:0.85rem; color:#ccc; line-height:1.6; margin-bottom:20px;">
+                動画広告を見ることで、<b style="color:#ff4500;">1分間・毎秒2回</b>の<br>自動観測を発動します。<br>
+                <span style="font-size:0.7rem;">（本日残り: ${3 - state.autoClickUses}回）</span>
+            </p>
+            <button class="btn-ad" onclick="startAutoClick()">広告を見て発動する</button>
+            <button class="btn-outline" style="width:100%; margin-top:10px;" onclick="closeOverlay('ad-overlay')">やめる</button>
+        `;
+        openOverlay('ad-overlay');
+    }
+
+    function startAutoClick() {
+        playDummyAd(() => {
+            state.autoClickUses++;
+            save();
+            closeOverlay('ad-overlay');
+            
+            autoClickRemaining = 60;
+            const btn = document.getElementById('auto-click-btn');
+            btn.classList.add('active');
+            
+            autoClickInterval = setInterval(() => {
+                autoClickRemaining--;
+                btn.innerHTML = `⏳ オート中 (${autoClickRemaining}秒)`;
+                
+                // 1秒間に2回タップ
+                handleTap(null, null, true);
+                setTimeout(() => handleTap(null, null, true), 500);
+
+                if (autoClickRemaining <= 0) {
+                    clearInterval(autoClickInterval);
+                    btn.classList.remove('active');
+                    btn.innerHTML = `▶️ オート観測 <span style="font-weight:normal;">(${3 - state.autoClickUses}/3)</span>`;
+                    save(); // 終わったらセーブ
+                }
+            }, 1000);
+        });
+    }
+
+    // ダミーの広告再生プログレス
+    function playDummyAd(callback) {
+        document.getElementById('ad-content').innerHTML = `
+            <h4 style="color:#fff;">動画広告を再生中...</h4>
+            <div style="width:100%; background:#222; height:10px; border-radius:5px; overflow:hidden; margin:20px 0;">
+                <div id="dummy-ad-bar" style="width:0%; height:100%; background:#00ff00; transition: width 0.1s linear;"></div>
+            </div>
+            <p style="font-size:0.7rem; color:#888;">※これはダミーの広告画面です</p>
+        `;
+        
+        let progress = 0;
+        let adTimer = setInterval(() => {
+            progress += 5;
+            document.getElementById('dummy-ad-bar').style.width = progress + '%';
+            if (progress >= 100) {
+                clearInterval(adTimer);
+                document.getElementById('ad-content').innerHTML = `<div style="font-size:3rem; margin:20px 0;">✅</div><h3 style="color:#00ff00;">完了しました！</h3>`;
+                setTimeout(callback, 800);
+            }
+        }, 100);
+    }
 
     function setGachaMode(mode) {
         document.getElementById('gacha-view-0').style.display = mode === 0 ? 'block' : 'none';
@@ -797,38 +960,6 @@
             document.getElementById('particles-container').innerHTML = '';
             cutIn.classList.remove('play-star4', 'play-star5');
         }, 3200);
-    }
-
-    function createParticles(isStar4, isStar5) {
-        const container = document.getElementById('particles-container');
-        container.innerHTML = '';
-        const count = isStar5 ? 100 : (isStar4 ? 80 : 40);
-        for(let i=0; i<count; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            if(isStar5) {
-                p.style.width = Math.random() > 0.5 ? '4px' : '8px'; p.style.height = p.style.width;
-                p.style.background = Math.random() > 0.5 ? '#fff' : '#ff00ff';
-                p.style.boxShadow = '0 0 10px #fff';
-                p.style.left = '50%'; p.style.top = '50%';
-                p.style.setProperty('--dx', (Math.random() * 600 - 300) + 'px');
-                p.style.setProperty('--dy', (Math.random() * 600 - 300) + 'px');
-                p.style.animation = `explode ${Math.random() * 1.5 + 1}s ease-out forwards`;
-            } else if(isStar4) {
-                p.style.width = '6px'; p.style.height = '6px';
-                p.style.background = '#ffd700'; p.style.boxShadow = '0 0 8px #fff';
-                p.style.left = '50%'; p.style.top = '50%';
-                p.style.setProperty('--dx', (Math.random() * 400 - 200) + 'px');
-                p.style.setProperty('--dy', (Math.random() * 400 - 200) + 'px');
-                p.style.animation = `explode ${Math.random() * 1 + 1}s ease-out forwards`;
-            } else {
-                p.style.width = '10px'; p.style.height = '15px';
-                p.style.background = '#ffb7c5'; p.style.borderRadius = '50% 0 50% 50%';
-                p.style.left = Math.random() * 100 + 'vw'; p.style.top = '-20px';
-                p.style.animation = `fall ${Math.random() * 2 + 1.5}s linear forwards`;
-            }
-            container.appendChild(p);
-        }
     }
 
     function showGachaResults(rollCounts, leveledUpIds, totalTimes, rarityCounts, oldPower, newPower) {
@@ -1050,12 +1181,17 @@
         if(ptEl && state.startTime) ptEl.innerText = formatTime(Date.now() - state.startTime);
     }, 1000);
 
+    // 【新規】超豪華版 X（Twitter）シェア機能
     function shareToX() {
         let pwr = calcPower().total;
         let gain = Math.floor(state.maxGain || 0);
-        let rate = document.getElementById('stat-collection').innerText.split(' ')[2] || "(0%)";
+        let collectedCount = Object.keys(state.inv).length;
+        let totalCards = typeof cardData !== 'undefined' ? cardData.length : 460;
+        let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
+        let playtime = document.getElementById('stat-playtime').innerText;
         
-        let text = `【ヤオヨロクリッカー】\n観測者：${state.playerName}\n総合神力：${Math.floor(pwr).toLocaleString()}\n最大一撃：${gain.toLocaleString()} 霊貨\n図鑑完成度：${rate}\n\n#ヤオヨロクリッカー\nhttps://sky-ciel.github.io/YaoyoroClicker/`;
+        let text = `【ヤオヨロクリッカー】\n📜 観測者：${state.playerName}\n⚔️ 総合神力：${Math.floor(pwr).toLocaleString()}\n💥 最大一撃：${gain.toLocaleString()} 霊貨\n📚 図鑑完成度：${collectedCount} / ${totalCards} (${collectionRate}%)\n⏱️ プレイ時間：${playtime}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
+        
         let url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank');
     }
@@ -1064,6 +1200,7 @@
         if(confirm("本当に世界を初期化しますか？")) {
             if(confirm("この操作は絶対に取り消せません。今まで集めた神々もすべて失われます。本当によろしいですか？")) {
                 if(confirm("神々との絆がすべて失われます。最終確認です。消去しますか？")) {
+                    localStorage.removeItem('yaoyoro_secure_v7');
                     localStorage.removeItem('yaoyoro_secure_v6');
                     localStorage.removeItem('yaoyoro_secure_v5');
                     localStorage.removeItem('yaoyoro_secure_v4');
@@ -1190,6 +1327,12 @@
         }
         
         document.getElementById('page-info').innerText = `${curPage + 1} / ${maxP}`;
+
+        // オート観測ボタンの表示更新
+        let autoBtn = document.getElementById('auto-click-btn');
+        if (autoBtn && autoClickRemaining <= 0) {
+            autoBtn.innerHTML = `▶️ オート観測 <span style="font-weight:normal;">(${3 - state.autoClickUses}/3)</span>`;
+        }
     }
 
     function changeScreen(id, el) {
