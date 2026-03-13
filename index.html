@@ -11,17 +11,28 @@
             --fire: #ff4500; --water: #1e90ff; --earth: #cd853f; --sky: #00ffff; --evil: #ba55d3;
         }
         
+        /* PC・スマホ両対応の中央寄せレイアウト */
         html, body {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            width: 100%; height: 100%; margin: 0; padding: 0;
+            background: #000; /* PC版の外側の背景 */
+            display: flex; justify-content: center; align-items: center;
             overflow: hidden; touch-action: none; overscroll-behavior: none;
-            background: var(--urushi); color: #f0e6d2; font-family: 'Noto Serif JP', serif; margin: 0;
-            background-image: radial-gradient(circle at 50% 50%, rgba(212,175,55,0.06) 0%, transparent 60%);
+            font-family: 'Noto Serif JP', serif;
         }
+
+        #game-container {
+            width: 100%; max-width: 500px; height: 100%;
+            position: relative; background: var(--urushi); color: #f0e6d2;
+            background-image: radial-gradient(circle at 50% 50%, rgba(212,175,55,0.06) 0%, transparent 70%);
+            box-shadow: 0 0 30px rgba(212,175,55,0.1);
+            overflow: hidden;
+        }
+
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; }
 
         @keyframes critShake { 0%,100%{transform:translate(0,0);} 25%{transform:translate(4px,4px);} 75%{transform:translate(-4px,4px);} }
         .crit-active { animation: critShake 0.1s both; }
-        .crit-flash { position: fixed; inset: 0; background: rgba(255, 69, 0, 0.2); z-index: 100; opacity: 0; pointer-events: none; transition: 0.1s; }
+        .crit-flash { position: absolute; inset: 0; background: rgba(255, 69, 0, 0.2); z-index: 100; opacity: 0; pointer-events: none; transition: 0.1s; }
         .crit-flash.show { opacity: 1; }
 
         #header { 
@@ -31,13 +42,13 @@
         }
         .val { color: var(--gold); font-weight: 900; text-shadow: 0 0 5px rgba(212,175,55,0.4); font-family: sans-serif; }
 
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 15px 90px; opacity: 0; }
+        .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 15px 90px; opacity: 0; overflow-y: auto; touch-action: pan-y; }
         .screen.active { display: flex; animation: fadeIn 0.4s forwards; }
         @keyframes fadeIn { from { opacity: 0; filter: sepia(1); } to { opacity: 1; filter: sepia(0); } }
 
-        #main-btn-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
+        #main-btn-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40vh; }
         #main-btn { 
-            width: 170px; height: 170px; border-radius: 50%; background: radial-gradient(circle, #3a0a0a, #000); 
+            width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #3a0a0a, #000); 
             border: 3px solid var(--gold); color: var(--gold); font-size: 1.4rem; font-weight: bold;
             box-shadow: 0 10px 20px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.4); outline: none; text-shadow: 0 0 10px var(--gold);
         }
@@ -50,29 +61,42 @@
         .dyn-btn { width: 100%; background: linear-gradient(45deg, var(--syu), #000); font-size: 1.1rem; padding: 15px; margin-top: 10px; border-color: var(--gold); color: #fff; text-shadow: 0 0 5px var(--gold); transition: 0.2s;}
         .dyn-btn:disabled { filter: grayscale(1); opacity: 0.3; border-color: #555; }
 
-        /* 3Dガチャ・確定カットイン演出 */
-        #summon-scene { display: none; position: fixed; inset: 0; background: radial-gradient(circle, #2a0a0a, #000); z-index: 5000; align-items: center; justify-content: center; perspective: 1000px; overflow: hidden; }
+        /* ★4・★5 分岐ガチャ演出 */
+        #summon-scene { display: none; position: absolute; inset: 0; background: radial-gradient(circle, #2a0a0a, #000); z-index: 5000; align-items: center; justify-content: center; perspective: 1000px; overflow: hidden; }
+        #summon-scene.scene-star5 { background: #000; } /* ★5はブラックアウト */
         
         .anim-torii { font-size: 8rem; opacity: 0; filter: drop-shadow(0 0 20px var(--syu)); }
         .anim-torii.play-normal { animation: toriiGlow 2.5s forwards; }
-        .anim-torii.play-hot { animation: toriiHot 2.5s forwards; }
+        .anim-torii.play-star4 { animation: toriiHot4 2.5s forwards; }
+        .anim-torii.play-star5 { animation: toriiHot5 2.5s forwards; filter: drop-shadow(0 0 20px #ba55d3); }
+        
         @keyframes toriiGlow { 0% { transform: scale(0.5); opacity: 0; } 30% { opacity: 1; } 100% { transform: scale(1.5); opacity: 0; filter: drop-shadow(0 0 50px var(--syu)); } }
-        @keyframes toriiHot { 
+        @keyframes toriiHot4 { 
             0% { transform: scale(0.5); opacity: 0; filter: drop-shadow(0 0 20px #ff0000); } 
             20% { opacity: 1; filter: drop-shadow(0 0 50px #ff00ff); transform: scale(0.8) rotate(2deg); }
             40% { filter: drop-shadow(0 0 80px #00ffff); transform: scale(0.9) rotate(-2deg); }
             50% { transform: scale(1.0) rotate(0deg); }
             100% { transform: scale(2.0); opacity: 0; filter: drop-shadow(0 0 150px #ffffff); } 
         }
+        @keyframes toriiHot5 { 
+            0% { transform: scale(0.5); opacity: 0; filter: drop-shadow(0 0 20px #8a2be2); } 
+            20% { opacity: 1; filter: drop-shadow(0 0 80px #d4af37); transform: scale(0.8) rotate(-3deg); }
+            40% { filter: drop-shadow(0 0 120px #ff00ff); transform: scale(0.9) rotate(3deg); }
+            50% { transform: scale(1.0) rotate(0deg); }
+            100% { transform: scale(2.5); opacity: 0; filter: drop-shadow(0 0 200px #ffffff); } 
+        }
 
+        /* カットインの分岐 */
         .cut-in { 
             display: none; position: absolute; top: 45%; left: 0; width: 100%; 
-            background: rgba(166, 46, 46, 0.9); color: #fff; font-size: 3rem; font-weight: 900; 
-            text-align: center; padding: 15px 0; z-index: 5500; text-shadow: 0 0 20px #fff; 
+            color: #fff; font-size: 3rem; font-weight: 900; text-align: center; padding: 15px 0; z-index: 5500; 
             border-top: 4px solid var(--gold); border-bottom: 4px solid var(--gold); transform: scaleY(0); 
         }
-        .cut-in.play { display: block; animation: cutInAnim 1.8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+        .cut-in.play-star4 { display: block; background: rgba(166, 46, 46, 0.9); text-shadow: 0 0 20px #fff; animation: cutInAnim 1.8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+        .cut-in.play-star5 { display: block; background: linear-gradient(90deg, transparent, rgba(148,0,211,0.9), rgba(212,175,55,0.9), rgba(148,0,211,0.9), transparent); text-shadow: 0 0 20px #ffd700, 0 0 40px #ff00ff; animation: cutInAnim5 2.0s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+        
         @keyframes cutInAnim { 0% { transform: scaleY(0) skewX(-20deg); opacity: 0; } 10% { transform: scaleY(1) skewX(0deg); opacity: 1; } 80% { transform: scaleY(1) skewX(0deg); opacity: 1; } 100% { transform: scaleY(0) skewX(20deg); opacity: 0; } }
+        @keyframes cutInAnim5 { 0% { transform: scaleY(0) scaleX(1.5); opacity: 0; } 10% { transform: scaleY(1) scaleX(1); opacity: 1; filter: brightness(2); } 80% { transform: scaleY(1) scaleX(1); opacity: 1; } 100% { transform: scaleY(0) scaleX(2); opacity: 0; } }
 
         .anim-card { position: absolute; width: 120px; height: 168px; background: linear-gradient(135deg, #fff, var(--gold), #fff); border: 4px solid #fff; border-radius: 8px; opacity: 0; box-shadow: 0 0 50px 20px rgba(212,175,55,0.8); }
         .anim-card.play { animation: cardShoot 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s forwards; }
@@ -86,7 +110,7 @@
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         @keyframes explode { 0% { transform: scale(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; } }
 
-        /* 魔導書（属性とレアリティ完全反映） */
+        /* 魔導書 */
         .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; flex: 1; align-content: start; margin-top: 10px; }
         .file-slot { 
             aspect-ratio: 1/1.4; border-radius: 8px; position: relative; 
@@ -95,26 +119,19 @@
         }
         .file-slot.empty { opacity: 0.15; border-style: dashed; }
         
-        /* 属性背景グラデーション */
-        .bg-fire { background: linear-gradient(135deg, rgba(230,57,70,0.4), #0d0505); }
-        .bg-water { background: linear-gradient(135deg, rgba(69,123,157,0.4), #0d0505); }
-        .bg-earth { background: linear-gradient(135deg, rgba(139,69,19,0.4), #0d0505); }
-        .bg-sky { background: linear-gradient(135deg, rgba(0,180,216,0.4), #0d0505); }
-        .bg-evil { background: linear-gradient(135deg, rgba(148,0,211,0.4), #0d0505); }
+        .bg-fire { background: linear-gradient(135deg, rgba(230,57,70,0.5), #0d0505); }
+        .bg-water { background: linear-gradient(135deg, rgba(69,123,157,0.5), #0d0505); }
+        .bg-earth { background: linear-gradient(135deg, rgba(139,69,19,0.5), #0d0505); }
+        .bg-sky { background: linear-gradient(135deg, rgba(0,180,216,0.5), #0d0505); }
+        .bg-evil { background: linear-gradient(135deg, rgba(148,0,211,0.5), #0d0505); }
 
-        .attr-icon { position: absolute; top: 2px; left: 4px; font-size: 0.75rem; text-shadow: 0 0 3px #000; z-index: 5; }
+        .attr-icon { position: absolute; top: 2px; left: 4px; font-size: 0.8rem; text-shadow: 0 0 3px #000; z-index: 5; }
 
-        /* レア度枠＆★4以上の豪華オーラ */
         .rare-1 { border-color: #8b4513; }
         .rare-2 { border-color: #a9a9a9; }
         .rare-3 { border-color: #e0e0e0; box-shadow: inset 0 0 10px rgba(255,255,255,0.2); }
-        .rare-4 { 
-            border-color: #ffaa00; 
-            box-shadow: 0 0 15px #ff8c00, inset 0 0 20px rgba(255,140,0,0.6); 
-            animation: goldPulse 1.5s infinite alternate; 
-        }
+        .rare-4 { border-color: #ffaa00; box-shadow: 0 0 15px #ff8c00, inset 0 0 20px rgba(255,140,0,0.6); animation: goldPulse 1.5s infinite alternate; }
         @keyframes goldPulse { from { box-shadow: 0 0 5px #ffaa00, inset 0 0 15px rgba(255,170,0,0.4); } to { box-shadow: 0 0 20px #ffaa00, inset 0 0 30px rgba(255,170,0,0.8); } }
-        
         .rare-5 { border: 2px solid transparent; border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff00ff) 1; animation: rainbow 2s infinite linear; }
         @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
@@ -122,12 +139,11 @@
         .slot-stars { font-size: 0.45rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 2px; text-shadow: 0 0 2px #000; z-index: 5;}
         .file-lvl { position: absolute; top: -1px; right: -1px; background: rgba(0,0,0,0.8); color: #fff; font-size: 0.6rem; padding: 2px 6px; font-weight: 900; border-bottom-left-radius: 8px; border: 1px solid var(--gold); border-top:none; border-right:none; z-index: 5;}
 
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; }
+        .overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; }
         .modal { width: 100%; max-height: 85vh; background: var(--urushi); padding: 20px; border-radius: 12px; border: 2px solid var(--gold); overflow-y: auto; touch-action: pan-y; text-align: left; }
         
         .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; }
         
-        /* 昇華（全連動） */
         .lvl-up-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); color: #ff00ff; font-weight: 900; font-size: 0.9rem; text-shadow: 0 0 5px #fff, 0 0 10px #ff00ff; animation: popUp 1s forwards; pointer-events: none; z-index: 10; white-space: nowrap;}
         @keyframes popUp { 0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -80%) scale(1); opacity: 0; } }
 
@@ -144,106 +160,108 @@
         @keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-70px) scale(1.3); } }
     </style>
 </head>
-<body id="body">
+<body>
 
-<div class="crit-flash" id="crit-flash"></div>
+<div id="game-container">
+    <div class="crit-flash" id="crit-flash"></div>
 
-<div id="summon-scene">
-    <div id="particles-container"></div>
-    <div class="anim-torii" id="anim-torii">⛩️</div>
-    <div class="cut-in" id="cut-in">神威顕現</div>
-    <div class="anim-card" id="anim-card"></div>
-    <div class="flash-bang" id="flash-bang"></div>
-</div>
-
-<div id="header">
-    <div>霊貨 <span id="coins" class="val">0</span></div>
-    <div>神結晶 <span id="rare-coins" class="val">0</span></div>
-</div>
-
-<div id="screen-home" class="screen active">
-    <div id="main-btn-container"><button id="main-btn">観測する</button></div>
-    <div style="width:100%; background:rgba(20,10,10,0.8); padding:15px; border-radius:10px; border:1px solid #444; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); text-align:left; margin-bottom:10px;">
-        <h4 style="margin:0 0 8px; color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:5px;">観測の加護</h4>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.9rem;">
-            <div>効率: <span id="st-p" class="val">1</span></div>
-            <div>倍率: <span id="st-m" class="val">1.0</span>x</div>
-            <div>会心: <span id="st-c" class="val">0</span>%</div>
-            <div>結晶: <span id="st-r" class="val">0.5</span>%</div>
-        </div>
-        <div style="margin-top:8px; border-top:1px dashed #555; padding-top:8px; font-size:0.85rem; color:#aaa;">
-            深淵倍率: <span id="st-e" class="val" style="color:var(--evil);">1.0</span>x
-        </div>
+    <div id="summon-scene">
+        <div id="particles-container"></div>
+        <div class="anim-torii" id="anim-torii">⛩️</div>
+        <div class="cut-in" id="cut-in"></div>
+        <div class="anim-card" id="anim-card"></div>
+        <div class="flash-bang" id="flash-bang"></div>
     </div>
-</div>
 
-<div id="screen-gacha" class="screen">
-    <div style="display:flex; gap:10px; margin-bottom:15px; width:100%;">
-        <button onclick="setGachaMode(0)" id="tab-g0" style="flex:1; background:var(--gold); color:#000; border:none;">通常招集</button>
-        <button onclick="setGachaMode(1)" id="tab-g1" style="flex:1; background:#222; color:var(--gold); border:1px solid var(--gold);">稀代招集</button>
+    <div id="header">
+        <div>霊貨 <span id="coins" class="val">0</span></div>
+        <div>神結晶 <span id="rare-coins" class="val">0</span></div>
     </div>
-    
-    <div class="gacha-box" id="gacha-view-0">
-        <div style="font-size:4.5rem; filter:drop-shadow(0 0 15px var(--syu)); margin-bottom:10px;">⛩️</div>
-        <h3 style="color:var(--gold); margin:0 0 5px;">通常招集</h3>
-        <p style="font-size:0.75rem; color:#ccc; margin-bottom:20px;">1回 100 霊貨（★1〜★4）</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <button class="btn-outline" onclick="triggerDynamicSummon('normal', 1)">1連</button>
-            <button onclick="triggerDynamicSummon('normal', 10)">10連</button>
-        </div>
-        <button id="dyn-btn-normal" class="dyn-btn" onclick="triggerDynamicSummon('normal', 'max')">全力招集 (0連)</button>
-    </div>
-    
-    <div class="gacha-box" id="gacha-view-1" style="display:none; border-color:var(--evil);">
-        <div style="font-size:4.5rem; filter:drop-shadow(0 0 20px var(--evil)); margin-bottom:10px;">✨</div>
-        <h3 style="color:var(--gold); margin:0 0 5px;">稀代招集</h3>
-        <p style="font-size:0.75rem; color:#ccc; margin-bottom:20px;">1回 5 神結晶（★3〜★5確定）</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <button class="btn-outline" onclick="triggerDynamicSummon('rare', 1)">1連</button>
-            <button style="background:var(--evil); border-color:#ff00ff;" onclick="triggerDynamicSummon('rare', 10)">10連</button>
-        </div>
-        <button id="dyn-btn-rare" class="dyn-btn" style="background:linear-gradient(45deg, #4b0082, #000);" onclick="triggerDynamicSummon('rare', 'max')">全力招集 (0回)</button>
-    </div>
-</div>
 
-<div id="screen-zukan" class="screen">
-    <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:10px;">
-        <button class="btn-outline" onclick="toggleZukanMode()" id="zukan-toggle-btn" style="padding:8px; font-size:0.7rem;">全表示中</button>
-        <div id="page-info" style="color:var(--gold); font-weight:bold;">其の壱</div>
-        <div style="display:flex; gap:5px;">
-            <button class="btn-outline" onclick="changePage(-1)" style="padding:8px;">前</button>
-            <button class="btn-outline" onclick="changePage(1)" style="padding:8px;">次</button>
+    <div id="screen-home" class="screen active">
+        <div id="main-btn-container"><button id="main-btn">観測する</button></div>
+        <div style="width:100%; background:rgba(20,10,10,0.8); padding:15px; border-radius:10px; border:1px solid #444; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); text-align:left; margin-bottom:10px;">
+            <h4 style="margin:0 0 8px; color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:5px;">観測の加護</h4>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.9rem;">
+                <div>効率: <span id="st-p" class="val">1</span></div>
+                <div>倍率: <span id="st-m" class="val">1.0</span>x</div>
+                <div>会心: <span id="st-c" class="val">0</span>%</div>
+                <div>結晶: <span id="st-r" class="val">0.5</span>%</div>
+            </div>
+            <div style="margin-top:8px; border-top:1px dashed #555; padding-top:8px; font-size:0.85rem; color:#aaa;">
+                深淵倍率: <span id="st-e" class="val" style="color:var(--evil);">1.0</span>x
+            </div>
         </div>
     </div>
-    <div id="book-container" class="book-grid"></div>
-</div>
 
-<div id="screen-profile" class="screen">
-    <h3 style="color:var(--gold); text-shadow:0 0 5px var(--gold);">観測者の歩み</h3>
-    <div style="width:100%; background:rgba(30,10,10,0.6); padding:20px; border-radius:10px; border:1px solid var(--gold); text-align:left; line-height:2;">
-        <div>累計獲得霊貨: <span id="stat-total-coins" class="val">0</span></div>
-        <div>総観測回数: <span id="stat-total-clicks" class="val">0</span></div>
-        <div>総招集回数: <span id="stat-total-gacha" class="val">0</span></div>
-        <div>神結晶発見数: <span id="stat-total-rare" class="val">0</span></div>
+    <div id="screen-gacha" class="screen">
+        <div style="display:flex; gap:10px; margin-bottom:15px; width:100%;">
+            <button onclick="setGachaMode(0)" id="tab-g0" style="flex:1; background:var(--gold); color:#000; border:none;">通常招集</button>
+            <button onclick="setGachaMode(1)" id="tab-g1" style="flex:1; background:#222; color:var(--gold); border:1px solid var(--gold);">稀代招集</button>
+        </div>
+        
+        <div class="gacha-box" id="gacha-view-0">
+            <div style="font-size:4.5rem; filter:drop-shadow(0 0 15px var(--syu)); margin-bottom:10px;">⛩️</div>
+            <h3 style="color:var(--gold); margin:0 0 5px;">通常招集</h3>
+            <p style="font-size:0.75rem; color:#ccc; margin-bottom:20px;">1回 100 霊貨（★1〜★4）</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <button class="btn-outline" onclick="triggerDynamicSummon('normal', 1)">1連</button>
+                <button onclick="triggerDynamicSummon('normal', 10)">10連</button>
+            </div>
+            <button id="dyn-btn-normal" class="dyn-btn" onclick="triggerDynamicSummon('normal', 'max')">全力招集 (0連)</button>
+        </div>
+        
+        <div class="gacha-box" id="gacha-view-1" style="display:none; border-color:var(--evil);">
+            <div style="font-size:4.5rem; filter:drop-shadow(0 0 20px var(--evil)); margin-bottom:10px;">✨</div>
+            <h3 style="color:var(--gold); margin:0 0 5px;">稀代招集</h3>
+            <p style="font-size:0.75rem; color:#ccc; margin-bottom:20px;">1回 5 神結晶（★3〜★5確定）</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <button class="btn-outline" onclick="triggerDynamicSummon('rare', 1)">1連</button>
+                <button style="background:var(--evil); border-color:#ff00ff;" onclick="triggerDynamicSummon('rare', 10)">10連</button>
+            </div>
+            <button id="dyn-btn-rare" class="dyn-btn" style="background:linear-gradient(45deg, #4b0082, #000);" onclick="triggerDynamicSummon('rare', 'max')">全力招集 (0回)</button>
+        </div>
     </div>
-</div>
 
-<div id="menu-bar">
-    <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
-    <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
-    <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
-    <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
-</div>
+    <div id="screen-zukan" class="screen">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:10px;">
+            <button class="btn-outline" onclick="toggleZukanMode()" id="zukan-toggle-btn" style="padding:8px; font-size:0.7rem;">全表示中</button>
+            <div id="page-info" style="color:var(--gold); font-weight:bold;">其の壱</div>
+            <div style="display:flex; gap:5px;">
+                <button class="btn-outline" onclick="changePage(-1)" style="padding:8px;">前</button>
+                <button class="btn-outline" onclick="changePage(1)" style="padding:8px;">次</button>
+            </div>
+        </div>
+        <div id="book-container" class="book-grid"></div>
+    </div>
 
-<div id="detail-overlay" class="overlay" onclick="this.style.display='none'">
-    <div class="modal" id="detail-content" onclick="event.stopPropagation()"></div>
-</div>
+    <div id="screen-profile" class="screen">
+        <h3 style="color:var(--gold); text-shadow:0 0 5px var(--gold);">観測者の歩み</h3>
+        <div style="width:100%; background:rgba(30,10,10,0.6); padding:20px; border-radius:10px; border:1px solid var(--gold); text-align:left; line-height:2;">
+            <div>累計獲得霊貨: <span id="stat-total-coins" class="val">0</span></div>
+            <div>総観測回数: <span id="stat-total-clicks" class="val">0</span></div>
+            <div>総招集回数: <span id="stat-total-gacha" class="val">0</span></div>
+            <div>神結晶発見数: <span id="stat-total-rare" class="val">0</span></div>
+        </div>
+    </div>
 
-<div id="gacha-result-overlay" class="overlay" onclick="closeGachaResult()">
-    <div class="modal" onclick="event.stopPropagation()" id="gacha-result-modal">
-        <h3 style="color:var(--gold); text-align:center; border-bottom:1px solid #444; padding-bottom:10px;">招集結果</h3>
-        <div id="gacha-res-list" class="res-grid"></div>
-        <button onclick="closeGachaResult()" style="width:100%; margin-top:20px;">閉じる</button>
+    <div id="menu-bar">
+        <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
+        <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
+        <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
+        <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
+    </div>
+
+    <div id="detail-overlay" class="overlay" onclick="this.style.display='none'">
+        <div class="modal" id="detail-content" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <div id="gacha-result-overlay" class="overlay" onclick="closeGachaResult()">
+        <div class="modal" onclick="event.stopPropagation()" id="gacha-result-modal">
+            <h3 style="color:var(--gold); text-align:center; border-bottom:1px solid #444; padding-bottom:10px;">招集結果</h3>
+            <div id="gacha-res-list" class="res-grid"></div>
+            <button onclick="closeGachaResult()" style="width:100%; margin-top:20px;">閉じる</button>
+        </div>
     </div>
 </div>
 
@@ -254,9 +272,9 @@
 
     function getAttrIcon(attr) { return { fire: "🔥", water: "💧", earth: "⛰️", sky: "🪽", evil: "🔯" }[attr] || ""; }
 
-    function save() { localStorage.setItem('yaoyoro_max_v4', JSON.stringify(state)); }
+    function save() { localStorage.setItem('yaoyoro_max_v5', JSON.stringify(state)); }
     function load() {
-        const s = localStorage.getItem('yaoyoro_max_v4');
+        const s = localStorage.getItem('yaoyoro_max_v5');
         if (s) {
             let loaded = JSON.parse(s);
             state = { ...state, ...loaded };
@@ -269,7 +287,7 @@
     }
 
     function updateStats() {
-        let p = 1, m = 1.0, c = 0, r = 0.005, e = 1.0;
+        let p = 1, m = 1.0, c = 0, raw_r = 0.005, e = 1.0;
         for (let id in state.inv) {
             const card = cardData.find(x => x.id == id);
             if(!card) continue;
@@ -278,10 +296,12 @@
             if (card.attr === "fire") p += card.bonus * l;
             if (card.attr === "water") m += card.bonus * l;
             if (card.attr === "earth") c += card.bonus * l;
-            if (card.attr === "sky") r += card.bonus * l;
+            if (card.attr === "sky") raw_r += card.bonus * l;
             if (card.attr === "evil") e *= (1 + card.bonus * l);
         }
-        state.stats = { p, m, c, r, e };
+        // 神結晶確率の数学的収束（絶対に50%を超えない）
+        let final_r = (raw_r * 0.5) / (raw_r + 0.5);
+        state.stats = { p, m, c, r: final_r, e };
     }
 
     const mainBtn = document.getElementById('main-btn');
@@ -291,10 +311,10 @@
         let isCrit = false;
         let critMulti = 5;
         
-        // 限界突破（100%超過分をダメージ倍率に加算）
+        // 限界突破システム（対数で緩やかに倍率化）
         if (cRate > 1.0) {
             isCrit = true;
-            critMulti = 5 + (cRate - 1.0) * 10;
+            critMulti = 5 + Math.log2(1 + (cRate - 1.0) * 5) * 3;
         } else {
             isCrit = Math.random() < cRate;
         }
@@ -309,20 +329,26 @@
         setTimeout(() => mainBtn.classList.remove('btn-pressed'), 50);
 
         if(isCrit) {
-            document.body.classList.remove('crit-active');
-            void document.body.offsetWidth;
-            document.body.classList.add('crit-active');
+            const container = document.getElementById('game-container');
+            container.classList.remove('crit-active');
+            void container.offsetWidth;
+            container.classList.add('crit-active');
             const flash = document.getElementById('crit-flash');
             flash.classList.add('show');
-            setTimeout(() => { document.body.classList.remove('crit-active'); flash.classList.remove('show'); }, 100);
+            setTimeout(() => { container.classList.remove('crit-active'); flash.classList.remove('show'); }, 100);
         }
+
+        // 座標補正（コンテナ内相対座標）
+        const rect = document.getElementById('game-container').getBoundingClientRect();
+        const relX = x - rect.left;
+        const relY = y - rect.top;
 
         const el = document.createElement('div');
         el.className = 'float-num';
         el.innerText = (isCrit ? (cRate > 1.0 ? "神会心!" : "会心!") : "") + "+" + Math.floor(gain).toLocaleString();
-        el.style.left = x + 'px'; el.style.top = y + 'px';
+        el.style.left = relX + 'px'; el.style.top = relY + 'px';
         if (isCrit) el.style.color = cRate > 1.0 ? "#ff00ff" : "#ff4500";
-        document.body.appendChild(el);
+        document.getElementById('game-container').appendChild(el);
         setTimeout(() => el.remove(), 600);
         
         updateDisplay(); save();
@@ -342,7 +368,8 @@
 
     function triggerDynamicSummon(type, amount) {
         let maxPulls = type === 'normal' ? Math.floor(state.coins / 100) : Math.floor(state.rareCoins / 5);
-        let pulls = amount === 'max' ? maxPulls : amount;
+        let safeMax = Math.min(100000, maxPulls); // クラッシュ防止の安全装置(10万連)
+        let pulls = amount === 'max' ? safeMax : amount;
         if(amount !== 'max' && pulls > maxPulls) return alert("お供え物が不足しています");
         if(pulls <= 0) return alert("お供え物が不足しています");
         processSummon(type, pulls);
@@ -353,10 +380,11 @@
         let curr = type === 'normal' ? 'coins' : 'rareCoins';
         
         let rollCounts = {};
-        let isHot = false;
+        let isStar4 = false;
+        let isStar5 = false;
         let displayCards = [];
 
-        // 超高速・期待値スキップアルゴリズム (1万連以上でもクラッシュしない)
+        // 超高速・期待値スキップアルゴリズム
         if (times <= 1000) {
             for(let i=0; i<times; i++) {
                 let roll = Math.random() * 100, rarity = 1;
@@ -368,19 +396,19 @@
                 let pool = cardData.filter(x => x.rare === rarity);
                 let card = pool.length ? pool[Math.floor(Math.random()*pool.length)] : cardData[0];
                 rollCounts[card.id] = (rollCounts[card.id] || 0) + 1;
-                if (card.rare >= 4 && Math.random() < 0.5) isHot = true;
+                if (card.rare === 4) isStar4 = true;
+                if (card.rare === 5) isStar5 = true;
                 if (displayCards.length < 100) displayCards.push(card);
             }
         } else {
-            let rates = type === 'normal' 
-                ? { 4: 0.000001, 3: 0.03, 2: 0.20, 1: 0.769999 } 
-                : { 5: 0.02, 4: 0.13, 3: 0.85 };
+            let rates = type === 'normal' ? { 4: 0.000001, 3: 0.03, 2: 0.20, 1: 0.769999 } : { 5: 0.02, 4: 0.13, 3: 0.85 };
             for (let rare in rates) {
                 let expected = times * rates[rare];
                 let count = Math.floor(expected);
                 if (Math.random() < (expected - count)) count++;
                 if (count > 0) {
-                    if (rare >= 4) isHot = true;
+                    if (rare == 4) isStar4 = true;
+                    if (rare == 5) isStar5 = true;
                     let pool = cardData.filter(x => x.rare == rare);
                     if (pool.length === 0) pool = [cardData[0]];
                     let base = Math.floor(count / pool.length);
@@ -422,11 +450,19 @@
         const cutIn = document.getElementById('cut-in');
 
         scene.style.display = 'flex';
-        createParticles(isHot);
+        scene.className = isStar5 ? 'scene-star5' : '';
+        createParticles(isStar4, isStar5);
 
-        torii.className = isHot ? 'anim-torii play-hot' : 'anim-torii play-normal';
-        cutIn.classList.remove('play');
-        if(isHot) { setTimeout(() => { cutIn.classList.add('play'); }, 800); }
+        torii.className = isStar5 ? 'anim-torii play-star5' : (isStar4 ? 'anim-torii play-star4' : 'anim-torii play-normal');
+        cutIn.classList.remove('play-star4', 'play-star5');
+        
+        if(isStar5) { 
+            cutIn.innerText = "神格顕現"; 
+            setTimeout(() => { cutIn.classList.add('play-star5'); }, 800); 
+        } else if(isStar4) { 
+            cutIn.innerText = "神威顕現"; 
+            setTimeout(() => { cutIn.classList.add('play-star4'); }, 800); 
+        }
 
         card.classList.remove('play'); flash.classList.remove('play');
         void scene.offsetWidth; 
@@ -434,20 +470,31 @@
 
         setTimeout(() => {
             scene.style.display = 'none';
+            scene.className = '';
             showGachaResults(displayCards, leveledUpIds, times);
             document.getElementById('particles-container').innerHTML = '';
-            cutIn.classList.remove('play');
+            cutIn.classList.remove('play-star4', 'play-star5');
         }, 3200);
     }
 
-    function createParticles(isHot) {
+    function createParticles(isStar4, isStar5) {
         const container = document.getElementById('particles-container');
         container.innerHTML = '';
-        const count = isHot ? 80 : 40;
+        const count = isStar5 ? 100 : (isStar4 ? 80 : 40);
         for(let i=0; i<count; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
-            if(isHot) {
+            if(isStar5) {
+                // 宇宙・星屑
+                p.style.width = Math.random() > 0.5 ? '4px' : '8px'; p.style.height = p.style.width;
+                p.style.background = Math.random() > 0.5 ? '#fff' : '#ff00ff';
+                p.style.boxShadow = '0 0 10px #fff';
+                p.style.left = '50%'; p.style.top = '50%';
+                p.style.setProperty('--dx', (Math.random() * 600 - 300) + 'px');
+                p.style.setProperty('--dy', (Math.random() * 600 - 300) + 'px');
+                p.style.animation = `explode ${Math.random() * 1.5 + 1}s ease-out forwards`;
+            } else if(isStar4) {
+                // 金粉爆発
                 p.style.width = '6px'; p.style.height = '6px';
                 p.style.background = '#ffd700'; p.style.boxShadow = '0 0 8px #fff';
                 p.style.left = '50%'; p.style.top = '50%';
@@ -455,6 +502,7 @@
                 p.style.setProperty('--dy', (Math.random() * 400 - 200) + 'px');
                 p.style.animation = `explode ${Math.random() * 1 + 1}s ease-out forwards`;
             } else {
+                // 桜吹雪
                 p.style.width = '10px'; p.style.height = '15px';
                 p.style.background = '#ffb7c5'; p.style.borderRadius = '50% 0 50% 50%';
                 p.style.left = Math.random() * 100 + 'vw'; p.style.top = '-20px';
@@ -480,7 +528,7 @@
         });
 
         if(totalTimes > 100) {
-            displayHtml += `<div style="grid-column: 1 / -1; color: var(--gold); padding: 10px; font-size:0.8rem;">他 ${totalTimes - 100} 柱の神々を招集しました</div>`;
+            displayHtml += `<div style="grid-column: 1 / -1; color: var(--gold); padding: 10px; font-size:0.8rem; font-weight:bold;">他 ${Number(totalTimes - 100).toLocaleString()} 柱の神々を招集しました</div>`;
         }
 
         document.getElementById('gacha-res-list').innerHTML = displayHtml;
@@ -518,7 +566,7 @@
         const c = cardData.find(x => x.id == id);
         const info = state.inv[id] || { l: 0, c: 0 };
         const b = (c.bonus * (info.l || 1));
-        const bT = (c.attr === "earth" || c.attr === "sky") ? (b * 100).toFixed(2) + "%" : b.toFixed(2);
+        const bT = (c.attr === "earth" || c.attr === "sky") ? (b * 100).toFixed(2) + "%" : b.toLocaleString(undefined, {maximumFractionDigits:2});
         
         let tipsHtml = c.attr === "evil" ? `
             <div style="background:rgba(186,85,211,0.1); border:1px solid var(--evil); border-left:4px solid var(--evil); padding:12px; border-radius:4px; margin-top:15px; font-size:0.75rem; line-height:1.6;">
@@ -546,15 +594,14 @@
         document.getElementById('coins').innerText = Math.floor(state.coins).toLocaleString();
         document.getElementById('rare-coins').innerText = state.rareCoins.toLocaleString();
         document.getElementById('st-p').innerText = state.stats.p.toLocaleString();
-        document.getElementById('st-m').innerText = state.stats.m.toFixed(2);
+        document.getElementById('st-m').innerText = state.stats.m.toLocaleString(undefined, {maximumFractionDigits:2}) + "x";
         
-        // 会心率100%超え表記
-        let cText = (state.stats.c * 100).toFixed(1) + "%";
+        let cText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1}) + "%";
         if(state.stats.c > 1.0) cText += ' <span style="color:#ff00ff; font-size:0.7rem;">(限界突破)</span>';
         document.getElementById('st-c').innerHTML = cText;
         
-        document.getElementById('st-r').innerText = (state.stats.r * 100).toFixed(3);
-        document.getElementById('st-e').innerText = state.stats.e.toFixed(2);
+        document.getElementById('st-r').innerText = (state.stats.r * 100).toLocaleString(undefined, {maximumFractionDigits:3}) + "%";
+        document.getElementById('st-e').innerText = state.stats.e.toLocaleString(undefined, {maximumFractionDigits:2}) + "x";
         
         document.getElementById('stat-total-coins').innerText = Math.floor(state.totalCoins || 0).toLocaleString();
         document.getElementById('stat-total-clicks').innerText = (state.totalClicks || 0).toLocaleString();
@@ -562,12 +609,14 @@
         document.getElementById('stat-total-rare').innerText = (state.totalRare || 0).toLocaleString();
 
         let maxNorm = Math.floor(state.coins / 100);
+        let safeMaxNorm = Math.min(100000, maxNorm); // 安全装置
         let btnN = document.getElementById('dyn-btn-normal');
-        btnN.innerText = `全力招集 (${maxNorm.toLocaleString()}連)`; btnN.disabled = maxNorm === 0;
+        btnN.innerText = `限界全力招集 (${safeMaxNorm.toLocaleString()}連)`; btnN.disabled = safeMaxNorm === 0;
         
         let maxRare = Math.floor(state.rareCoins / 5);
+        let safeMaxRare = Math.min(100000, maxRare);
         let btnR = document.getElementById('dyn-btn-rare');
-        btnR.innerText = `全力招集 (${maxRare.toLocaleString()}回)`; btnR.disabled = maxRare === 0;
+        btnR.innerText = `限界全力招集 (${safeMaxRare.toLocaleString()}回)`; btnR.disabled = safeMaxRare === 0;
 
         let displayList = showAll ? cardData : cardData.filter(c => !!state.inv[c.id]);
 
@@ -593,7 +642,7 @@
         }
         
         let maxP = Math.max(1, Math.ceil(displayList.length / 9));
-        document.getElementById('page-info').innerText = `其の${['','壱','弐','参','肆','伍','陸','漆','捌','玖','拾'][curPage+1] || curPage+1}`;
+        document.getElementById('page-info').innerText = `其の${curPage+1} / ${maxP}`;
     }
 
     function changeScreen(id, el) {
