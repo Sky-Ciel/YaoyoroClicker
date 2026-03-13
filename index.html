@@ -26,7 +26,6 @@
             box-shadow: 0 0 40px rgba(212,175,55,0.1); overflow: hidden; z-index: 1;
         }
 
-        /* 画面内に常に舞う金箔 */
         #inner-particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         .inner-dust { position: absolute; background: #d4af37; border-radius: 50%; opacity: 0; animation: floatDust linear infinite; box-shadow: 0 0 6px #d4af37; }
         @keyframes floatDust { 0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; } }
@@ -92,8 +91,8 @@
         @keyframes explode { 0% { transform: scale(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; } }
 
         /* 魔導書・リザルト */
-        .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; flex: 1; align-content: start; margin-top: 10px; padding: 0 5px; }
-        .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; grid-auto-rows: min-content; align-items: start; }
+        .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; flex: 1; align-content: start; margin-top: 10px; padding: 0 10px; }
+        .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; grid-auto-rows: min-content; align-items: start; }
         
         .file-slot { border-radius: 8px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: #111; border: 2px solid #333; transition: transform 0.2s; overflow: hidden; padding: 8px 2px; }
         .book-grid .file-slot { aspect-ratio: 1/1.4; }
@@ -145,7 +144,7 @@
         .suck-anim { animation: suckIn 0.5s ease-in forwards; pointer-events: none; }
         @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
 
-        /* プロフィール豪華装飾 */
+        /* プロフィール装飾 */
         .profile-card { background: rgba(30,10,10,0.8); padding: 15px 12px; border-radius: 10px; border: 1px solid var(--gold); text-align: left; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); margin-bottom: 15px; width: 100%; box-sizing: border-box;}
         .profile-title { margin-top: 0; margin-bottom: 12px; color: var(--gold); font-size: 1.1rem; text-align: center; border-bottom: 1px dashed var(--syu); padding-bottom: 8px; }
         .progress-wrap { width: 100%; height: 10px; background: #222; border-radius: 5px; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
@@ -156,12 +155,11 @@
         .stat-label { color: #aaa; font-size: 0.65rem; margin-bottom: 3px; }
         .stat-val { font-weight: bold; color: #fff; font-size: 0.95rem; word-break: break-all; }
 
-        .badge-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; text-align: center; margin-bottom: 8px; }
+        .badge-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; text-align: center; margin-bottom: 8px; }
         .badge-box { background: #222; border-radius: 4px; padding: 4px 1px; border: 1px solid #444; display: flex; flex-direction: column; align-items: center;}
         .badge-title { font-size: 0.6rem; margin-bottom: 2px; display: block; white-space: nowrap; }
         .badge-val { color: #fff; font-size: 0.75rem; font-weight: bold; }
 
-        /* X (Twitter) シェアボタン */
         .btn-share { background: #1DA1F2; color: #fff; border: 1px solid #fff; border-radius: 8px; font-weight: bold; padding: 12px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; width: 80%; box-shadow: 0 4px 10px rgba(29,161,242,0.4); transition: 0.2s; }
         .btn-share:hover { filter: brightness(1.2); transform: translateY(-2px); }
 
@@ -178,6 +176,8 @@
     </style>
 </head>
 <body>
+
+<script src="cards.js"></script>
 
 <div id="game-container">
     <div id="inner-particles"></div>
@@ -199,7 +199,7 @@
 
     <div id="screen-home" class="screen active">
         <div id="main-btn-container"><button id="main-btn">観測する</button></div>
-        <div style="width:100%; background:rgba(20,8,8,0.85); padding:15px; border-radius:10px; border:1px solid #553333; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); text-align:left; margin-bottom:10px; width: calc(100% - 20px);">
+        <div style="width:calc(100% - 20px); background:rgba(20,8,8,0.85); padding:15px; border-radius:10px; border:1px solid #553333; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); text-align:left; margin-bottom:10px;">
             <h4 style="margin:0 0 8px; color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:5px;">観測の加護</h4>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85rem;">
                 <div>効率: <span id="st-p" class="val">1</span></div>
@@ -462,7 +462,6 @@
         const step = (timestamp) => {
             if (!startTime) startTime = timestamp;
             const progress = Math.min((timestamp - startTime) / duration, 1);
-            // ease-out キュービック
             const easeProgress = 1 - Math.pow(1 - progress, 3); 
             const current = Math.floor(start + (end - start) * easeProgress);
             obj.innerText = current.toLocaleString();
@@ -494,7 +493,21 @@
     function initGame() {
         if (typeof cardData === 'undefined') {
             setTimeout(() => {
-                if (typeof cardData !== 'undefined') proceedInit();
+                if (typeof cardData !== 'undefined') {
+                    proceedInit();
+                } else {
+                    document.getElementById('game-container').innerHTML = `
+                        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#120404; color:#ff4500; text-align:center; padding:20px; box-sizing:border-box;">
+                            <div style="font-size:4rem; margin-bottom:15px; filter:drop-shadow(0 0 10px #ff0000);">⚠️</div>
+                            <h2 style="color:var(--gold); margin-bottom:10px;">神々の記録が途切れています</h2>
+                            <p style="color:#ccc; font-size:0.85rem; line-height:1.6;">
+                                <code>cards.js</code> の読み込みに失敗しました。<br><br>
+                                ファイルの最後が <code>];</code> で終わっているか<br>
+                                途中で文字が切れていないか確認してください。
+                            </p>
+                        </div>
+                    `;
+                }
             }, 500);
         } else {
             proceedInit();
@@ -527,7 +540,6 @@
         updateStats(); updateDisplay();
     }
 
-    // 神力計算ロジックの切り出し
     function calcPower() {
         let total = 0, fire = 0, water = 0, earth = 0, sky = 0, evil = 0;
         if (typeof cardData !== 'undefined') {
@@ -661,7 +673,7 @@
         let curr = type === 'normal' ? 'coins' : 'rareCoins';
         if (type === 'normal') state.spentCoins += cost; else state.spentRareCoins += cost;
         
-        let oldPower = calcPower().total; // ガチャ前の神力
+        let oldPower = calcPower().total;
 
         let rollCounts = {};
         let rarityCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
@@ -751,7 +763,7 @@
         
         state[curr] -= cost; state.totalGacha += times;
 
-        let newPower = calcPower().total; // ガチャ後の神力
+        let newPower = calcPower().total;
 
         const scene = document.getElementById('summon-scene');
         const torii = document.getElementById('anim-torii');
@@ -785,6 +797,38 @@
             document.getElementById('particles-container').innerHTML = '';
             cutIn.classList.remove('play-star4', 'play-star5');
         }, 3200);
+    }
+
+    function createParticles(isStar4, isStar5) {
+        const container = document.getElementById('particles-container');
+        container.innerHTML = '';
+        const count = isStar5 ? 100 : (isStar4 ? 80 : 40);
+        for(let i=0; i<count; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            if(isStar5) {
+                p.style.width = Math.random() > 0.5 ? '4px' : '8px'; p.style.height = p.style.width;
+                p.style.background = Math.random() > 0.5 ? '#fff' : '#ff00ff';
+                p.style.boxShadow = '0 0 10px #fff';
+                p.style.left = '50%'; p.style.top = '50%';
+                p.style.setProperty('--dx', (Math.random() * 600 - 300) + 'px');
+                p.style.setProperty('--dy', (Math.random() * 600 - 300) + 'px');
+                p.style.animation = `explode ${Math.random() * 1.5 + 1}s ease-out forwards`;
+            } else if(isStar4) {
+                p.style.width = '6px'; p.style.height = '6px';
+                p.style.background = '#ffd700'; p.style.boxShadow = '0 0 8px #fff';
+                p.style.left = '50%'; p.style.top = '50%';
+                p.style.setProperty('--dx', (Math.random() * 400 - 200) + 'px');
+                p.style.setProperty('--dy', (Math.random() * 400 - 200) + 'px');
+                p.style.animation = `explode ${Math.random() * 1 + 1}s ease-out forwards`;
+            } else {
+                p.style.width = '10px'; p.style.height = '15px';
+                p.style.background = '#ffb7c5'; p.style.borderRadius = '50% 0 50% 50%';
+                p.style.left = Math.random() * 100 + 'vw'; p.style.top = '-20px';
+                p.style.animation = `fall ${Math.random() * 2 + 1.5}s linear forwards`;
+            }
+            container.appendChild(p);
+        }
     }
 
     function showGachaResults(rollCounts, leveledUpIds, totalTimes, rarityCounts, oldPower, newPower) {
@@ -829,7 +873,6 @@
         document.getElementById('gacha-res-list').style.display = 'grid';
         document.getElementById('gacha-res-summary').style.display = 'none';
 
-        // 神力上昇バナーの制御
         let diff = newPower - oldPower;
         let banner = document.getElementById('gacha-power-banner');
         if (diff > 0) {
@@ -837,7 +880,6 @@
             document.getElementById('res-power-val').innerText = Math.floor(oldPower).toLocaleString();
             document.getElementById('res-power-diff').innerText = "0";
             
-            // 少し遅らせてからアニメーション開始
             setTimeout(() => {
                 animateValue('res-power-val', oldPower, newPower, 1200);
                 animateValue('res-power-diff', 0, diff, 1200);
@@ -998,7 +1040,7 @@
         let s = totalSec % 60;
         
         let res = "";
-        res += `${d}日 `;
+        if (d > 0) res += `${d}日 `;
         res += `${h.toString().padStart(2, '0')}時間 ${m.toString().padStart(2, '0')}分 ${s.toString().padStart(2, '0')}秒`;
         return res;
     }
@@ -1008,7 +1050,6 @@
         if(ptEl && state.startTime) ptEl.innerText = formatTime(Date.now() - state.startTime);
     }, 1000);
 
-    // Xシェア機能
     function shareToX() {
         let pwr = calcPower().total;
         let gain = Math.floor(state.maxGain || 0);
@@ -1158,7 +1199,6 @@
         el.classList.add('active');
     }
     
-    // JSのロードが確実に終わってから発火する
     window.addEventListener('load', initGame);
 </script>
 </body>
