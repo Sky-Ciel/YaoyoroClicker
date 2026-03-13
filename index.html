@@ -26,7 +26,6 @@
             box-shadow: 0 0 40px rgba(212,175,55,0.1); overflow: hidden; z-index: 1;
         }
 
-        /* 画面内に常に舞う金箔 */
         #inner-particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         .inner-dust { position: absolute; background: #d4af37; border-radius: 50%; opacity: 0; animation: floatDust linear infinite; box-shadow: 0 0 6px #d4af37; }
         @keyframes floatDust { 0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; } }
@@ -116,7 +115,6 @@
         .rare-4 { border-color: #ffaa00; box-shadow: 0 0 15px #ff8c00, inset 0 0 20px rgba(255,140,0,0.6); animation: goldPulse 1.5s infinite alternate; }
         @keyframes goldPulse { from { box-shadow: 0 0 5px #ffaa00, inset 0 0 15px rgba(255,170,0,0.4); } to { box-shadow: 0 0 20px #ffaa00, inset 0 0 30px rgba(255,170,0,0.8); } }
         
-        /* ★5 虹色アニメーション完全復活版（境界線の干渉回避） */
         .rare-5 { animation: rainbowBorder 2s infinite linear; background: linear-gradient(135deg, #2a0a2a, #0b0b0e); }
         @keyframes rainbowBorder { 
             0% { border-color: #ff0000; box-shadow: 0 0 15px #ff0000, inset 0 0 15px #ff0000; } 
@@ -146,21 +144,19 @@
         .suck-anim { animation: suckIn 0.5s ease-in forwards; pointer-events: none; }
         @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
 
-        /* プロフィール豪華装飾（レイアウト大幅改善） */
-        .profile-card { background: rgba(30,10,10,0.8); padding: 20px; border-radius: 12px; border: 1px solid var(--gold); text-align: left; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); margin-bottom: 20px; width: 100%; box-sizing: border-box;}
-        .profile-title { margin-top: 0; margin-bottom: 12px; color: var(--gold); font-size: 1.1rem; text-align: center; border-bottom: 1px dashed var(--syu); padding-bottom: 8px; }
-        .progress-wrap { width: 100%; height: 12px; background: #222; border-radius: 6px; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
+        /* プロフィール豪華装飾 */
+        .profile-card { background: rgba(30,10,10,0.8); padding: 25px 20px; border-radius: 12px; border: 1px solid var(--gold); text-align: left; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); margin-bottom: 20px; width: 100%; box-sizing: border-box;}
+        .profile-title { margin-top: 0; margin-bottom: 15px; color: var(--gold); font-size: 1.2rem; text-align: center; border-bottom: 1px dashed var(--syu); padding-bottom: 10px; }
+        .progress-wrap { width: 100%; height: 12px; background: #222; border-radius: 6px; margin: 15px 0; overflow: hidden; border: 1px solid #444; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--syu), var(--gold)); transition: width 0.5s ease-out; }
-        
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; line-height: 1.4; }
-        .stat-box { background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; border: 1px solid #444; display: flex; flex-direction: column; justify-content: center; }
-        .stat-label { color: #aaa; font-size: 0.65rem; margin-bottom: 3px; }
-        .stat-val { font-weight: bold; color: #fff; font-size: 0.95rem; word-break: break-all; }
-        
-        .badge-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; text-align: center; margin-bottom: 8px; }
-        .badge-box { background: #222; border-radius: 4px; padding: 4px 2px; border: 1px solid #444; }
-        .badge-title { font-size: 0.65rem; margin-bottom: 2px; display: block; }
-        .badge-val { color: #fff; font-size: 0.75rem; font-weight: bold; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 0.9rem; line-height: 1.6; }
+        .stat-grid div { background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; border: 1px solid #444; }
+        .stat-label { color: #aaa; font-size: 0.75rem; margin-bottom: 2px; }
+
+        .badge-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; text-align: center; margin-bottom: 10px; }
+        .badge-box { background: #222; border-radius: 6px; padding: 6px 2px; border: 1px solid #444; display: flex; flex-direction: column; align-items: center;}
+        .badge-title { font-size: 0.65rem; margin-bottom: 4px; display: block; }
+        .badge-val { color: #fff; font-size: 0.8rem; font-weight: bold; }
 
         #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
         .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; cursor: pointer; }
@@ -290,36 +286,48 @@
     </div>
 
     <div id="screen-profile" class="screen" style="padding-left:15px; padding-right:15px;">
-        <h3 style="color:var(--gold); text-shadow:0 0 5px var(--gold); margin-top:0;">観測者の歩み</h3>
         
+        <div class="profile-card" style="text-align:center; background: linear-gradient(135deg, rgba(50,20,20,0.9), rgba(20,5,5,0.9)); border-color:#ff4500; box-shadow: 0 0 20px rgba(255,69,0,0.3);">
+            <div style="font-size:0.85rem; color:#aaa; margin-bottom:5px;">観測者の総合神力</div>
+            <div id="stat-total-power" style="font-size:2.8rem; font-weight:900; color:#ff4500; text-shadow:0 0 15px #ff4500, 0 0 30px #ff0000; font-family:serif;">0</div>
+            
+            <div class="badge-grid" style="margin-top:15px;">
+                <div class="badge-box"><span class="badge-title">🔥 火の神力</span><span id="power-fire" class="badge-val">0</span></div>
+                <div class="badge-box"><span class="badge-title">💧 水の神力</span><span id="power-water" class="badge-val">0</span></div>
+                <div class="badge-box"><span class="badge-title">⛰️ 地の神力</span><span id="power-earth" class="badge-val">0</span></div>
+                <div class="badge-box"><span class="badge-title">🪽 空の神力</span><span id="power-sky" class="badge-val">0</span></div>
+                <div class="badge-box"><span class="badge-title">🔯 悪の神力</span><span id="power-evil" class="badge-val">0</span></div>
+            </div>
+        </div>
+
         <div class="profile-card">
             <h4 class="profile-title">観測者情報</h4>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
-                <b style="font-size:1.2rem; color:#fff; text-shadow: 0 0 5px #fff;" id="display-player-name">名もなき観測者</b>
-                <button onclick="changePlayerName()" style="padding:4px 8px; font-size:0.6rem;" class="btn-outline">名前変更</button>
+                <b style="font-size:1.3rem; color:#fff; text-shadow: 0 0 5px #fff;" id="display-player-name">名もなき観測者</b>
+                <button onclick="changePlayerName()" style="padding:6px 12px; font-size:0.7rem;" class="btn-outline">名前変更</button>
             </div>
-            <div style="color:#aaa; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center;">
+            <div style="color:#aaa; font-size:0.85rem; display:flex; justify-content:space-between; align-items:center;">
                 <span>総プレイ時間</span>
-                <span id="stat-playtime" style="color:var(--gold); font-weight:bold; font-family: monospace; font-size:0.9rem;">00日 00時間 00分 00秒</span>
+                <span id="stat-playtime" style="color:var(--gold); font-weight:bold; font-family: monospace; font-size:0.9rem;">0日 00時間 00分 00秒</span>
             </div>
         </div>
 
         <div class="profile-card">
             <h4 class="profile-title">図鑑収集録</h4>
-            <div style="font-size:0.95rem; font-weight:bold; color:var(--gold); display:flex; justify-content:space-between;">
+            <div style="font-size:1rem; font-weight:bold; color:var(--gold); display:flex; justify-content:space-between;">
                 <span>全体の完成度</span>
-                <span id="stat-collection">0 / 0 (0%)</span>
+                <span id="stat-collection" class="val">0 / 0 (0%)</span>
             </div>
             <div class="progress-wrap"><div class="progress-bar" id="stat-prog" style="width:0%"></div></div>
             
-            <div class="badge-grid">
+            <div class="badge-grid" style="margin-top:15px;">
                 <div class="badge-box"><span class="badge-title">🔥 火</span><span id="col-fire" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title">💧 水</span><span id="col-water" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title">⛰️ 地</span><span id="col-earth" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title">🪽 空</span><span id="col-sky" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title">🔯 悪</span><span id="col-evil" class="badge-val">0/0</span></div>
             </div>
-            <div class="badge-grid">
+            <div class="badge-grid" style="margin-top:10px;">
                 <div class="badge-box"><span class="badge-title" style="color:#ff00ff;">★5</span><span id="col-r5" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title" style="color:#ffaa00;">★4</span><span id="col-r4" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title" style="color:#e0e0e0;">★3</span><span id="col-r3" class="badge-val">0/0</span></div>
@@ -331,9 +339,9 @@
         <div class="profile-card">
             <h4 class="profile-title">観測の軌跡</h4>
             <div class="stat-grid">
-                <div class="stat-box" style="grid-column: span 2; background: rgba(255,0,255,0.1); border-color:#ff00ff;">
+                <div class="stat-box" style="grid-column: span 2; background: rgba(255,0,255,0.1); border-color:#ff00ff; text-align:center;">
                     <div class="stat-label" style="color:#ff00ff;">最大一撃獲得量 (Max Gain)</div>
-                    <div id="stat-max-gain" class="stat-val" style="color:#ff00ff; font-size:1.2rem; text-align:center;">0</div>
+                    <div id="stat-max-gain" class="stat-val" style="color:#ff00ff; font-size:1.4rem;">0</div>
                 </div>
 
                 <div class="stat-box"><div class="stat-label">最高到達 効率</div><div id="stat-max-p" class="stat-val">1</div></div>
@@ -355,13 +363,20 @@
                 <div class="stat-box"><div class="stat-label">招集消費 結晶</div><div id="stat-spent-rare" class="stat-val" style="color:#aaa;">0</div></div>
 
                 <div class="stat-box"><div class="stat-label">★5 招集回数</div><div id="stat-total-star5" class="stat-val" style="color:#ff00ff;">0</div></div>
-                <div class="stat-box"><div class="stat-label">実績結晶発見率</div><div id="stat-real-rare" class="stat-val">0%</div></div>
+                <div class="stat-box"><div class="stat-label">実績結晶発見</div><div id="stat-real-rare" class="stat-val">0%</div></div>
             </div>
         </div>
         
         <div style="margin-top:10px; margin-bottom:20px; text-align:center; width: 100%;">
-            <button onclick="resetGame()" style="background:#4a0000; border-color:#ff0000; font-size:0.7rem; padding:10px; width:80%;">世界を初期化する</button>
+            <button onclick="resetGame()" style="background:#4a0000; border-color:#ff0000; font-size:0.8rem; padding:15px; width:80%;">世界を初期化する</button>
         </div>
+    </div>
+
+    <div id="menu-bar">
+        <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
+        <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
+        <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
+        <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
     </div>
 
     <div id="detail-overlay" class="overlay" onclick="closeOverlay('detail-overlay')">
@@ -376,17 +391,10 @@
             <button id="gacha-action-btn" onclick="handleGachaAction(event)" style="width:100%; margin-top:20px;">確認</button>
         </div>
     </div>
-    
-    <div id="menu-bar">
-        <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
-        <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
-        <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
-        <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
-    </div>
 </div>
 
-<script src="cards.js"></script>
 <script>
+    // === グローバル変数 ===
     let state = { 
         coins: 0, rareCoins: 0, inv: {}, invOrder: [], 
         stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0, critPower: 2.0 }, 
@@ -399,6 +407,7 @@
     let gachaSummaryHtml = "";
     let isShowingSummary = true;
     
+    // 背景エフェクト
     function initInnerParticles() {
         const bg = document.getElementById('inner-particles');
         for(let i=0; i<15; i++) {
@@ -415,6 +424,7 @@
 
     function getAttrIcon(attr) { return { fire: "🔥", water: "💧", earth: "⛰️", sky: "🪽", evil: "🔯" }[attr] || ""; }
 
+    // アニメーション付きオーバーレイ
     function openOverlay(id) {
         let el = document.getElementById(id);
         el.style.display = 'flex';
@@ -427,6 +437,7 @@
         setTimeout(() => { el.style.display = 'none'; }, 250);
     }
 
+    // 暗号化セーブ機能
     function generateHash(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -440,9 +451,10 @@
         const json = JSON.stringify(state);
         const encoded = btoa(unescape(encodeURIComponent(json)));
         const hash = generateHash(encoded);
-        localStorage.setItem('yaoyoro_secure_v4', JSON.stringify({p: encoded, h: hash}));
+        localStorage.setItem('yaoyoro_secure_v5', JSON.stringify({p: encoded, h: hash}));
     }
     
+    // ゲーム初期化
     function initGame() {
         if (typeof cardData === 'undefined' || cardData.length === 0) {
             alert("【重大なエラー】神々のデータが読み込めません。cards.js が同じフォルダにあるか確認してください。");
@@ -451,7 +463,7 @@
 
         initInnerParticles();
 
-        const saved = localStorage.getItem('yaoyoro_secure_v4');
+        const saved = localStorage.getItem('yaoyoro_secure_v5');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
@@ -459,8 +471,8 @@
                     state = { ...state, ...JSON.parse(decodeURIComponent(escape(atob(data.p)))) };
                 } else { console.error("セーブデータ改ざん検知"); }
             } catch(e) { console.error("Load Error", e); }
-        } else if (localStorage.getItem('yaoyoro_secure_v2')) {
-            const data = JSON.parse(localStorage.getItem('yaoyoro_secure_v2'));
+        } else if (localStorage.getItem('yaoyoro_secure_v4')) {
+            const data = JSON.parse(localStorage.getItem('yaoyoro_secure_v4'));
             if (generateHash(data.p) === data.h) state = { ...state, ...JSON.parse(decodeURIComponent(escape(atob(data.p)))) };
         }
         
@@ -476,16 +488,27 @@
 
     function updateStats() {
         let p = 1, m = 1.0, c = 0, raw_r = 0.005, evilBonusSum = 0;
+        let power = { total: 0, fire: 0, water: 0, earth: 0, sky: 0, evil: 0 };
+
         for (let id in state.inv) {
             const card = cardData.find(x => x.id == id);
             if(!card) continue;
             const l = state.inv[id].l;
+            const count = state.inv[id].c;
+            
+            // 神力の計算式：(レア度^2) * 10 * (1 + レベル) + 所持端数
+            let pwr = (card.rare * card.rare) * 10 * (1 + l) + count;
+            power[card.attr] += pwr;
+            power.total += pwr;
+
             if (l === 0) continue;
-            if (card.attr === "fire") p += card.bonus * l;
-            if (card.attr === "water") m += card.bonus * l;
-            if (card.attr === "earth") c += card.bonus * l;
-            if (card.attr === "sky") raw_r += card.bonus * l;
-            if (card.attr === "evil") evilBonusSum += card.bonus * l; 
+            let bonus = card.bonus !== undefined ? card.bonus : 0.001;
+
+            if (card.attr === "fire") p += bonus * l;
+            if (card.attr === "water") m += bonus * l;
+            if (card.attr === "earth") c += bonus * l;
+            if (card.attr === "sky") raw_r += bonus * l;
+            if (card.attr === "evil") evilBonusSum += bonus * l;
         }
         
         let e = 1.0 + evilBonusSum;
@@ -497,6 +520,16 @@
         if (m > state.maxM) state.maxM = m;
 
         state.stats = { p, m, c, r: final_r, e, critPower: critPow };
+
+        // 神力表示の更新
+        if(document.getElementById('stat-total-power')) {
+            document.getElementById('stat-total-power').innerText = Math.floor(power.total).toLocaleString();
+            document.getElementById('power-fire').innerText = Math.floor(power.fire).toLocaleString();
+            document.getElementById('power-water').innerText = Math.floor(power.water).toLocaleString();
+            document.getElementById('power-earth').innerText = Math.floor(power.earth).toLocaleString();
+            document.getElementById('power-sky').innerText = Math.floor(power.sky).toLocaleString();
+            document.getElementById('power-evil').innerText = Math.floor(power.evil).toLocaleString();
+        }
     }
 
     const mainBtn = document.getElementById('main-btn');
@@ -930,6 +963,7 @@
         if(confirm("本当に世界を初期化しますか？")) {
             if(confirm("この操作は絶対に取り消せません。今まで集めた神々もすべて失われます。本当によろしいですか？")) {
                 if(confirm("神々との絆がすべて失われます。最終確認です。消去しますか？")) {
+                    localStorage.removeItem('yaoyoro_secure_v5');
                     localStorage.removeItem('yaoyoro_secure_v4');
                     localStorage.removeItem('yaoyoro_secure_v3');
                     localStorage.removeItem('yaoyoro_secure_v2');
