@@ -18,6 +18,17 @@
             font-family: 'Noto Serif JP', serif;
         }
 
+        /* 【新規】PC表示時のサイド広告枠（スマホでは非表示） */
+        .side-ad { display: none; }
+        @media (min-width: 1150px) {
+            .side-ad {
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                width: 300px; height: 600px; background: #111; border: 2px dashed #444; color: #666;
+                margin: 0 20px; border-radius: 10px; font-weight: bold; font-family: sans-serif;
+                box-shadow: inset 0 0 20px rgba(0,0,0,0.8); z-index: 0;
+            }
+        }
+
         #game-container {
             width: 100%; max-width: 500px; height: 100%; position: relative; 
             background: var(--urushi); color: #f0e6d2;
@@ -94,6 +105,7 @@
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         @keyframes explode { 0% { transform: scale(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; } }
 
+        /* 魔導書・リザルト */
         .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; flex: 1; align-content: start; margin-top: 10px; padding: 0 10px; }
         .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; grid-auto-rows: min-content; align-items: start; }
         
@@ -143,7 +155,6 @@
         
         .lvl-up-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); color: #ff00ff; font-weight: 900; font-size: 0.9rem; text-shadow: 0 0 5px #fff, 0 0 10px #ff00ff; animation: popUp 1s forwards; pointer-events: none; z-index: 10; white-space: nowrap;}
         @keyframes popUp { 0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -80%) scale(1); opacity: 0; } }
-
         .suck-anim { animation: suckIn 0.5s ease-in forwards; pointer-events: none; }
         @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
 
@@ -162,8 +173,14 @@
         .badge-title { font-size: 0.6rem; margin-bottom: 2px; display: block; white-space: nowrap; }
         .badge-val { color: #fff; font-size: 0.75rem; font-weight: bold; }
 
-        .btn-share { background: #1DA1F2; color: #fff; border: 1px solid #fff; border-radius: 8px; font-weight: bold; padding: 12px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; width: 80%; box-shadow: 0 4px 10px rgba(29,161,242,0.4); transition: 0.2s; }
+        /* シェアボタン群 */
+        .btn-share { background: #1DA1F2; color: #fff; border: 1px solid #fff; border-radius: 8px; font-weight: bold; padding: 12px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; width: 80%; box-shadow: 0 4px 10px rgba(29,161,242,0.4); transition: 0.2s; margin-bottom: 10px; }
         .btn-share:hover { filter: brightness(1.2); transform: translateY(-2px); }
+        
+        /* 【新規】投げ銭ボタン */
+        .btn-donate { background: linear-gradient(45deg, #ff8c00, #e65c00); color: #fff; border: 2px solid #ffd700; border-radius: 8px; padding: 12px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; width: 80%; box-shadow: 0 4px 10px rgba(255,140,0,0.4); transition: 0.2s; margin-bottom: 20px;}
+        .btn-donate:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
         .btn-ad { background: linear-gradient(45deg, #008000, #004d00); color: #fff; border: 2px solid #00ff00; border-radius: 8px; padding: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 0 15px rgba(0,255,0,0.4); width: 100%; transition: 0.2s;}
         .btn-ad:hover { filter: brightness(1.2); }
 
@@ -181,7 +198,9 @@
 </head>
 <body>
 
-<script src="cards.js"></script>
+<div id="side-ad-left" class="side-ad">
+    PC用 広告枠<br><span style="font-size:0.8rem; font-weight:normal; margin-top:10px;">(300x600)<br>※スマホでは非表示</span>
+</div>
 
 <div id="game-container">
     <div id="inner-particles"></div>
@@ -386,8 +405,12 @@
             </div>
         </div>
         
-        <div style="margin-top:5px; margin-bottom:15px; text-align:center; width: 100%;">
+        <div style="margin-top:5px; text-align:center; width: 100%;">
             <a href="javascript:void(0)" onclick="shareToX()" class="btn-share">𝕏 で記録をシェアする</a>
+        </div>
+        
+        <div style="text-align:center; width: 100%;">
+            <a href="https://ofuse.me/" target="_blank" class="btn-donate">☕ 開発者にコーヒーを奢る</a>
         </div>
 
         <div style="margin-bottom:30px; text-align:center; width: 100%;">
@@ -428,6 +451,11 @@
     </div>
 </div>
 
+<div id="side-ad-right" class="side-ad">
+    PC用 広告枠<br><span style="font-size:0.8rem; font-weight:normal; margin-top:10px;">(300x600)<br>※スマホでは非表示</span>
+</div>
+
+<script src="cards.js"></script>
 <script>
     let state = { 
         coins: 0, rareCoins: 0, inv: {}, invOrder: [], 
@@ -555,7 +583,6 @@
         if(!state.startTime) state.startTime = Date.now();
         if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
 
-        // 朝6時リセット
         let now = new Date();
         let offsetDate = new Date(now.getTime() - 6 * 3600 * 1000).toDateString();
         if(state.lastAutoDate !== offsetDate) {
@@ -765,7 +792,7 @@
             <div style="font-size:3rem; margin-bottom:10px;">▶️</div>
             <h3 style="color:var(--gold); margin-top:0;">神々の代行（オート観測）</h3>
             <p style="font-size:0.85rem; color:#ccc; line-height:1.6; margin-bottom:20px;">
-                動画広告を見ることで、<b style="color:#ff4500;">1分間・毎秒2回</b>の<br>自動観測を発動します。<br>
+                広告を見ることで、<b style="color:#ff4500;">1分間・毎秒2回</b>の<br>自動観測を発動します。<br>
                 <span style="font-size:0.7rem;">（本日残り: ${3 - state.autoClickUses}回）</span>
             </p>
             <button class="btn-ad" onclick="startAutoClick()">広告を見て発動する</button>
@@ -803,7 +830,7 @@
 
     function playDummyAd(callback) {
         document.getElementById('ad-content').innerHTML = `
-            <h4 style="color:#fff;">動画広告を再生中...</h4>
+            <h4 style="color:#fff;">広告を読み込み中...</h4>
             <div style="width:100%; background:#222; height:10px; border-radius:5px; overflow:hidden; margin:20px 0;">
                 <div id="dummy-ad-bar" style="width:0%; height:100%; background:#00ff00; transition: width 0.1s linear;"></div>
             </div>
