@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --gold: #d4af37; --urushi: #1a0a0a; --syu: #a62e2e; 
+            --gold: #d4af37; --urushi: #0a0505; --syu: #a62e2e; 
             --fire: #ff4500; --water: #1e90ff; --earth: #cd853f; --sky: #00ffff; --evil: #ba55d3;
         }
         
@@ -15,20 +15,17 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             overflow: hidden; touch-action: none; overscroll-behavior: none;
             background: var(--urushi); color: #f0e6d2; font-family: 'Noto Serif JP', serif; margin: 0;
-            background-image: radial-gradient(circle at 20% 30%, rgba(212,175,55,0.08) 0%, transparent 40%),
-                              radial-gradient(circle at 80% 80%, rgba(166,46,46,0.15) 0%, transparent 40%);
+            background-image: radial-gradient(circle at 50% 50%, rgba(212,175,55,0.05) 0%, transparent 60%);
         }
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; }
 
-        /* クリティカル揺れ */
         @keyframes critShake { 0%,100%{transform:translate(0,0);} 25%{transform:translate(4px,4px);} 75%{transform:translate(-4px,4px);} }
         .crit-active { animation: critShake 0.1s both; }
         .crit-flash { position: fixed; inset: 0; background: rgba(255, 69, 0, 0.2); z-index: 100; opacity: 0; pointer-events: none; transition: 0.1s; }
         .crit-flash.show { opacity: 1; }
 
-        /* ヘッダー */
         #header { 
-            background: linear-gradient(180deg, #2a0a0a, #1a0a0a); padding: 15px 10px; 
+            background: linear-gradient(180deg, #1f0a0a, #0a0505); padding: 15px 10px; 
             border-bottom: 2px solid var(--gold); position: absolute; top:0; width:100%; z-index:1000;
             display: flex; justify-content: space-around; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
@@ -38,28 +35,24 @@
         .screen.active { display: flex; animation: fadeIn 0.4s forwards; }
         @keyframes fadeIn { from { opacity: 0; filter: sepia(1); } to { opacity: 1; filter: sepia(0); } }
 
-        /* メインボタン */
         #main-btn-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
         #main-btn { 
-            width: 170px; height: 170px; border-radius: 50%; background: radial-gradient(circle, #4a1a1a, #000); 
+            width: 170px; height: 170px; border-radius: 50%; background: radial-gradient(circle, #3a0a0a, #000); 
             border: 3px solid var(--gold); color: var(--gold); font-size: 1.4rem; font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.4); outline: none;
-            text-shadow: 0 0 10px var(--gold);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.4); outline: none; text-shadow: 0 0 10px var(--gold);
         }
         .btn-pressed { transform: scale(0.92) translateY(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.8) !important; filter: brightness(1.3); }
 
-        /* ガチャ画面装飾 */
         .gacha-box {
-            width: 100%; background: linear-gradient(135deg, #2a0a0a, #1a0a0a); border: 2px solid var(--gold); 
+            width: 100%; background: linear-gradient(135deg, #1a0505, #0a0505); border: 2px solid var(--gold); 
             border-radius: 12px; padding: 20px 15px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.6); margin: auto;
         }
         .dyn-btn { width: 100%; background: linear-gradient(45deg, var(--syu), #000); font-size: 1.1rem; padding: 15px; margin-top: 10px; border-color: var(--gold); color: #fff; text-shadow: 0 0 5px var(--gold); }
         .dyn-btn:disabled { filter: grayscale(1); opacity: 0.5; border-color: #555; }
 
-        /* 3Dガチャ・パーティクル演出 */
+        /* 3Dガチャ・確定カットイン演出 */
         #summon-scene { display: none; position: fixed; inset: 0; background: radial-gradient(circle, #2a0a0a, #000); z-index: 5000; align-items: center; justify-content: center; perspective: 1000px; overflow: hidden; }
         
-        /* 確定演出の鳥居（虹色に発光して揺れる） */
         .anim-torii { font-size: 8rem; opacity: 0; filter: drop-shadow(0 0 20px var(--syu)); }
         .anim-torii.play-normal { animation: toriiGlow 2.5s forwards; }
         .anim-torii.play-hot { animation: toriiHot 2.5s forwards; }
@@ -68,17 +61,21 @@
             0% { transform: scale(0.5); opacity: 0; filter: drop-shadow(0 0 20px #ff0000); } 
             20% { opacity: 1; filter: drop-shadow(0 0 50px #ff00ff); transform: scale(0.8) rotate(2deg); }
             40% { filter: drop-shadow(0 0 80px #00ffff); transform: scale(0.9) rotate(-2deg); }
-            60% { filter: drop-shadow(0 0 100px #ffff00); transform: scale(1.0) rotate(2deg); }
-            100% { transform: scale(1.8); opacity: 0; filter: drop-shadow(0 0 150px #ffffff); } 
+            50% { transform: scale(1.0) rotate(0deg); }
+            100% { transform: scale(2.0); opacity: 0; filter: drop-shadow(0 0 150px #ffffff); } 
         }
 
-        /* 3Dカード（極限発光） */
-        .anim-card { 
-            position: absolute; width: 120px; height: 168px; 
-            background: linear-gradient(135deg, #fff, var(--gold), #fff); 
-            border: 4px solid #fff; border-radius: 8px; opacity: 0; 
-            box-shadow: 0 0 50px 20px rgba(212,175,55,0.8);
+        /* 神威顕現カットイン */
+        .cut-in { 
+            display: none; position: absolute; top: 45%; left: 0; width: 100%; 
+            background: rgba(166, 46, 46, 0.9); color: #fff; font-size: 3rem; font-weight: 900; 
+            text-align: center; padding: 15px 0; z-index: 5500; text-shadow: 0 0 20px #fff; 
+            border-top: 4px solid var(--gold); border-bottom: 4px solid var(--gold); transform: scaleY(0); 
         }
+        .cut-in.play { display: block; animation: cutInAnim 1.8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+        @keyframes cutInAnim { 0% { transform: scaleY(0) skewX(-20deg); opacity: 0; } 10% { transform: scaleY(1) skewX(0deg); opacity: 1; } 80% { transform: scaleY(1) skewX(0deg); opacity: 1; } 100% { transform: scaleY(0) skewX(20deg); opacity: 0; } }
+
+        .anim-card { position: absolute; width: 120px; height: 168px; background: linear-gradient(135deg, #fff, var(--gold), #fff); border: 4px solid #fff; border-radius: 8px; opacity: 0; box-shadow: 0 0 50px 20px rgba(212,175,55,0.8); }
         .anim-card.play { animation: cardShoot 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s forwards; }
         @keyframes cardShoot { 0% { transform: scale(0.1) translateZ(-500px) rotateY(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: scale(2.2) translateZ(200px) rotateY(1440deg); opacity: 1; } }
         
@@ -86,7 +83,6 @@
         .flash-bang.play { animation: flash 0.8s 2.2s forwards; }
         @keyframes flash { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
 
-        /* パーティクル（桜吹雪 / 金粉） */
         .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0.8; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         @keyframes explode { 0% { transform: scale(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; } }
@@ -96,42 +92,44 @@
         .file-slot { 
             aspect-ratio: 1/1.4; border-radius: 8px; position: relative; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: #111; border: 2px solid #333; transition: transform 0.2s;
+            background: #111; border: 2px solid #333; transition: transform 0.2s; overflow: hidden;
         }
         .file-slot.empty { opacity: 0.15; border-style: dashed; }
-        .file-slot.owned { background: linear-gradient(135deg, #2a0a0a, #1a0a0a); }
         
-        .attr-fire { box-shadow: inset 0 0 20px rgba(255,69,0,0.3); }
-        .attr-water { box-shadow: inset 0 0 20px rgba(30,144,255,0.3); }
-        .attr-earth { box-shadow: inset 0 0 20px rgba(205,133,63,0.3); }
-        .attr-sky { box-shadow: inset 0 0 20px rgba(0,255,255,0.3); }
-        .attr-evil { box-shadow: inset 0 0 20px rgba(186,85,211,0.3); }
+        /* 属性背景グラデーション */
+        .bg-fire { background: linear-gradient(135deg, rgba(230,57,70,0.5), #111); }
+        .bg-water { background: linear-gradient(135deg, rgba(69,123,157,0.5), #111); }
+        .bg-earth { background: linear-gradient(135deg, rgba(139,69,19,0.5), #111); }
+        .bg-sky { background: linear-gradient(135deg, rgba(135,206,235,0.4), #111); }
+        .bg-evil { background: linear-gradient(135deg, rgba(148,0,211,0.4), #111); }
 
+        .attr-icon { position: absolute; top: 2px; left: 4px; font-size: 0.75rem; text-shadow: 0 0 3px #000; }
+
+        /* レア度枠 */
         .rare-1 { border-color: #8b4513; }
         .rare-2 { border-color: #a9a9a9; }
         .rare-3 { border-color: #ffd700; }
-        .rare-4 { border-color: #ff8c00; box-shadow: 0 0 10px #ff8c00, inset 0 0 20px rgba(255,140,0,0.4); }
-        .rare-5 { border: 2px solid transparent; border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff00ff) 1; animation: rainbow 2s infinite linear; background: linear-gradient(135deg, #2a0a2a, #0b0b0e); }
+        .rare-4 { border-color: #ff8c00; box-shadow: inset 0 0 20px rgba(255,140,0,0.4); }
+        .rare-5 { border: 2px solid transparent; border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff00ff) 1; animation: rainbow 2s infinite linear; }
         @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
         .slot-name { font-size: 0.55rem; width: 95%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; font-weight: bold; text-shadow: 1px 1px 2px #000; }
         .slot-stars { font-size: 0.45rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 2px; text-shadow: 0 0 2px #000; }
         .file-lvl { position: absolute; top: -1px; right: -1px; background: rgba(0,0,0,0.8); color: #fff; font-size: 0.6rem; padding: 2px 6px; font-weight: 900; border-bottom-left-radius: 8px; border: 1px solid var(--gold); border-top:none; border-right:none;}
 
-        /* オーバーレイ */
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; }
         .modal { width: 100%; max-height: 85vh; background: var(--urushi); padding: 20px; border-radius: 12px; border: 2px solid var(--gold); overflow-y: auto; touch-action: pan-y; text-align: left; }
         
         .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; }
-        .res-item { padding: 3px; border-radius: 4px; text-align: center; }
         
+        /* 昇華（全連動） */
         .lvl-up-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); color: #ff00ff; font-weight: 900; font-size: 0.9rem; text-shadow: 0 0 5px #fff, 0 0 10px #ff00ff; animation: popUp 1s forwards; pointer-events: none; z-index: 10; white-space: nowrap;}
         @keyframes popUp { 0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -80%) scale(1); opacity: 0; } }
 
         .suck-anim { animation: suckIn 0.6s ease-in forwards; pointer-events: none; }
         @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
 
-        #menu-bar { position: absolute; bottom: 0; width: 100%; background: #0a0505; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+        #menu-bar { position: absolute; bottom: 0; width: 100%; background: #050202; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
         .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; }
         .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
 
@@ -148,6 +146,7 @@
 <div id="summon-scene">
     <div id="particles-container"></div>
     <div class="anim-torii" id="anim-torii">⛩️</div>
+    <div class="cut-in" id="cut-in">神威顕現</div>
     <div class="anim-card" id="anim-card"></div>
     <div class="flash-bang" id="flash-bang"></div>
 </div>
@@ -159,7 +158,7 @@
 
 <div id="screen-home" class="screen active">
     <div id="main-btn-container"><button id="main-btn">観測する</button></div>
-    <div style="width:100%; background:rgba(26,10,10,0.8); padding:15px; border-radius:10px; border:1px solid var(--syu); box-shadow: inset 0 0 10px rgba(0,0,0,0.8); text-align:left; margin-bottom:10px;">
+    <div style="width:100%; background:rgba(20,10,10,0.8); padding:15px; border-radius:10px; border:1px solid #444; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); text-align:left; margin-bottom:10px;">
         <h4 style="margin:0 0 8px; color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:5px;">観測の加護</h4>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.9rem;">
             <div>効率: <span id="st-p" class="val">1</span></div>
@@ -167,8 +166,8 @@
             <div>会心: <span id="st-c" class="val">0</span>%</div>
             <div>結晶: <span id="st-r" class="val">0.5</span>%</div>
         </div>
-        <div style="margin-top:8px; border-top:1px dashed var(--gold); padding-top:8px; font-size:0.9rem;">
-            深淵倍率: <span id="st-e" class="val" style="color:#d8b4e2;">1.0</span>x
+        <div style="margin-top:8px; border-top:1px dashed #555; padding-top:8px; font-size:0.9rem;">
+            深淵倍率: <span id="st-e" class="val" style="color:var(--evil);">1.0</span>x
         </div>
     </div>
 </div>
@@ -198,7 +197,7 @@
             <button class="btn-outline" onclick="triggerDynamicSummon('rare', 1)">1連</button>
             <button style="background:var(--evil); border-color:#ff00ff;" onclick="triggerDynamicSummon('rare', 10)">10連</button>
         </div>
-        <button id="dyn-btn-rare" class="dyn-btn" style="background:linear-gradient(45deg, #4b0082, #000);" onclick="triggerDynamicSummon('rare', 'max')">全力招集 (0連)</button>
+        <button id="dyn-btn-rare" class="dyn-btn" style="background:linear-gradient(45deg, #4b0082, #000);" onclick="triggerDynamicSummon('rare', 'max')">全力招集 (0回)</button>
     </div>
 </div>
 
@@ -248,9 +247,11 @@
     let state = { coins: 0, rareCoins: 0, inv: {}, stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0 }, totalCoins: 0, totalClicks: 0, totalGacha: 0, totalRare: 0 };
     let curPage = 0, showAll = true;
 
-    function save() { localStorage.setItem('yaoyoro_max_v2', JSON.stringify(state)); }
+    function getAttrIcon(attr) { return { fire: "🔥", water: "💧", earth: "⛰️", sky: "☁️", evil: "👁️" }[attr] || ""; }
+
+    function save() { localStorage.setItem('yaoyoro_final_v5', JSON.stringify(state)); }
     function load() {
-        const s = localStorage.getItem('yaoyoro_max_v2');
+        const s = localStorage.getItem('yaoyoro_final_v5');
         if (s) state = JSON.parse(s);
         updateStats(); updateDisplay();
     }
@@ -318,75 +319,21 @@
 
     function triggerDynamicSummon(type, amount) {
         let maxPulls = type === 'normal' ? Math.floor(state.coins / 100) : Math.floor(state.rareCoins / 5);
-        let pulls = amount === 'max' ? Math.min(1000, maxPulls) : amount;
-        if(pulls > maxPulls) return alert("お供え物が不足しています");
-        if(pulls > 0) processSummon(type, pulls);
+        let pulls = amount === 'max' ? maxPulls : amount;
+        if(pulls <= 0) return alert("お供え物が不足しています");
+        processSummon(type, pulls);
     }
 
     function processSummon(type, times) {
         let cost = type === 'normal' ? 100 * times : 5 * times;
         let curr = type === 'normal' ? 'coins' : 'rareCoins';
         
-        // ガチャを回して結果を事前取得
-        let preRoll = executeRolls(type, times);
-        // ★4以上が含まれていれば「確定演出（熱い演出）」が発生！
-        let isHot = preRoll.some(c => c.rare >= 4);
-        
-        state[curr] -= cost; state.totalGacha += times;
+        let displayLimit = Math.min(times, 100);
+        let displayCards = [];
+        let isHot = false;
+        let leveledUpIds = new Set();
 
-        const scene = document.getElementById('summon-scene');
-        const torii = document.getElementById('anim-torii');
-        const card = document.getElementById('anim-card');
-        const flash = document.getElementById('flash-bang');
-
-        scene.style.display = 'flex';
-        createParticles(isHot); // パーティクル生成
-
-        torii.className = isHot ? 'anim-torii play-hot' : 'anim-torii play-normal';
-
-        card.classList.remove('play'); flash.classList.remove('play');
-        void scene.offsetWidth; 
-        card.classList.add('play'); flash.classList.add('play');
-
-        setTimeout(() => {
-            scene.style.display = 'none';
-            showGachaResults(preRoll);
-            document.getElementById('particles-container').innerHTML = '';
-        }, 3000);
-    }
-
-    // パーティクル生成（桜吹雪 or 金粉爆発）
-    function createParticles(isHot) {
-        const container = document.getElementById('particles-container');
-        container.innerHTML = '';
-        const count = isHot ? 80 : 40;
-        for(let i=0; i<count; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            if(isHot) {
-                // 金粉爆発
-                p.style.width = '6px'; p.style.height = '6px';
-                p.style.background = '#ffd700';
-                p.style.boxShadow = '0 0 8px #fff';
-                p.style.left = '50%'; p.style.top = '50%';
-                p.style.setProperty('--dx', (Math.random() * 400 - 200) + 'px');
-                p.style.setProperty('--dy', (Math.random() * 400 - 200) + 'px');
-                p.style.animation = `explode ${Math.random() * 1 + 1}s ease-out forwards`;
-            } else {
-                // 桜吹雪
-                p.style.width = '10px'; p.style.height = '15px';
-                p.style.background = '#ffb7c5';
-                p.style.borderRadius = '50% 0 50% 50%';
-                p.style.left = Math.random() * 100 + 'vw';
-                p.style.top = '-20px';
-                p.style.animation = `fall ${Math.random() * 2 + 1.5}s linear forwards`;
-            }
-            container.appendChild(p);
-        }
-    }
-
-    function executeRolls(type, times) {
-        let results = [];
+        // メモリ対策：表示用だけ保存し、残りは直接計算
         for (let i = 0; i < times; i++) {
             let roll = Math.random() * 100, rarity = 1;
             if (type === 'normal') {
@@ -396,46 +343,88 @@
             }
             let pool = cardData.filter(x => x.rare === rarity);
             let card = pool.length ? pool[Math.floor(Math.random()*pool.length)] : cardData[0];
-            results.push(card);
-        }
-        return results;
-    }
+            
+            if (card.rare >= 4 && Math.random() < 0.5) isHot = true;
 
-    function showGachaResults(rolledCards) {
-        let displayHtml = '';
-        // 1000連などの場合は描画負荷を下げるため上位レアを優先的に表示、またはシンプルに表示
-        let renderLimit = Math.min(rolledCards.length, 100); 
-        
-        for(let i=0; i<renderLimit; i++) {
-            let card = rolledCards[i];
-            let isLevelUp = false;
+            if (i < displayLimit) displayCards.push(card);
+
             if (!state.inv[card.id]) state.inv[card.id] = { c: 0, l: 0 };
             state.inv[card.id].c++;
-            if (state.inv[card.id].c >= Math.pow(state.inv[card.id].l + 1, 2)) { 
-                state.inv[card.id].l++; state.inv[card.id].c = 0; isLevelUp = true; 
+            if (state.inv[card.id].c >= Math.pow(state.inv[card.id].l + 1, 2)) {
+                state.inv[card.id].l++;
+                state.inv[card.id].c = 0;
+                leveledUpIds.add(card.id);
             }
+        }
+        
+        state[curr] -= cost; state.totalGacha += times;
+
+        const scene = document.getElementById('summon-scene');
+        const torii = document.getElementById('anim-torii');
+        const card = document.getElementById('anim-card');
+        const flash = document.getElementById('flash-bang');
+        const cutIn = document.getElementById('cut-in');
+
+        scene.style.display = 'flex';
+        createParticles(isHot);
+
+        torii.className = isHot ? 'anim-torii play-hot' : 'anim-torii play-normal';
+        cutIn.classList.remove('play');
+        if(isHot) { setTimeout(() => { cutIn.classList.add('play'); }, 800); }
+
+        card.classList.remove('play'); flash.classList.remove('play');
+        void scene.offsetWidth; 
+        card.classList.add('play'); flash.classList.add('play');
+
+        setTimeout(() => {
+            scene.style.display = 'none';
+            showGachaResults(displayCards, leveledUpIds, times);
+            document.getElementById('particles-container').innerHTML = '';
+            cutIn.classList.remove('play');
+        }, 3200);
+    }
+
+    function createParticles(isHot) {
+        const container = document.getElementById('particles-container');
+        container.innerHTML = '';
+        const count = isHot ? 80 : 40;
+        for(let i=0; i<count; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            if(isHot) {
+                p.style.width = '6px'; p.style.height = '6px';
+                p.style.background = '#ffd700'; p.style.boxShadow = '0 0 8px #fff';
+                p.style.left = '50%'; p.style.top = '50%';
+                p.style.setProperty('--dx', (Math.random() * 400 - 200) + 'px');
+                p.style.setProperty('--dy', (Math.random() * 400 - 200) + 'px');
+                p.style.animation = `explode ${Math.random() * 1 + 1}s ease-out forwards`;
+            } else {
+                p.style.width = '10px'; p.style.height = '15px';
+                p.style.background = '#ffb7c5'; p.style.borderRadius = '50% 0 50% 50%';
+                p.style.left = Math.random() * 100 + 'vw'; p.style.top = '-20px';
+                p.style.animation = `fall ${Math.random() * 2 + 1.5}s linear forwards`;
+            }
+            container.appendChild(p);
+        }
+    }
+
+    function showGachaResults(cards, leveledUpIds, totalTimes) {
+        let displayHtml = '';
+        cards.forEach(card => {
+            let isLevelUp = leveledUpIds.has(card.id);
             displayHtml += `
-                <div class="file-slot owned rare-${card.rare} attr-${card.attr} res-anim-target" style="padding:2px; aspect-ratio:1/1.2;">
+                <div class="file-slot owned rare-${card.rare} bg-${card.attr} res-anim-target" style="padding:2px; aspect-ratio:1/1.2;">
                     ${isLevelUp ? '<div class="lvl-up-badge">昇華!!</div>' : ''}
+                    <div class="attr-icon">${getAttrIcon(card.attr)}</div>
                     <div class="slot-stars" style="font-size:0.35rem;">${"★".repeat(card.rare)}</div>
                     <div style="font-size:1.2rem; margin:2px 0;">📜</div>
                     <b style="font-size:0.5rem; text-shadow:1px 1px 2px #000; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:90%;">${card.name}</b>
                 </div>
             `;
-        }
-        
-        // 100連以上の場合、残りの処理だけバックグラウンドで行う
-        for(let i=renderLimit; i<rolledCards.length; i++){
-            let card = rolledCards[i];
-            if (!state.inv[card.id]) state.inv[card.id] = { c: 0, l: 0 };
-            state.inv[card.id].c++;
-            if (state.inv[card.id].c >= Math.pow(state.inv[card.id].l + 1, 2)) { 
-                state.inv[card.id].l++; state.inv[card.id].c = 0;
-            }
-        }
+        });
 
-        if(rolledCards.length > 100) {
-            displayHtml += `<div style="grid-column: 1 / -1; color: var(--gold); padding: 10px;">他 ${rolledCards.length - 100}柱の神々を招集しました</div>`;
+        if(totalTimes > 100) {
+            displayHtml += `<div style="grid-column: 1 / -1; color: var(--gold); padding: 10px; font-size:0.8rem;">他 ${totalTimes - 100}柱の神々を招集しました</div>`;
         }
 
         document.getElementById('gacha-res-list').innerHTML = displayHtml;
@@ -451,7 +440,7 @@
         setTimeout(() => {
             document.getElementById('gacha-result-overlay').style.display = 'none';
             nav.style.background = ''; nav.style.color = '';
-        }, 500);
+        }, 600);
     }
 
     function changePage(dir) {
@@ -482,7 +471,7 @@
 
         document.getElementById('detail-content').innerHTML = `
             <div style="text-align:center; margin-bottom:10px;"><span style="color:var(--gold); font-size:1.2rem; letter-spacing:2px;">${"★".repeat(c.rare)}</span></div>
-            <h2 style="color:var(--${c.attr}); margin-top:0; border-bottom:1px solid var(--syu); padding-bottom:10px;">${c.name}</h2>
+            <h2 style="color:var(--${c.attr}); margin-top:0; border-bottom:1px solid var(--syu); padding-bottom:10px;">${getAttrIcon(c.attr)} ${c.name}</h2>
             <div style="font-size:0.85rem; color:#aaa; margin-bottom:15px;">属性: ${c.attr.toUpperCase()} / 強化段位: +${info.l}</div>
             <div style="background:linear-gradient(135deg, #1a0a0a, #0d0d12); padding:15px; border-radius:8px; border:1px solid var(--gold); box-shadow:inset 0 0 10px rgba(0,0,0,0.8);">
                 <b style="color:var(--gold)">神徳：</b> ${getEffectName(c.attr)} +${bT}<br>
@@ -495,9 +484,7 @@
         document.getElementById('detail-overlay').style.display = 'flex';
     }
 
-    function getEffectName(attr) {
-        return { fire: "基礎効率", water: "霊貨倍率", earth: "会心発生率", sky: "結晶発見率", evil: "深淵倍率" }[attr];
-    }
+    function getEffectName(attr) { return { fire: "基礎効率", water: "霊貨倍率", earth: "会心発生率", sky: "結晶発見率", evil: "深淵倍率" }[attr]; }
 
     function updateDisplay() {
         document.getElementById('coins').innerText = Math.floor(state.coins).toLocaleString();
@@ -508,18 +495,13 @@
         document.getElementById('st-r').innerText = (state.stats.r * 100).toFixed(3);
         document.getElementById('st-e').innerText = state.stats.e.toFixed(2);
         
-        document.getElementById('stat-total-coins').innerText = Math.floor(state.totalCoins).toLocaleString();
-        document.getElementById('stat-total-clicks').innerText = state.totalClicks;
-        document.getElementById('stat-total-gacha').innerText = state.totalGacha;
-        document.getElementById('stat-total-rare').innerText = state.totalRare;
-
-        let maxNorm = Math.min(1000, Math.floor(state.coins / 100));
+        let maxNorm = Math.floor(state.coins / 100);
         let btnN = document.getElementById('dyn-btn-normal');
-        btnN.innerText = `全力招集 (${maxNorm}連)`; btnN.disabled = maxNorm === 0;
+        btnN.innerText = `全力招集 (${maxNorm.toLocaleString()}連)`; btnN.disabled = maxNorm === 0;
         
-        let maxRare = Math.min(1000, Math.floor(state.rareCoins / 5));
+        let maxRare = Math.floor(state.rareCoins / 5);
         let btnR = document.getElementById('dyn-btn-rare');
-        btnR.innerText = `全力招集 (${maxRare}回)`; btnR.disabled = maxRare === 0;
+        btnR.innerText = `全力招集 (${maxRare.toLocaleString()}回)`; btnR.disabled = maxRare === 0;
 
         let displayList = showAll ? cardData : cardData.filter(c => !!state.inv[c.id]);
 
@@ -533,8 +515,9 @@
             const info = state.inv[c.id] || { l: 0, c: 0 };
             
             book.innerHTML += `
-                <div class="file-slot ${owned ? 'owned rare-'+c.rare+' attr-'+c.attr : 'empty'}" onclick="${owned ? `showDetail(${c.id})` : ''}">
+                <div class="file-slot ${owned ? 'owned rare-'+c.rare+' bg-'+c.attr : 'empty'}" onclick="${owned ? `showDetail(${c.id})` : ''}">
                     ${owned ? `<div class="file-lvl">+${info.l}</div>` : ''}
+                    ${owned ? `<div class="attr-icon">${getAttrIcon(c.attr)}</div>` : ''}
                     <div class="slot-stars">${owned ? "★".repeat(c.rare) : ''}</div>
                     <div style="font-size:1.8rem; text-shadow:0 0 10px rgba(212,175,55,0.5);">${owned ? '📜' : '？'}</div>
                     <div class="slot-name" style="color:${owned ? '#fff' : '#666'};">${owned ? c.name : '未確認'}</div>
