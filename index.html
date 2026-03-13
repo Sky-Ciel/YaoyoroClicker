@@ -21,15 +21,16 @@
             font-family: 'Noto Serif JP', serif;
         }
 
-        /* PC表示時のサイド広告枠（スマホでは非表示） */
+        /* 【修正】PC表示時のサイド広告枠（3つ並べるために縦長に調整） */
         .side-ad { display: none; }
         @media (min-width: 1150px) {
             .side-ad {
-                display: flex; flex-direction: column; align-items: center; justify-content: center;
-                width: 300px; height: 600px; background: transparent; color: #666;
-                margin: 0 20px; border-radius: 10px; font-weight: bold; font-family: sans-serif;
-                z-index: 0;
+                display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px;
+                width: 320px; height: 100vh; overflow-y: auto; background: transparent; 
+                margin: 0 10px; z-index: 0; padding: 20px 0;
             }
+            /* スクロールバーを隠す */
+            .side-ad::-webkit-scrollbar { display: none; }
         }
 
         #game-container {
@@ -58,8 +59,8 @@
         }
         .val { color: var(--gold); font-weight: 900; text-shadow: 0 0 5px rgba(212,175,55,0.4); font-family: sans-serif; }
 
-        /* メニュー上のスマホ広告に被らないよう下部余白を増加 */
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 5px 120px; opacity: 0; overflow-y: auto; touch-action: pan-y; z-index: 2; position: relative;}
+        /* スマホ広告（50px）とメニューバー（約50px）の分、下部の余白を大きく確保 */
+        .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 5px 130px; opacity: 0; overflow-y: auto; touch-action: pan-y; z-index: 2; position: relative;}
         .screen.active { display: flex; animation: fadeIn 0.4s forwards; }
         @keyframes fadeIn { from { opacity: 0; filter: sepia(1); } to { opacity: 1; filter: sepia(0); } }
 
@@ -185,12 +186,19 @@
         .btn-ad { background: linear-gradient(45deg, #008000, #004d00); color: #fff; border: 2px solid #00ff00; border-radius: 8px; padding: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 0 15px rgba(0,255,0,0.4); width: 100%; transition: 0.2s;}
         .btn-ad:hover { filter: brightness(1.2); }
 
-        #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
-        .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; cursor: pointer; }
-        .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
+        /* 【修正】スマホ用下部広告（メニューバーの真上に絶対に表示されるように固定） */
+        #bottom-ad-container { 
+            position: absolute; 
+            bottom: calc(52px + env(safe-area-inset-bottom)); 
+            left: 0; width: 100%; height: 50px; 
+            display: flex; justify-content: center; align-items: center;
+            background: #000; z-index: 1500; 
+            border-top: 1px solid #333;
+        }
 
-        /* スマホ用下部広告のコンテナ */
-        #bottom-ad-container { position: absolute; bottom: 55px; width: 100%; text-align: center; z-index: 900; background: #000; padding: 2px 0; }
+        #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); height: 52px;}
+        .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; cursor: pointer; line-height: 1;}
+        .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
 
         button { background: var(--syu); color: #fff; border: 1px solid var(--gold); padding: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: bold; }
         .btn-outline { background: #222; color: var(--gold); }
@@ -203,6 +211,8 @@
 <body>
 
 <div id="side-ad-left" class="side-ad">
+    <script src="https://adm.shinobi.jp/s/fe283abd1f77c129a548a9c367b207ea"></script>
+    <script src="https://adm.shinobi.jp/s/fe283abd1f77c129a548a9c367b207ea"></script>
     <script src="https://adm.shinobi.jp/s/fe283abd1f77c129a548a9c367b207ea"></script>
     </div>
 
@@ -461,6 +471,8 @@
 
 <div id="side-ad-right" class="side-ad">
     <script src="https://adm.shinobi.jp/s/fe283abd1f77c129a548a9c367b207ea"></script>
+    <script src="https://adm.shinobi.jp/s/fe283abd1f77c129a548a9c367b207ea"></script>
+    <script src="https://adm.shinobi.jp/s/fe283abd1f77c129a548a9c367b207ea"></script>
     </div>
 
 <script>
@@ -646,6 +658,7 @@
                 <b style="color:var(--gold); font-size:1.5rem;">${reward.toLocaleString()} 霊貨</b>
             </div>
             <button class="btn-ad" style="width:100%;" onclick="claimOfflineReward(${reward})">報酬を受け取る</button>
+            <button class="btn-outline" style="width:100%; margin-top:10px;" onclick="closeOverlay('ad-overlay')">あとで</button>
         `;
         openOverlay('ad-overlay');
     }
@@ -830,9 +843,7 @@
         
         if (pulls > maxPulls || pulls <= 0 || isNaN(pulls)) return alert("お供え物が不足しています");
         
-        // ガチャを引いたら即座にボタンを無効化（連打フリーズ対策）
         document.querySelectorAll('.dyn-btn, .btn-outline').forEach(b => b.style.pointerEvents = 'none');
-
         processSummon(type, pulls);
     }
 
@@ -969,7 +980,6 @@
             showGachaResults(rollCounts, leveledUpIds, times, rarityCounts, oldPower, newPower);
             document.getElementById('particles-container').innerHTML = '';
             cutIn.classList.remove('play-star4', 'play-star5');
-            // ガチャボタンの無効化を解除
             document.querySelectorAll('.dyn-btn, .btn-outline').forEach(b => b.style.pointerEvents = 'auto');
         }, 3200);
     }
@@ -1384,7 +1394,7 @@
         el.classList.add('active');
     }
     
-    // 【修正】広告の影響を受けないように、DOMの読み込み完了時点で発火
+    // 広告の影響を受けないように、DOMの読み込み完了時点で発火
     window.addEventListener('DOMContentLoaded', initGame);
 </script>
 </body>
