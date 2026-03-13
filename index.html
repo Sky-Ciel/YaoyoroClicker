@@ -23,10 +23,10 @@
             background: var(--urushi); color: #f0e6d2;
             background-image: radial-gradient(circle at 20% 20%, rgba(212,175,55,0.06) 0%, transparent 60%),
                               radial-gradient(circle at 80% 80%, rgba(166,46,46,0.12) 0%, transparent 60%);
-            box-shadow: 0 0 40px rgba(212,175,55,0.1); overflow: hidden; z-index: 1;
+            box-shadow: 0 0 40px rgba(212,175,55,0.15); overflow: hidden; z-index: 1;
         }
 
-        /* 画面内に常に舞う金箔 */
+        /* 常に舞う金箔 */
         #inner-particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         .inner-dust { position: absolute; background: #d4af37; border-radius: 50%; opacity: 0; animation: floatDust linear infinite; box-shadow: 0 0 6px #d4af37; }
         @keyframes floatDust { 0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; } }
@@ -39,7 +39,7 @@
         .crit-flash.show { opacity: 1; }
 
         #header { 
-            background: linear-gradient(180deg, #1f0808, #120404); padding: 15px 10px; 
+            background: linear-gradient(180deg, #1f0a0a, #120404); padding: 15px 10px; 
             border-bottom: 2px solid var(--gold); position: absolute; top:0; width:100%; z-index:1000;
             display: flex; justify-content: space-around; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
@@ -51,13 +51,13 @@
 
         #main-btn-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40vh; }
         #main-btn { 
-            width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #3a0808, #000); 
+            width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #3a0a0a, #000); 
             border: 3px solid var(--gold); color: var(--gold); font-size: 1.4rem; font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4); outline: none; text-shadow: 0 0 10px var(--gold);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.4); outline: none; text-shadow: 0 0 10px var(--gold);
         }
-        .btn-pressed { transform: scale(0.92) translateY(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.9) !important; filter: brightness(1.3); }
+        .btn-pressed { transform: scale(0.92) translateY(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.8) !important; filter: brightness(1.3); }
 
-        .gacha-box { width: 100%; background: linear-gradient(135deg, #1f0808, #120404); border: 2px solid var(--gold); border-radius: 12px; padding: 20px 15px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.8); margin: auto; }
+        .gacha-box { width: 100%; background: linear-gradient(135deg, #1f0a0a, #120404); border: 2px solid var(--gold); border-radius: 12px; padding: 20px 15px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.6); margin: auto; }
         .dyn-btn { width: 100%; background: linear-gradient(45deg, var(--syu), #000); font-size: 1rem; padding: 15px 5px; margin-top: 10px; border-color: var(--gold); color: #fff; text-shadow: 0 0 5px var(--gold); transition: 0.2s;}
         .dyn-btn:disabled { filter: grayscale(1); opacity: 0.3; border-color: #555; }
 
@@ -116,7 +116,6 @@
         .rare-4 { border-color: #ffaa00; box-shadow: 0 0 15px #ff8c00, inset 0 0 20px rgba(255,140,0,0.6); animation: goldPulse 1.5s infinite alternate; }
         @keyframes goldPulse { from { box-shadow: 0 0 5px #ffaa00, inset 0 0 15px rgba(255,170,0,0.4); } to { box-shadow: 0 0 20px #ffaa00, inset 0 0 30px rgba(255,170,0,0.8); } }
         
-        /* ★5 超絶虹色発光アニメーション復活 */
         .rare-5 { border: 2px solid transparent !important; animation: rainbowShadow 2s infinite linear; background: linear-gradient(135deg, #2a0a2a, #0b0b0e); }
         @keyframes rainbowShadow { 
             0% { box-shadow: 0 0 15px #ff0000, inset 0 0 15px #ff0000; border-color: #ff0000; } 
@@ -147,9 +146,12 @@
         @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
 
         /* プロフィール豪華装飾 */
-        .profile-card { background: rgba(30,10,10,0.8); padding: 20px; border-radius: 10px; border: 1px solid var(--gold); text-align: left; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); margin-bottom: 15px; }
-        .progress-wrap { width: 100%; height: 8px; background: #222; border-radius: 4px; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
+        .profile-card { background: rgba(30,10,10,0.85); padding: 20px; border-radius: 10px; border: 1px solid var(--gold); text-align: left; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); margin-bottom: 20px; position: relative;}
+        .progress-wrap { width: 100%; height: 10px; background: #222; border-radius: 5px; margin: 12px 0; overflow: hidden; border: 1px solid #444; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);}
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--syu), var(--gold)); transition: width 0.5s ease-out; }
+        
+        .stat-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; font-size:0.75rem; color:#ccc; margin-bottom:15px; background:rgba(0,0,0,0.5); padding:10px; border-radius:8px; border: 1px solid #444;}
+        .stat-grid-2 { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; font-size:0.75rem; color:#ccc; background:rgba(0,0,0,0.5); padding:10px; border-radius:8px; border: 1px solid #444;}
 
         #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
         .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; cursor: pointer; }
@@ -167,7 +169,6 @@
 
 <div id="game-container">
     <div id="inner-particles"></div>
-
     <div class="crit-flash" id="crit-flash"></div>
 
     <div id="summon-scene">
@@ -274,7 +275,6 @@
                 <button class="btn-outline" onclick="changePage(1)" style="padding:6px;">次</button>
             </div>
         </div>
-
         <div id="book-container" class="book-grid"></div>
     </div>
 
@@ -286,25 +286,39 @@
                 <b style="font-size:1.2rem; color:#fff; text-shadow: 0 0 5px #fff;" id="display-player-name">名もなき観測者</b>
                 <button onclick="changePlayerName()" style="padding:4px 8px; font-size:0.6rem;" class="btn-outline">名前変更</button>
             </div>
-            <div style="color:#aaa; font-size:0.75rem; margin-bottom:15px; border-bottom: 1px solid #444; padding-bottom: 10px;">
+            <div style="color:#aaa; font-size:0.75rem;">
                 総プレイ時間: <span id="stat-playtime" style="color:var(--gold);">0時間 0分 0秒</span>
             </div>
-            
-            <div style="font-size:0.9rem; font-weight:bold; color:var(--gold); display:flex; justify-content:space-between;">
+        </div>
+
+        <div class="profile-card">
+            <div style="font-size:1rem; font-weight:bold; color:var(--gold); display:flex; justify-content:space-between;">
                 <span>図鑑完成度</span>
-                <span id="stat-collection" class="val">0 / 0 (0%)</span>
+                <span id="stat-collection" class="val">0 / 100 (0%)</span>
             </div>
             <div class="progress-wrap"><div class="progress-bar" id="stat-prog" style="width:0%"></div></div>
             
-            <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#aaa; margin-top:10px;">
-                <span id="col-fire">火:0</span> <span id="col-water">水:0</span> <span id="col-earth">地:0</span> <span id="col-sky">空:0</span> <span id="col-evil">悪:0</span>
+            <div style="font-size:0.75rem; color:var(--gold); margin-bottom:5px; margin-top:15px;">■ 属性別収集録</div>
+            <div class="stat-grid">
+                <div>🔥 火: <span class="val" id="col-fire">0 / 30</span></div>
+                <div>💧 水: <span class="val" id="col-water">0 / 30</span></div>
+                <div>⛰️ 地: <span class="val" id="col-earth">0 / 21</span></div>
+                <div>🪽 空: <span class="val" id="col-sky">0 / 10</span></div>
+                <div>🔯 悪: <span class="val" id="col-evil">0 / 9</span></div>
             </div>
-            <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#aaa; margin-top:5px;">
-                <span id="col-r5">★5:0</span> <span id="col-r4">★4:0</span> <span id="col-r3">★3:0</span> <span id="col-r2">★2:0</span> <span id="col-r1">★1:0</span>
+
+            <div style="font-size:0.75rem; color:var(--gold); margin-bottom:5px;">■ レアリティ別収集録</div>
+            <div class="stat-grid-2">
+                <div>★★★★★: <span class="val" id="col-r5">0 / 5</span></div>
+                <div>★★★★: <span class="val" id="col-r4">0 / 10</span></div>
+                <div>★★★: <span class="val" id="col-r3">0 / 10</span></div>
+                <div>★★: <span class="val" id="col-r2">0 / 30</span></div>
+                <div>★: <span class="val" id="col-r1">0 / 45</span></div>
             </div>
         </div>
 
         <div class="profile-card" style="font-size: 0.85rem; line-height: 1.8;">
+            <div style="color:var(--gold); font-weight:bold; margin-bottom:10px; border-bottom:1px solid #444; padding-bottom:5px;">■ 観測の軌跡</div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                 <div>最大一撃獲得:<br><span id="stat-max-gain" class="val" style="color:#ff00ff;">0</span></div>
                 <div>総会心発生:<br><span id="stat-total-crits" class="val" style="color:#ff4500;">0</span></div>
@@ -317,16 +331,9 @@
             </div>
         </div>
         
-        <div style="margin-top:20px; text-align:center; width: 100%;">
+        <div style="margin-top:10px; text-align:center; width: 100%;">
             <button onclick="resetGame()" style="background:#4a0000; border-color:#ff0000; font-size:0.7rem; padding:10px; width:80%;">世界を初期化する</button>
         </div>
-    </div>
-
-    <div id="menu-bar">
-        <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
-        <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
-        <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
-        <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
     </div>
 
     <div id="detail-overlay" class="overlay" onclick="closeOverlay('detail-overlay')">
@@ -341,10 +348,126 @@
             <button id="gacha-action-btn" onclick="handleGachaAction(event)" style="width:100%; margin-top:20px;">確認</button>
         </div>
     </div>
+
+    <div id="menu-bar">
+        <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
+        <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
+        <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
+        <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
+    </div>
 </div>
 
-<script src="cards.js"></script>
 <script>
+    // --- 100種類の神々（完全独立・書き下ろしデータ） ---
+    const cardData = [
+        { id: 3001, name: "原初の火 軻遇突智", rare: 5, attr: "fire", story: "全てが始まる前に存在したとされる、純粋な熱量そのもの。観測者の世界を燃やし尽くす。", bonus: 50.0 },
+        { id: 3002, name: "創世の海 ティアマト", rare: 5, attr: "water", story: "生命の源たる原初の海。彼女が波打つ時、世界は再び無垢なる霊貨の海へと沈む。", bonus: 5.0 },
+        { id: 3003, name: "創世の母神 ガイア", rare: 5, attr: "earth", story: "大地という概念を生み出した母なる存在。彼女の気まぐれは世界を容易く裏返してしまう。", bonus: 0.1 },
+        { id: 3004, name: "天理の神 アマツ", rare: 5, attr: "sky", story: "天上の理を統べる最高位の神。その眼差しは運命を書き換え、稀なる神結晶をこの世に顕現させる。", bonus: 0.005 },
+        { id: 3005, name: "忘却の神 レテ", rare: 5, attr: "evil", story: "深淵に座し、全てを無へと還す神。その沈黙は既存の理を塗り替え、あらゆる現象を底知れぬ力へと変貌させる。", bonus: 0.5 },
+
+        { id: 2001, name: "業火の神 カグツチ", rare: 4, attr: "fire", story: "神代より続く、万物を焼き清める原始の炎。その焔は観測者の魂を燃え上がらせる。", bonus: 10.0 },
+        { id: 2002, name: "憤怒の魔将 サタン", rare: 4, attr: "fire", story: "血塗られた剣を振るう地獄の将。彼の怒りに触れた者は限界を超えた力を引き出される。", bonus: 15.0 },
+        { id: 2003, name: "深海の王 ワダツミ", rare: 4, attr: "water", story: "海の底で永い眠りについていた古き神。その息吹は潮の満ち引きと共に富の奔流を生む。", bonus: 0.5 },
+        { id: 2004, name: "嫉妬の海神 レヴィアタン", rare: 4, attr: "water", story: "他者の富を貪り喰らう深淵の海獣。その果てなき渇望が霊貨の波を呼び寄せる。", bonus: 0.8 },
+        { id: 2005, name: "岩穿の巨神", rare: 4, attr: "earth", story: "拳一つで山を砕く伝説の巨人。彼が大地を叩く衝撃は、観測の一撃をより致命的なものへと変える。", bonus: 0.03 },
+        { id: 2006, name: "強欲の地主 マモン", rare: 4, attr: "earth", story: "地中の黄金を全て我が物とする魔神。彼の欲望はわずかな確率の奇跡を強引に引き当てる。", bonus: 0.05 },
+        { id: 2007, name: "雷霆の竜神", rare: 4, attr: "sky", story: "天を裂く雷の化身。その一閃は次元の壁を穿ち、神の領域から結晶をこぼれ落とさせる。", bonus: 0.001 },
+        { id: 2008, name: "傲慢の堕天使 ルシファー", rare: 4, attr: "sky", story: "かつて天の頂にいた最も美しき者。神をもしのぐその傲慢さは、希少な結晶すら傅かせる。", bonus: 0.002 },
+        { id: 2009, name: "暴食の王 ベルゼブブ", rare: 4, attr: "evil", story: "あらゆるものを喰らい尽くす蝿の王。彼が存在するだけで、獲得の概念そのものが膨張し続ける。", bonus: 0.1 },
+        { id: 2010, name: "色欲の魔神 アスモデウス", rare: 4, attr: "evil", story: "欲望の果てに座す魔神。魅了された者は、自身の魂すらも霊貨に変えて捧げてしまう。", bonus: 0.12 },
+
+        { id: 1001, name: "鳳凰の雛 焔", rare: 3, attr: "fire", story: "神鳥の幼生。まだ飛べぬものの、その羽ばたきは太陽の欠片のように周囲を照らし出す。", bonus: 2.0 },
+        { id: 1002, name: "炎蛇の化身", rare: 3, attr: "fire", story: "マグマ溜まりから生まれ落ちた蛇神。這った跡には消えない炎が残る。", bonus: 3.0 },
+        { id: 1003, name: "清流の使者 アオ", rare: 3, attr: "water", story: "清らかな川の流れを司る龍の末裔。彼女の加護を受けた地では、あらゆる交易が盛んになる。", bonus: 0.1 },
+        { id: 1004, name: "氷雪の精霊王", rare: 3, attr: "water", story: "絶対零度を支配する王。霊貨の価値を凍結し、より高い倍率のまま保存する。", bonus: 0.15 },
+        { id: 1005, name: "豊穣の女神", rare: 3, attr: "earth", story: "実りの秋を司る神。彼女の歩みと共に黄金の麦が芽吹き、会心の奇跡を呼ぶ。", bonus: 0.01 },
+        { id: 1006, name: "怠惰の魔獣 ベルフェゴール", rare: 3, attr: "earth", story: "動くことを拒んだ結果、大地と一体化した巨獣。彼の重みは一撃の威力を致命的な域に達しさせる。", bonus: 0.02 },
+        { id: 1007, name: "嵐の精霊 ジン", rare: 3, attr: "sky", story: "竜巻の中心に住まう風の精霊。全てを巻き上げる風は、隠された宝をも空へ打ち上げる。", bonus: 0.0002 },
+        { id: 1008, name: "黄金の霊鳥", rare: 3, attr: "sky", story: "夕暮れの空を飛ぶ神々しい鳥。その羽が落ちた場所には必ず神の欠片が埋まっているという。", bonus: 0.0003 },
+        { id: 1009, name: "誘惑の悪魔 リリス", rare: 3, attr: "evil", story: "夜の帳から現れる美しき魔性。彼女との契約は甘美な報酬を約束するが、それは世界の秩序を歪める。", bonus: 0.05 },
+        { id: 1010, name: "怨嗟の亡霊騎士", rare: 3, attr: "evil", story: "生前の恨みを力に変えて戦い続ける騎士。その怨念は乗算となって世界を侵食する。", bonus: 0.06 },
+
+        // ★2 (30種)
+        { id: 201, name: "荒ぶる鬼火", rare: 2, attr: "fire", story: "近づく者を容赦なく威嚇する、気性の荒い炎。", bonus: 0.5 },
+        { id: 202, name: "輝く狐火", rare: 2, attr: "fire", story: "人を化かす力を少しだけ身につけた妖狐の火。", bonus: 0.5 },
+        { id: 203, name: "目覚めし火精", rare: 2, attr: "fire", story: "自身の熱量に気づき、力を制御し始めた火の精。", bonus: 0.5 },
+        { id: 204, name: "怒れる灯火", rare: 2, attr: "fire", story: "燃料を絶たれそうになり、必死に抵抗している。", bonus: 0.5 },
+        { id: 205, name: "嘆きの焔", rare: 2, attr: "fire", story: "燃やすものを求めて、辺りを彷徨う悲しき炎。", bonus: 0.5 },
+        { id: 206, name: "紅蓮の使い魔", rare: 2, attr: "fire", story: "下級の魔術師に使役される、従順な火の獣。", bonus: 0.5 },
+        { id: 207, name: "業火の妖精", rare: 2, attr: "fire", story: "面白半分で枯れ葉を燃やして回るいたずらっ子。", bonus: 0.5 },
+        { id: 208, name: "灼熱の番犬", rare: 2, attr: "fire", story: "門番として生み出された、火の粉を散らす犬。", bonus: 0.5 },
+        { id: 209, name: "天駆ける火の鳥", rare: 2, attr: "fire", story: "小さいながらも空を飛び、熱の軌跡を描く。", bonus: 0.5 },
+        { id: 210, name: "溶岩の火蜥蜴", rare: 2, attr: "fire", story: "火山帯に生息する、マグマを這う爬虫類の霊。", bonus: 0.5 },
+        { id: 211, name: "荒ぶる河童", rare: 2, attr: "water", story: "縄張りを荒らす者に相撲を挑んでくる。", bonus: 0.03 },
+        { id: 212, name: "輝く泉の妖精", rare: 2, attr: "water", story: "綺麗な水場に住み、訪れる者を癒やす。", bonus: 0.03 },
+        { id: 213, name: "目覚めし水精", rare: 2, attr: "water", story: "水脈の小さな流れを操る力を得た。", bonus: 0.03 },
+        { id: 214, name: "怒れる波浪", rare: 2, attr: "water", story: "嵐の日にだけ姿を現し、小舟を揺らす。", bonus: 0.03 },
+        { id: 215, name: "嘆きの雨女", rare: 2, attr: "water", story: "彼女が歩く場所には、常にシトシトと雨が降る。", bonus: 0.03 },
+        { id: 216, name: "蒼流の使い魔", rare: 2, attr: "water", story: "水を弾丸のように飛ばして主を守る。", bonus: 0.03 },
+        { id: 217, name: "深海の妖魔", rare: 2, attr: "water", story: "光の届かない場所で、じっと獲物を待っている。", bonus: 0.03 },
+        { id: 218, name: "激流の番人", rare: 2, attr: "water", story: "川の激しい場所に立ち、水難を防ぐとも起こすとも。", bonus: 0.03 },
+        { id: 219, name: "天駆ける水龍", rare: 2, attr: "water", story: "まだ小さいが、雲を呼ぶ力を持つ龍の幼生。", bonus: 0.03 },
+        { id: 220, name: "氷の城の騎士", rare: 2, attr: "water", story: "冷気を纏い、氷の剣で主を守護する。", bonus: 0.03 },
+        { id: 221, name: "荒ぶる土偶", rare: 2, attr: "earth", story: "古代の呪術で動き出し、ドスドスと地を踏み鳴らす。", bonus: 0.003 },
+        { id: 222, name: "輝く鉱石の霊", rare: 2, attr: "earth", story: "洞窟の奥深くで、美しい光を放つ宝石の精。", bonus: 0.003 },
+        { id: 223, name: "目覚めし泥人形", rare: 2, attr: "earth", story: "簡単な命令を忠実にこなすゴーレムの原型。", bonus: 0.003 },
+        { id: 224, name: "怒れる岩石", rare: 2, attr: "earth", story: "削り取られた恨みから、転がって人を襲う。", bonus: 0.003 },
+        { id: 225, name: "嘆きの砂男", rare: 2, attr: "earth", story: "崩れては再生する、果てなき徒労を繰り返す。", bonus: 0.003 },
+        { id: 226, name: "豊穣の使者", rare: 2, attr: "earth", story: "畑にわずかな実りをもたらす、農家の守り神。", bonus: 0.003 },
+        { id: 227, name: "荒ぶる雷獣", rare: 2, attr: "sky", story: "雲間に潜み、時折小さな稲妻を落とす。", bonus: 0.00005 },
+        { id: 228, name: "輝く天馬", rare: 2, attr: "sky", story: "夜空を駆ける、光り輝く美しい馬の幻影。", bonus: 0.00005 },
+        { id: 229, name: "荒ぶる夢魔", rare: 2, attr: "evil", story: "眠る者の精神に入り込み、恐ろしい悪夢を見せる。", bonus: 0.01 },
+        { id: 230, name: "輝く呪具", rare: 2, attr: "evil", story: "怨念を吸って怪しく光る、禁忌の装飾品。", bonus: 0.01 },
+
+        // ★1 (45種)
+        { id: 101, name: "迷える灯火", rare: 1, attr: "fire", story: "暗がりを微かに照らす、名もなき小さな光。", bonus: 0.1 },
+        { id: 102, name: "名もなき火種", rare: 1, attr: "fire", story: "誰かが落とした火打ち石の欠片から生まれた。", bonus: 0.1 },
+        { id: 103, name: "小さな火の粉", rare: 1, attr: "fire", story: "パチパチとはぜては、すぐに消えてしまう妖精。", bonus: 0.1 },
+        { id: 104, name: "路地裏の燐光", rare: 1, attr: "fire", story: "湿った裏路地で青白く光る、不思議な火。", bonus: 0.1 },
+        { id: 105, name: "古びた蝋燭", rare: 1, attr: "fire", story: "長い間使われなかった蝋燭に宿った念。", bonus: 0.1 },
+        { id: 106, name: "囲炉裏の煤", rare: 1, attr: "fire", story: "昔ながらの家屋で、灰の中から見つめる目。", bonus: 0.1 },
+        { id: 107, name: "夢見る火精", rare: 1, attr: "fire", story: "燃え上がるような大きな炎に憧れている。", bonus: 0.1 },
+        { id: 108, name: "眠たげな竃", rare: 1, attr: "fire", story: "ずっとポカポカしていて、いつも居眠りしている。", bonus: 0.1 },
+        { id: 109, name: "踊る狐火", rare: 1, attr: "fire", story: "旅人を惑わす、いたずら好きな火の玉。", bonus: 0.1 },
+        { id: 110, name: "静かな残り火", rare: 1, attr: "fire", story: "祭りの後に取り残された、寂しげな炎。", bonus: 0.1 },
+        { id: 111, name: "透明な熱気", rare: 1, attr: "fire", story: "姿は見えないが、触れると火傷する陽炎。", bonus: 0.1 },
+        { id: 112, name: "囁く熾火", rare: 1, attr: "fire", story: "パチッ、パチッと何かを語りかけてくる。", bonus: 0.1 },
+        { id: 113, name: "幻の火鱗", rare: 1, attr: "fire", story: "熱を帯びた鱗の形をした、ドラゴンのなりそこない。", bonus: 0.1 },
+        { id: 114, name: "遠い焚き火", rare: 1, attr: "fire", story: "遠くから見守るように燃え続ける温もり。", bonus: 0.1 },
+        { id: 115, name: "陽だまりの精", rare: 1, attr: "fire", story: "日光が集まる場所にだけ現れる小妖精。", bonus: 0.1 },
+        { id: 116, name: "迷える水滴", rare: 1, attr: "water", story: "葉っぱから落ちて、行き場をなくした雫。", bonus: 0.01 },
+        { id: 117, name: "小さな朝露", rare: 1, attr: "water", story: "朝一番にだけ姿を見せる、透き通った妖精。", bonus: 0.01 },
+        { id: 118, name: "泥水たまり", rare: 1, attr: "water", story: "子供が踏んづけて遊ぶ、泥混じりの精霊。", bonus: 0.01 },
+        { id: 119, name: "古びた水鏡", rare: 1, attr: "water", story: "過去の光景をほんの少しだけ映し出す。", bonus: 0.01 },
+        { id: 120, name: "井戸の底の霊", rare: 1, attr: "water", story: "暗くて冷たい場所でじっと誰かを待っている。", bonus: 0.01 },
+        { id: 121, name: "微かな波紋", rare: 1, attr: "water", story: "水面に一瞬だけ現れては消える不思議な模様。", bonus: 0.01 },
+        { id: 122, name: "夢見る水精", rare: 1, attr: "water", story: "いつか広大な海へ辿り着くことを夢見ている。", bonus: 0.01 },
+        { id: 123, name: "眠たげな小川", rare: 1, attr: "water", story: "ちょろちょろとゆっくり流れるマイペースな霊。", bonus: 0.01 },
+        { id: 124, name: "踊る飛沫", rare: 1, attr: "water", story: "滝壺ではしゃぎ回る、元気いっぱいの水玉。", bonus: 0.01 },
+        { id: 125, name: "静かな水面", rare: 1, attr: "water", story: "風ひとつない湖で、じっと空を見上げている。", bonus: 0.01 },
+        { id: 126, name: "透明な雨粒", rare: 1, attr: "water", story: "誰かの涙に紛れて落ちてきたとされる。", bonus: 0.01 },
+        { id: 127, name: "囁く泉", rare: 1, attr: "water", story: "耳を澄ますと、心地よい歌水音が聞こえる。", bonus: 0.01 },
+        { id: 128, name: "隠れた湧水", rare: 1, attr: "water", story: "岩の隙間からこっそり世界を覗き見ている。", bonus: 0.01 },
+        { id: 129, name: "遠いせせらぎ", rare: 1, attr: "water", story: "どこからともなく聞こえる、癒やしの音色。", bonus: 0.01 },
+        { id: 130, name: "霧の精", rare: 1, attr: "water", story: "辺りを白く包み込み、すべてを曖昧にする。", bonus: 0.01 },
+        { id: 131, name: "迷える小石", rare: 1, attr: "earth", story: "蹴飛ばされて、本来の場所から離れてしまった。", bonus: 0.001 },
+        { id: 132, name: "名もなき土塊", rare: 1, attr: "earth", story: "誰かが握りしめた泥が形を持ったもの。", bonus: 0.001 },
+        { id: 133, name: "小さな砂粒", rare: 1, attr: "earth", story: "風に吹かれて世界中を旅している。", bonus: 0.001 },
+        { id: 134, name: "路地裏の泥", rare: 1, attr: "earth", story: "雨の日にだけ元気に動き回る厄介者。", bonus: 0.001 },
+        { id: 135, name: "古びた茶碗", rare: 1, attr: "earth", story: "欠けてしまったが、まだお茶を注いでほしい。", bonus: 0.001 },
+        { id: 136, name: "忘れられた道祖神", rare: 1, attr: "earth", story: "道端で苔むしながら、細々と旅人を見守る。", bonus: 0.001 },
+        { id: 137, name: "微かな振動", rare: 1, attr: "earth", story: "地面の下で何かがモゾモゾと動いている。", bonus: 0.001 },
+        { id: 138, name: "夢見る土精", rare: 1, attr: "earth", story: "いつか立派な山になりたいと願っている。", bonus: 0.001 },
+        { id: 139, name: "眠たげな岩", rare: 1, attr: "earth", story: "何百年も同じ場所で動かずにいる。", bonus: 0.001 },
+        { id: 140, name: "踊る砂塵", rare: 1, attr: "earth", story: "風に巻き上げられて楽しくダンスをしている。", bonus: 0.001 },
+        { id: 141, name: "迷える風", rare: 1, attr: "sky", story: "どこへ吹くべきか忘れてしまった微風。", bonus: 0.00001 },
+        { id: 142, name: "名もなき羽", rare: 1, attr: "sky", story: "どの鳥のものかもわからない、宙を舞う白い羽。", bonus: 0.00001 },
+        { id: 143, name: "小さな雲", rare: 1, attr: "sky", story: "ぽっかりと空に浮かぶ、綿菓子のような存在。", bonus: 0.00001 },
+        { id: 144, name: "迷える影", rare: 1, attr: "evil", story: "持ち主とはぐれてしまった、誰かのシルエット。", bonus: 0.005 },
+        { id: 145, name: "名もなき怨念", rare: 1, attr: "evil", story: "誰かがため息と一緒に吐き出した小さな負の感情。", bonus: 0.005 }
+    ];
+
     let state = { 
         coins: 0, rareCoins: 0, inv: {}, invOrder: [], 
         stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0, critPower: 2.0 }, 
@@ -356,22 +479,6 @@
     let gachaSummaryHtml = "";
     let isShowingSummary = true;
     
-    // 画面内金箔エフェクト
-    function initInnerParticles() {
-        const bg = document.getElementById('inner-particles');
-        for(let i=0; i<15; i++) {
-            let p = document.createElement('div');
-            p.className = 'inner-dust';
-            p.style.width = (Math.random() * 4 + 2) + 'px';
-            p.style.height = p.style.width;
-            p.style.left = Math.random() * 100 + '%';
-            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            p.style.animationDelay = (Math.random() * 10) + 's';
-            bg.appendChild(p);
-        }
-    }
-    initInnerParticles();
-
     function getAttrIcon(attr) { return { fire: "🔥", water: "💧", earth: "⛰️", sky: "🪽", evil: "🔯" }[attr] || ""; }
 
     function openOverlay(id) {
@@ -386,7 +493,6 @@
         setTimeout(() => { el.style.display = 'none'; }, 250);
     }
 
-    // セーブデータ簡易暗号化
     function generateHash(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -400,25 +506,23 @@
         const json = JSON.stringify(state);
         const encoded = btoa(unescape(encodeURIComponent(json)));
         const hash = generateHash(encoded);
-        localStorage.setItem('yaoyoro_secure_v2', JSON.stringify({p: encoded, h: hash}));
+        localStorage.setItem('yaoyoro_secure_v3', JSON.stringify({p: encoded, h: hash}));
     }
     
     function load() {
-        const saved = localStorage.getItem('yaoyoro_secure_v2');
+        const saved = localStorage.getItem('yaoyoro_secure_v3');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
                 if (generateHash(data.p) === data.h) {
                     state = { ...state, ...JSON.parse(decodeURIComponent(escape(atob(data.p)))) };
-                } else { console.error("セーブデータ改ざん検知"); }
+                }
             } catch(e) { console.error("Load Error", e); }
-        } else if (localStorage.getItem('yaoyoro_secure_v1')) {
-            // 旧セーブ移行
-            const data = JSON.parse(localStorage.getItem('yaoyoro_secure_v1'));
+        } else if (localStorage.getItem('yaoyoro_secure_v2')) {
+            const data = JSON.parse(localStorage.getItem('yaoyoro_secure_v2'));
             if (generateHash(data.p) === data.h) state = { ...state, ...JSON.parse(decodeURIComponent(escape(atob(data.p)))) };
         }
         
-        // 初期化漏れ対策
         state.maxGain = state.maxGain || 0;
         if(!state.startTime) state.startTime = Date.now();
         if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
@@ -437,10 +541,9 @@
             if (card.attr === "water") m += card.bonus * l;
             if (card.attr === "earth") c += card.bonus * l;
             if (card.attr === "sky") raw_r += card.bonus * l;
-            if (card.attr === "evil") evilBonusSum += card.bonus * l; // 乗算を回避し加算
+            if (card.attr === "evil") evilBonusSum += card.bonus * l;
         }
-        
-        let e = 1.0 + evilBonusSum; // 最後に1回だけ掛ける（インフレ制御）
+        let e = 1.0 + evilBonusSum;
         let final_r = (raw_r * 0.5) / (raw_r + 0.5);
         let critPow = 2.0;
         if (c > 1.0) critPow = 2.0 + Math.log10(1 + (c - 1.0)) * 1.5; 
@@ -507,7 +610,7 @@
 
     function triggerDynamicSummon(type, amount) {
         let maxPulls = type === 'normal' ? Math.floor(state.coins / 100) : Math.floor(state.rareCoins / 5);
-        let safeMax = Math.min(1000000000, maxPulls); // 10億連
+        let safeMax = Math.min(1000000000, maxPulls);
         let pulls = amount === 'max' ? safeMax : amount;
         
         if (pulls > maxPulls || pulls <= 0) return alert("お供え物が不足しています");
@@ -523,7 +626,6 @@
         let rarityCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
         let isStar4 = false; let isStar5 = false;
 
-        // 乱数揺らぎ付き高速期待値アルゴリズム
         if (times <= 10) {
             for(let i=0; i<times; i++) {
                 let roll = Math.random() * 100, rarity = 1;
@@ -561,9 +663,7 @@
                     let rem = count % pool.length;
                     for(let i=0; i<pool.length; i++) {
                         let c = base + (i < rem ? 1 : 0);
-                        if (c > 0) {
-                            rollCounts[pool[i].id] = (rollCounts[pool[i].id] || 0) + c;
-                        }
+                        if (c > 0) rollCounts[pool[i].id] = (rollCounts[pool[i].id] || 0) + c;
                     }
                 }
             }
@@ -576,9 +676,7 @@
                 let rem = remaining % pool.length;
                 for(let i=0; i<pool.length; i++) {
                     let c = base + (i < rem ? 1 : 0);
-                    if (c > 0) {
-                        rollCounts[pool[i].id] = (rollCounts[pool[i].id] || 0) + c;
-                    }
+                    if (c > 0) rollCounts[pool[i].id] = (rollCounts[pool[i].id] || 0) + c;
                 }
             }
         }
@@ -803,7 +901,7 @@
             desc = "己の限界を超えた時、奇跡はより重みを持つ。<br><br>溢れ出た会心率（100%超過分）は決して失われず、威光となりて一撃の『威力（倍率）』を底上げするだろう。";
         } else if (type === 'evil') {
             title = "神の秘伝：深淵の理";
-            desc = "全てを飲み込む深淵の力。<br><br>他の全ての加護が掛かった後に、最後の『最終倍率』として掛け合わされる禁忌の加護である。";
+            desc = "全てを飲み込む深淵の力。<br><br>他の全ての加護が重なり合った後に、最後の『最終倍率』として掛け合わされる禁忌の加護である。";
         }
         
         document.getElementById('detail-content').innerHTML = `
@@ -872,6 +970,7 @@
         if(confirm("本当に世界を初期化しますか？")) {
             if(confirm("この操作は絶対に取り消せません。今まで集めた神々もすべて失われます。本当によろしいですか？")) {
                 if(confirm("神々との絆がすべて失われます。最終確認です。消去しますか？")) {
+                    localStorage.removeItem('yaoyoro_secure_v3');
                     localStorage.removeItem('yaoyoro_secure_v2');
                     localStorage.removeItem('yaoyoro_secure_v1');
                     localStorage.removeItem('yaoyoro_max_v10');
@@ -881,15 +980,24 @@
         }
     }
 
+    function getAttrMaxCounts() {
+        let counts = {fire:0, water:0, earth:0, sky:0, evil:0};
+        cardData.forEach(c => counts[c.attr]++);
+        return counts;
+    }
+    function getRareMaxCounts() {
+        let counts = {1:0, 2:0, 3:0, 4:0, 5:0};
+        cardData.forEach(c => counts[c.rare]++);
+        return counts;
+    }
+
     function updateDisplay() {
-        // ステータス更新（単位はJS側でのみ付与し重複を防ぐ）
         document.getElementById('coins').innerText = Math.floor(state.coins).toLocaleString();
         document.getElementById('rare-coins').innerText = Math.floor(state.rareCoins).toLocaleString();
         document.getElementById('st-p').innerText = state.stats.p.toLocaleString();
         document.getElementById('st-m').innerText = state.stats.m.toLocaleString(undefined, {maximumFractionDigits:2}) + "x";
         
-        let cText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1}) + "%";
-        document.getElementById('st-c').innerHTML = cText;
+        document.getElementById('st-c').innerText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1}) + "%";
 
         let critPowBox = document.getElementById('crit-power-box');
         if(state.stats.c > 1.0) {
@@ -915,7 +1023,6 @@
         document.getElementById('stat-total-sub').innerText = (state.totalSublimation || 0).toLocaleString();
         document.getElementById('stat-max-gain').innerText = Math.floor(state.maxGain || 0).toLocaleString();
 
-        // 図鑑のプログレスと収集率
         let collectedCount = Object.keys(state.inv).length;
         let totalCards = cardData.length;
         let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
@@ -928,16 +1035,20 @@
             let c = cardData.find(x => x.id == id);
             if(c) { attrCounts[c.attr]++; rareCounts[c.rare]++; }
         }
-        document.getElementById('col-fire').innerText = `火:${attrCounts.fire}`;
-        document.getElementById('col-water').innerText = `水:${attrCounts.water}`;
-        document.getElementById('col-earth').innerText = `地:${attrCounts.earth}`;
-        document.getElementById('col-sky').innerText = `空:${attrCounts.sky}`;
-        document.getElementById('col-evil').innerText = `悪:${attrCounts.evil}`;
-        document.getElementById('col-r5').innerText = `★5:${rareCounts[5]}`;
-        document.getElementById('col-r4').innerText = `★4:${rareCounts[4]}`;
-        document.getElementById('col-r3').innerText = `★3:${rareCounts[3]}`;
-        document.getElementById('col-r2').innerText = `★2:${rareCounts[2]}`;
-        document.getElementById('col-r1').innerText = `★1:${rareCounts[1]}`;
+        let maxA = getAttrMaxCounts();
+        let maxR = getRareMaxCounts();
+
+        document.getElementById('col-fire').innerHTML = `${attrCounts.fire} <span style="font-size:0.6rem; color:#888;">/ ${maxA.fire}</span>`;
+        document.getElementById('col-water').innerHTML = `${attrCounts.water} <span style="font-size:0.6rem; color:#888;">/ ${maxA.water}</span>`;
+        document.getElementById('col-earth').innerHTML = `${attrCounts.earth} <span style="font-size:0.6rem; color:#888;">/ ${maxA.earth}</span>`;
+        document.getElementById('col-sky').innerHTML = `${attrCounts.sky} <span style="font-size:0.6rem; color:#888;">/ ${maxA.sky}</span>`;
+        document.getElementById('col-evil').innerHTML = `${attrCounts.evil} <span style="font-size:0.6rem; color:#888;">/ ${maxA.evil}</span>`;
+        
+        document.getElementById('col-r5').innerHTML = `${rareCounts[5]} <span style="font-size:0.6rem; color:#888;">/ ${maxR[5]}</span>`;
+        document.getElementById('col-r4').innerHTML = `${rareCounts[4]} <span style="font-size:0.6rem; color:#888;">/ ${maxR[4]}</span>`;
+        document.getElementById('col-r3').innerHTML = `${rareCounts[3]} <span style="font-size:0.6rem; color:#888;">/ ${maxR[3]}</span>`;
+        document.getElementById('col-r2').innerHTML = `${rareCounts[2]} <span style="font-size:0.6rem; color:#888;">/ ${maxR[2]}</span>`;
+        document.getElementById('col-r1').innerHTML = `${rareCounts[1]} <span style="font-size:0.6rem; color:#888;">/ ${maxR[1]}</span>`;
 
         let maxNorm = Math.floor(state.coins / 100);
         let safeMaxNorm = Math.min(1000000000, maxNorm); // 10億連
