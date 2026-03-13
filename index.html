@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヤオヨロクリッカー</title>
+    <style>
+        body { background: #0d0d0d; color: #e0e0e0; text-align: center; font-family: "serif"; margin: 0; padding-bottom: 100px; }
+        #header { background: #1a1a1a; padding: 20px; border-bottom: 3px solid #333; position: sticky; top: 0; z-index: 100; }
+        .coin-text { font-size: 1.5rem; color: #ffd700; text-shadow: 0 0 5px #b8860b; }
+        
+        /* ボタン装飾 */
+        button { background: #222; color: #eee; border: 1px solid #555; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        #main-btn { width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(#444, #111); border: 4px solid #333; font-size: 1.2rem; color: #fff; box-shadow: 0 10px #000; transition: 0.1s; margin: 40px auto; display: block; }
+        #main-btn:active { transform: translateY(6px); box-shadow: 0 4px #000; }
+
+        /* ログの滝演出 */
+        #gacha-log { height: 120px; overflow-y: auto; background: #000; margin: 15px; padding: 10px; font-size: 0.85rem; border: 1px inset #333; text-align: left; }
+        
+        /* カードリスト */
+        #inventory { display: flex; flex-wrap: wrap; justify-content: center; padding: 10px; }
+        .card { width: 140px; border: 2px solid; margin: 8px; padding: 10px; border-radius: 10px; background: #000; font-size: 0.8rem; }
+        .attr-fire { border-color: #e63946; } .attr-water { border-color: #457b9d; }
+        .attr-earth { border-color: #6d597a; } .attr-sky { border-color: #a8dadc; }
+        .attr-evil { border-color: #590d22; }
+        .rare-5 { color: #ff00ff; font-weight: bold; text-shadow: 0 0 8px #ff00ff; }
+        .level-badge { background: #333; padding: 2px 5px; border-radius: 3px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="header">
+    <div class="coin-text">通常：<span id="coins">0</span> 枚</div>
+    <div class="coin-text" style="font-size: 1rem;">稀代：<span id="rare-coins">0</span> 枚 (0.5%)</div>
+</div>
+
+<button id="main-btn">八百万を<br>観測する</button>
+
+<div>
+    <button onclick="gacha(1)">ガチャ (100枚)</button>
+    <button onclick="gacha(100)">100連 (10,000枚)</button>
+</div>
+
+<div id="gacha-log">--- 観測記録 ---</div>
+
+<h3>--- 顕現せし八百万の神々 ---</h3>
+<div id="inventory"></div>
+
+<script>
+    let coins = 0;
+    let rareCoins = 0;
+    let clickPower = 1;
+    let invData = {}; // { id: { count: 0, level: 0 } }
+
+    const cardData = [
+        { id: 0, name: "灯火の精霊 ポポ", rare: 1, attr: "fire", text: "小さな熾火の化身。" },
+        { id: 1, name: "水滴の精霊 チル", rare: 1, attr: "water", text: "一滴の朝露から生まれた。" },
+        { id: 2, name: "微風の精霊 フウ", rare: 2, attr: "sky", text: "草原を駆ける幼い風。" },
+        { id: 3, name: "業火の神 カグツチ", rare: 4, attr: "fire", text: "全てを焼き尽くす荒ぶる神。" },
+        { id: 4, name: "忘却の神 レテ", rare: 5, attr: "evil", text: "記憶の深淵に座する者。" },
+        { id: 5, name: "天理の神 アマツ", rare: 5, attr: "sky", text: "理の頂を統べる者。" }
+    ];
+
+    const mainBtn = document.getElementById('main-btn');
+    const coinDisp = document.getElementById('coins');
+    const rareDisp = document.getElementById('rare-coins');
+    const logBox = document.getElementById('gacha-log');
+    const invBox = document.getElementById('inventory');
+
+    mainBtn.onclick = () => {
+        coins += clickPower;
+        if (Math.random() < 0.005) rareCoins++;
+        updateDisplay();
+    };
+
+    function gacha(times) {
+        const cost = 100 * times;
+        if (coins < cost) return alert("コインが足りません…");
+        coins -= cost;
+
+        let newLogs = "";
+        for (let i = 0; i < times; i++) {
+            const card = cardData[Math.floor(Math.random() * cardData.length)];
+            const isLevelUp = addCard(card);
+            newLogs = `<div>[★${card.rare}] ${card.name} ${isLevelUp ? '!!LEVEL UP!!' : ''}</div>` + newLogs;
+        }
+        logBox.innerHTML = newLogs;
+        updateDisplay();
+    }
+
+    function addCard(card) {
+        let isLevelUp = false;
+        if (!invData[card.id]) {
+            invData[card.id] = { count: 1, level: 0 };
+        } else {
+            invData[card.id].count++;
+            // ランクアップ計算式：レベルの2乗 (n^2)
+            let needed = Math.pow(invData[card.id].level + 1, 2);
+            if (invData[card.id].count >= needed) {
+                invData[card.id].level++;
+                invData[card.id].count = 0;
+                clickPower += (card.rare * 2); // 強さはレア度に応じて上昇
+                isLevelUp = true;
+            }
+        }
+        return isLevelUp;
+    }
+
+    function updateDisplay() {
+        coinDisp.innerText = Math.floor(coins);
+        rareDisp.innerText = rareCoins;
+
+        invBox.innerHTML = "";
+        for (let id in invData) {
+            const card = cardData[id];
+            const info = invData[id];
+            const next = Math.pow(info.level + 1, 2);
+            invBox.innerHTML += `
+                <div class="card attr-${card.attr}">
+                    <span class="rare-${card.rare}">★${card.rare}</span><br>
+                    <b>${card.name}</b><br>
+                    <span class="level-badge">+${info.level}</span><br>
+                    <progress value="${info.count}" max="${next}" style="width:100%"></progress><br>
+                    <small>${card.text}</small>
+                </div>
+            `;
+        }
+    }
+</script>
+</body>
+</html>
