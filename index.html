@@ -7,6 +7,8 @@
     
     <script src="cards.js"></script>
 
+    <script src="https://cdn.amplitude.com/libs/analytics-browser-2.11.1-min.js.gz"></script><script src="https://cdn.amplitude.com/libs/plugin-session-replay-browser-1.25.15-min.js.gz"></script><script>window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));window.amplitude.init('3a8c052fe8b672bb6f874953be9a7563', {"autocapture":{"elementInteractions":true}});</script>
+
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -16,25 +18,26 @@
         
         html, body {
             width: 100%; height: 100%; margin: 0; padding: 0; background: #000;
-            display: flex; justify-content: center; align-items: center;
+            /* 【修正】PC版で左右の広告を画面端に寄せるための設定 */
+            display: flex; justify-content: space-between; align-items: center;
             overflow: hidden; touch-action: none; overscroll-behavior: none;
             font-family: 'Noto Serif JP', serif;
         }
 
-        /* 【修正】PC表示時のサイド広告枠（3つ並べるために縦長に調整） */
+        /* PC表示時のサイド広告枠 */
         .side-ad { display: none; }
         @media (min-width: 1150px) {
             .side-ad {
                 display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px;
                 width: 320px; height: 100vh; overflow-y: auto; background: transparent; 
-                margin: 0 10px; z-index: 0; padding: 20px 0;
+                z-index: 0; padding: 20px 0;
             }
-            /* スクロールバーを隠す */
             .side-ad::-webkit-scrollbar { display: none; }
         }
 
         #game-container {
-            width: 100%; max-width: 500px; height: 100%; position: relative; 
+            /* 【修正】ゲーム画面が常に中央に来るようにmargin: autoを設定 */
+            width: 100%; max-width: 500px; height: 100%; position: relative; margin: 0 auto;
             background: var(--urushi); color: #f0e6d2;
             background-image: radial-gradient(circle at 20% 20%, rgba(212,175,55,0.06) 0%, transparent 60%),
                               radial-gradient(circle at 80% 80%, rgba(166,46,46,0.12) 0%, transparent 60%);
@@ -59,8 +62,8 @@
         }
         .val { color: var(--gold); font-weight: 900; text-shadow: 0 0 5px rgba(212,175,55,0.4); font-family: sans-serif; }
 
-        /* スマホ広告（50px）とメニューバー（約50px）の分、下部の余白を大きく確保 */
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 5px 130px; opacity: 0; overflow-y: auto; touch-action: pan-y; z-index: 2; position: relative;}
+        /* 【修正】メニュー(50px)＋スマホ広告(50px)＝下部100pxの余白を確保 */
+        .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 5px 100px; opacity: 0; overflow-y: auto; touch-action: pan-y; z-index: 2; position: relative;}
         .screen.active { display: flex; animation: fadeIn 0.4s forwards; }
         @keyframes fadeIn { from { opacity: 0; filter: sepia(1); } to { opacity: 1; filter: sepia(0); } }
 
@@ -186,19 +189,18 @@
         .btn-ad { background: linear-gradient(45deg, #008000, #004d00); color: #fff; border: 2px solid #00ff00; border-radius: 8px; padding: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 0 15px rgba(0,255,0,0.4); width: 100%; transition: 0.2s;}
         .btn-ad:hover { filter: brightness(1.2); }
 
-        /* 【修正】スマホ用下部広告（メニューバーの真上に絶対に表示されるように固定） */
-        #bottom-ad-container { 
-            position: absolute; 
-            bottom: calc(52px + env(safe-area-inset-bottom)); 
-            left: 0; width: 100%; height: 50px; 
-            display: flex; justify-content: center; align-items: center;
-            background: #000; z-index: 1500; 
-            border-top: 1px solid #333;
-        }
-
-        #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); height: 52px;}
+        /* 【修正】メニューバーを下部固定し、スマホ広告をそのすぐ下に隔離 */
+        #menu-bar { position: absolute; bottom: 50px; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 2000; height: 50px;}
         .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; cursor: pointer; line-height: 1;}
         .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
+
+        /* スマホ用下部広告（一番下に固定） */
+        #bottom-ad-container { 
+            position: absolute; 
+            bottom: 0; left: 0; width: 100%; height: 50px; 
+            display: flex; justify-content: center; align-items: center;
+            background: #000; z-index: 1500; 
+        }
 
         button { background: var(--syu); color: #fff; border: 1px solid var(--gold); padding: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: bold; }
         .btn-outline { background: #222; color: var(--gold); }
@@ -432,16 +434,16 @@
         </div>
     </div>
 
-    <div id="bottom-ad-container">
-        <script src="https://adm.shinobi.jp/s/999eec8c565d3a227c8175b30d470157"></script>
-        </div>
-
     <div id="menu-bar">
         <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
         <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
         <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
         <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
     </div>
+
+    <div id="bottom-ad-container">
+        <script src="https://adm.shinobi.jp/s/999eec8c565d3a227c8175b30d470157"></script>
+        </div>
 
     <div id="detail-overlay" class="overlay" onclick="closeOverlay('detail-overlay')">
         <div class="modal" id="detail-content" onclick="event.stopPropagation()"></div>
@@ -658,7 +660,6 @@
                 <b style="color:var(--gold); font-size:1.5rem;">${reward.toLocaleString()} 霊貨</b>
             </div>
             <button class="btn-ad" style="width:100%;" onclick="claimOfflineReward(${reward})">報酬を受け取る</button>
-            <button class="btn-outline" style="width:100%; margin-top:10px;" onclick="closeOverlay('ad-overlay')">あとで</button>
         `;
         openOverlay('ad-overlay');
     }
@@ -1394,7 +1395,6 @@
         el.classList.add('active');
     }
     
-    // 広告の影響を受けないように、DOMの読み込み完了時点で発火
     window.addEventListener('DOMContentLoaded', initGame);
 </script>
 </body>
