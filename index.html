@@ -5,189 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ヤオヨロクリッカー</title>
     <style>
-        /* 連打の邪魔をしない設定 */
-        * { 
-            touch-action: manipulation; /* ダブルタップズーム禁止 */
-            user-select: none;         /* テキスト選択禁止 */
-            -webkit-user-select: none;
-        }
+        * { touch-action: manipulation; user-select: none; -webkit-user-select: none; box-sizing: border-box; }
+        body { background: #0d0d0d; color: #e0e0e0; text-align: center; font-family: serif; margin: 0; }
+        
+        /* 画面切り替え用の設定 */
+        .screen { display: none; padding-top: 60px; min-height: 100vh; }
+        .screen.active { display: block; }
 
-        body { 
-            background: #0d0d0d; 
-            color: #e0e0e0; 
-            text-align: center; 
-            font-family: "Hiragino Mincho ProN", "MS PMincho", serif; 
-            margin: 0; 
-            padding-bottom: 50px;
-        }
-
-        /* ヘッダー：情報を整理 */
+        /* ヘッダー（タイトル） */
         #header { 
-            background: rgba(26, 26, 26, 0.95); 
-            padding: 15px; 
-            border-bottom: 2px solid #b8860b; 
-            position: sticky; 
-            top: 0; 
-            z-index: 100;
-            display: flex;
-            justify-content: space-around;
+            background: #1a1a1a; padding: 10px; border-bottom: 2px solid #b8860b; 
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .coin-text { font-size: 1.1rem; color: #ffd700; }
+        #title-text { font-weight: bold; color: #b8860b; }
 
-        /* メインボタン：押しやすく、かっこよく */
-        #main-btn-container { margin: 40px 0; }
+        /* メインボタン（ホーム画面） */
         #main-btn { 
-            width: 180px; height: 180px; 
-            border-radius: 50%; 
-            background: radial-gradient(#555, #111); 
-            border: 4px solid #b8860b; 
-            font-size: 1.3rem; color: #fff; 
-            box-shadow: 0 8px 0 #000; 
-            transition: 0.05s;
-            cursor: pointer;
+            width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(#444, #111);
+            border: 4px solid #b8860b; color: #fff; font-size: 1.2rem; box-shadow: 0 8px 0 #000;
         }
-        #main-btn:active { 
-            transform: translateY(4px); 
-            box-shadow: 0 4px 0 #000; 
-        }
+        #main-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #000; }
 
-        /* ガチャ・ログエリア */
-        .section-title { 
-            background: #222; 
-            padding: 5px; 
-            margin: 20px 0 10px; 
-            border-left: 5px solid #b8860b;
-            text-align: left;
-            padding-left: 15px;
+        /* フッターメニューボタン */
+        #menu-bar { 
+            position: fixed; bottom: 0; width: 100%; background: #1a1a1a; 
+            display: flex; border-top: 2px solid #333; z-index: 1000;
         }
-        button { 
-            background: #333; color: #eee; 
-            border: 1px solid #555; padding: 12px 15px; 
-            border-radius: 5px; font-size: 0.9rem;
-        }
+        .menu-item { flex: 1; padding: 15px; color: #aaa; cursor: pointer; border-right: 1px solid #333; }
+        .menu-item.active { color: #ffd700; background: #222; }
 
-        #gacha-log { 
-            height: 100px; overflow-y: auto; 
-            background: #000; margin: 10px; 
-            padding: 8px; font-size: 0.8rem; 
-            border: 1px solid #333; text-align: left; 
-            color: #aaa;
+        /* ガチャ画面のオーバーレイ（簡易版） */
+        #gacha-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000; padding: 20px;
         }
-        
-        /* カードリスト：カードっぽさを強化 */
+        .close-btn { position: absolute; top: 10px; right: 10px; font-size: 2rem; color: #fff; }
+
+        /* カード表示 */
         #inventory { display: flex; flex-wrap: wrap; justify-content: center; }
-        .card { 
-            width: 130px; border: 2px solid; margin: 5px; 
-            padding: 8px; border-radius: 8px; 
-            background: #111; font-size: 0.75rem;
-            position: relative;
-        }
-        .attr-fire { border-color: #e63946; box-shadow: 0 0 5px rgba(230,57,70,0.3); }
-        .attr-water { border-color: #457b9d; }
-        .attr-earth { border-color: #6d597a; }
-        .attr-sky { border-color: #a8dadc; }
-        .attr-evil { border-color: #590d22; }
-        
-        .rare-5 { color: #ff00ff; text-shadow: 0 0 5px #ff00ff; }
-        .level-badge { position: absolute; top: -5px; right: -5px; background: #b8860b; color: white; border-radius: 50%; width: 24px; height: 24px; line-height: 24px; font-weight: bold; font-size: 0.7rem; }
-        progress { width: 100%; height: 8px; accent-color: #b8860b; }
+        .card { width: 100px; border: 1px solid #555; margin: 5px; padding: 5px; background: #111; font-size: 0.7rem; }
     </style>
 </head>
 <body>
 
 <div id="header">
-    <div class="coin-text">通常：<span id="coins">0</span></div>
-    <div class="coin-text">稀代：<span id="rare-coins">0</span></div>
+    <div id="title-text">ヤオヨロクリッカー</div>
+    <div style="color: #ffd700;">金：<span id="coins">0</span></div>
 </div>
 
-<div id="main-btn-container">
-    <button id="main-btn">八百万を<br>観測する</button>
+<div id="screen-home" class="screen active">
+    <button id="main-btn">観測</button>
+    <p>現在のパワー: <span id="power">1</span></p>
 </div>
 
-<div class="section-title">神々の顕現（ガチャ）</div>
-<div style="display: flex; justify-content: center; gap: 10px;">
-    <button onclick="gacha(1)">壱連 (100)</button>
-    <button onclick="gacha(100)">百連 (1万)</button>
+<div id="screen-zukan" class="screen">
+    <h3>顕現せし神々</h3>
+    <div id="inventory"></div>
 </div>
 
-<div id="gacha-log">--- 観測の記録 ---</div>
+<div id="menu-bar">
+    <div class="menu-item active" onclick="showScreen('home')">ホーム</div>
+    <div class="menu-item" onclick="showGacha()">ガチャ</div>
+    <div class="menu-item" onclick="showScreen('zukan')">図鑑</div>
+</div>
 
-<div class="section-title">顕現せし八百万の神々</div>
-<div id="inventory"></div>
+<div id="gacha-overlay">
+    <span class="close-btn" onclick="hideGacha()">×</span>
+    <h2>神々の招集</h2>
+    <div style="margin: 40px 0; font-size: 2rem;">[ ガチャイラスト ]</div>
+    <button onclick="pullGacha(1)">壱連 (100)</button>
+    <button onclick="pullGacha(10)">拾連 (1000)</button>
+    <div id="gacha-result" style="margin-top: 20px; font-size: 0.9rem; color: #aaa;"></div>
+</div>
+
+<script src="cards.js"></script>
 
 <script>
-    // --- データ管理 ---
     let coins = 0;
-    let rareCoins = 0;
     let clickPower = 1;
-    let invData = {};
+    let inv = {};
 
-    const cardData = [
-        { id: 0, name: "灯火の精霊 ポポ", rare: 1, attr: "fire", text: "小さな熾火の化身。" },
-        { id: 1, name: "水滴の精霊 チル", rare: 1, attr: "water", text: "一滴の朝露から生まれた。" },
-        { id: 2, name: "微風の精霊 フウ", rare: 2, attr: "sky", text: "草原を駆ける幼い風。" },
-        { id: 3, name: "業火の神 カグツチ", rare: 4, attr: "fire", text: "全てを焼き尽くす荒ぶる神。" },
-        { id: 4, name: "忘却の神 レテ", rare: 5, attr: "evil", text: "記憶の深淵に座する者。" },
-        { id: 5, name: "天理の神 アマツ", rare: 5, attr: "sky", text: "理の頂を統べる者。" }
-    ];
-
-    // --- ロジック ---
-    document.getElementById('main-btn').onclick = () => {
-        coins += clickPower;
-        if (Math.random() < 0.005) rareCoins++;
-        updateDisplay();
-    };
-
-    function gacha(times) {
-        const cost = 100 * times;
-        if (coins < cost) return; 
-        coins -= cost;
-
-        let logHTML = "";
-        for (let i = 0; i < times; i++) {
-            const card = cardData[Math.floor(Math.random() * cardData.length)];
-            const isLevelUp = addCard(card);
-            logHTML = `<div>[★${card.rare}] ${card.name} ${isLevelUp ? '!!昇格!!' : ''}</div>` + logHTML;
-        }
-        document.getElementById('gacha-log').innerHTML = logHTML;
+    // 画面切り替え
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen-' + screenId).classList.add('active');
+        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+        // 簡易的なアクティブ表示切り替え
         updateDisplay();
     }
 
-    function addCard(card) {
-        let isLevelUp = false;
-        if (!invData[card.id]) {
-            invData[card.id] = { count: 1, level: 0 };
-        } else {
-            invData[card.id].count++;
-            let needed = Math.pow(invData[card.id].level + 1, 2);
-            if (invData[card.id].count >= needed) {
-                invData[card.id].level++;
-                invData[card.id].count = 0;
-                clickPower += (card.rare * 2); 
-                isLevelUp = true;
-            }
+    function showGacha() { document.getElementById('gacha-overlay').style.display = 'block'; }
+    function hideGacha() { document.getElementById('gacha-overlay').style.display = 'none'; }
+
+    // クリック処理
+    document.getElementById('main-btn').onclick = () => {
+        coins += clickPower;
+        updateDisplay();
+    };
+
+    function pullGacha(times) {
+        if (coins < 100 * times) return alert("金が足りぬ…");
+        coins -= 100 * times;
+        let res = "";
+        for(let i=0; i<times; i++) {
+            let card = cardData[Math.floor(Math.random() * cardData.length)];
+            inv[card.id] = (inv[card.id] || 0) + 1;
+            res += `[★${card.rare}] ${card.name} / `;
         }
-        return isLevelUp;
+        document.getElementById('gacha-result').innerText = res;
+        updateDisplay();
     }
 
     function updateDisplay() {
         document.getElementById('coins').innerText = Math.floor(coins);
-        document.getElementById('rare-coins').innerText = rareCoins;
+        document.getElementById('power').innerText = clickPower;
         const invBox = document.getElementById('inventory');
         invBox.innerHTML = "";
-        for (let id in invData) {
-            const card = cardData[id];
-            const info = invData[id];
-            const next = Math.pow(info.level + 1, 2);
-            invBox.innerHTML += `
-                <div class="card attr-${card.attr}">
-                    <div class="level-badge">+${info.level}</div>
-                    <span class="rare-${card.rare}">★${card.rare}</span><br>
-                    <b>${card.name}</b><br>
-                    <progress value="${info.count}" max="${next}"></progress><br>
-                    <small>${card.text}</small>
-                </div>
-            `;
+        for(let id in inv) {
+            let card = cardData[id];
+            invBox.innerHTML += `<div class="card">★${card.rare}<br>${card.name}<br>×${inv[id]}</div>`;
         }
     }
 </script>
