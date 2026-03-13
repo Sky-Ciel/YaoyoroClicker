@@ -5,54 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ヤオヨロクリッカー</title>
     <style>
-        :root { --main-gold: #d4af37; --bg-dark: #0a0a0c; --fire: #e63946; --water: #457b9d; --sky: #a8dadc; --evil: #590d22; }
-        * { touch-action: manipulation; user-select: none; -webkit-user-select: none; box-sizing: border-box; }
-        body { background: var(--bg-dark); color: #e0e0e0; text-align: center; font-family: serif; margin: 0; overflow: hidden; }
-
-        /* 画面揺れアニメーション */
-        @keyframes shake { 0% { transform: translate(0,0); } 25% { transform: translate(5px,5px); } 50% { transform: translate(-5px,0); } 75% { transform: translate(5px,-5px); } 100% { transform: translate(0,0); } }
-        .critical-shake { animation: shake 0.2s infinite; background-color: rgba(255,0,0,0.2) !important; }
+        :root { --gold: #d4af37; --bg: #0a0a0c; --fire: #e63946; --water: #457b9d; --earth: #a0522d; --sky: #87ceeb; --evil: #9400d3; }
+        * { touch-action: manipulation; user-select: none; box-sizing: border-box; }
+        body { background: var(--bg); color: #e0e0e0; text-align: center; font-family: serif; margin: 0; }
 
         /* ヘッダー */
-        #header { background: rgba(20, 20, 25, 0.9); padding: 10px; border-bottom: 1px solid var(--main-gold); position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-around; }
-        .val { color: var(--main-gold); font-weight: bold; }
+        #header { background: rgba(20,20,25,0.9); padding: 10px; border-bottom: 1px solid var(--gold); position: fixed; top:0; width:100%; z-index:1000; display: flex; justify-content: space-around; }
+        .val { color: var(--gold); font-weight: bold; }
 
-        /* 各画面 */
-        .screen { display: none; padding-top: 70px; height: 100vh; overflow-y: auto; padding-bottom: 80px; }
+        /* 画面 */
+        .screen { display: none; padding: 70px 10px 80px; height: 100vh; overflow-y: auto; }
         .screen.active { display: block; }
 
-        /* 観測エリア */
-        #main-btn-container { height: 50vh; display: flex; align-items: center; justify-content: center; position: relative; }
-        #main-btn { width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(#444, #000); border: 3px solid var(--main-gold); color: #fff; font-size: 1.2rem; cursor: pointer; z-index: 10; }
-        
-        /* 浮遊数字アニメ */
-        .float-num { position: absolute; color: var(--main-gold); font-weight: bold; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 20; }
-        @keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
+        /* ガチャリザルト演出 */
+        #gacha-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:3000; align-items:center; justify-content:center; flex-direction:column; }
+        .res-card { border: 1px solid #444; margin: 5px; padding: 5px; font-size: 0.7rem; display: inline-block; width: 90px; vertical-align: top; }
 
-        /* カードデザイン（図鑑） */
-        #inventory { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
-        .card { background: #111; border: 2px solid #444; border-radius: 8px; padding: 10px; position: relative; overflow: hidden; }
-        .attr-fire { border-color: var(--fire); } .attr-water { border-color: var(--water); } .attr-sky { border-color: var(--sky); } .attr-evil { border-color: var(--evil); }
-        .rare-5 { box-shadow: 0 0 10px var(--main-gold); border-style: double; }
-        .lvl { position: absolute; top: 0; right: 0; background: var(--main-gold); color: #000; font-size: 0.7rem; padding: 2px 5px; font-weight: bold; }
+        /* カードリスト */
+        #inventory { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .card { background: #111; border: 2px solid #444; border-radius: 8px; padding: 10px; position: relative; text-align: left; min-height: 120px; }
+        .attr-fire { border-color: var(--fire); } .attr-water { border-color: var(--water); } .attr-earth { border-color: var(--earth); } .attr-sky { border-color: var(--sky); } .attr-evil { border-color: var(--evil); }
+        .lvl-badge { position: absolute; top: 5px; right: 5px; background: var(--gold); color: #000; padding: 2px 5px; border-radius: 3px; font-weight: bold; font-size: 0.7rem; }
+        .bonus-txt { font-size: 0.75rem; color: #aaa; margin: 5px 0; }
+        .prog-val { font-size: 0.65rem; color: #888; text-align: right; }
 
-        /* オーバーレイ */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; }
-        .modal { width: 85%; background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid var(--main-gold); }
-
-        /* ガチャ演出 */
-        #gacha-flash { position: fixed; top:0; left:0; width:100%; height:100%; background:white; opacity:0; z-index:4000; pointer-events:none; }
-        @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
-
-        /* メニュー */
+        /* メニューバー */
         #menu-bar { position: fixed; bottom: 0; width: 100%; background: #16161a; display: flex; border-top: 1px solid #333; z-index: 1000; }
         .menu-item { flex: 1; padding: 15px; color: #777; font-size: 0.8rem; }
-        .menu-item.active { color: var(--main-gold); }
+        .menu-item.active { color: var(--gold); }
+        
+        button { background: #222; color: #fff; border: 1px solid #555; padding: 10px; border-radius: 5px; margin: 5px; cursor: pointer; }
+        .btn-rare { border-color: var(--gold); color: var(--gold); }
     </style>
 </head>
-<body id="game-body">
-
-<div id="gacha-flash"></div>
+<body>
 
 <div id="header">
     <div>霊貨 <span id="coins" class="val">0</span></div>
@@ -60,21 +46,29 @@
 </div>
 
 <div id="screen-home" class="screen active">
-    <div id="main-btn-container">
-        <button id="main-btn">観測</button>
+    <div style="height:40vh; display:flex; align-items:center; justify-content:center;">
+        <button id="main-btn" style="width:150px; height:150px; border-radius:50%; background:radial-gradient(#444,#000); border:3px solid var(--gold); color:#fff; font-size:1.2rem;">観測</button>
     </div>
-    <div id="status-mini">
-        現在の観測効率: <span id="power" class="val">1</span> / Tap
+    <div id="status-panel" style="text-align:left; background:#1a1a1a; padding:15px; border-radius:10px; font-size:0.85rem;">
+        <p>● 観測効率: <span id="st-p" class="val">1</span> (+<span id="st-p-add">0</span>)</p>
+        <p>● 霊貨倍率: <span id="st-m" class="val">1.0</span>x</p>
+        <p>● クリティカル率: <span id="st-c" class="val">0</span>%</p>
+        <p>● 神結晶発見率: <span id="st-r" class="val">0.5</span>%</p>
     </div>
 </div>
 
 <div id="screen-gacha" class="screen">
-    <h3>神々の招集</h3>
-    <div style="font-size: 4rem; margin: 20px;">⛩️</div>
-    <button onclick="pullGacha(1)">壱連</button>
-    <button onclick="pullGacha(100)">百連</button>
-    <button onclick="openHelp()">出現確率</button>
-    <div id="gacha-res" style="margin-top:20px; font-size:0.8rem; height:4rem; overflow:hidden; color:#888;"></div>
+    <div style="margin-bottom:30px;">
+        <h3>通常招集</h3>
+        <p style="font-size:0.8rem; color:#888;">(★1-3 / ★4: 0.0001%)</p>
+        <button onclick="gacha('normal', 1)">1連 (100霊貨)</button>
+        <button onclick="gacha('normal', 10)">10連</button>
+    </div>
+    <div style="border-top: 1px solid #333; padding-top:20px;">
+        <h3 style="color:var(--gold);">稀代招集</h3>
+        <p style="font-size:0.8rem; color:#888;">(★3-5確定 / 1回 5神結晶)</p>
+        <button class="btn-rare" onclick="gacha('rare', 1)">招集する</button>
+    </div>
 </div>
 
 <div id="screen-zukan" class="screen">
@@ -82,13 +76,11 @@
     <div id="inventory"></div>
 </div>
 
-<div id="screen-profile" class="screen">
-    <h3>観測者プロフィール</h3>
-    <div class="modal" style="margin: 0 auto; text-align: left; width: 90%;">
-        <p>累計獲得霊貨: <span id="stat-total-coins">0</span></p>
-        <p>総観測回数: <span id="stat-total-clicks">0</span></p>
-        <p>総招集回数: <span id="stat-total-gacha">0</span></p>
-        <p>神結晶発見数: <span id="stat-total-rare">0</span></p>
+<div id="gacha-overlay" onclick="this.style.display='none'">
+    <div style="background:#1a1a1a; padding:20px; border:1px solid var(--gold); width:90%; border-radius:10px;">
+        <h4>招集結果</h4>
+        <div id="gacha-res-list" style="max-height:60vh; overflow-y:auto;"></div>
+        <p style="font-size:0.8rem; color:#888; margin-top:10px;">(画面タップで閉じる)</p>
     </div>
 </div>
 
@@ -96,139 +88,108 @@
     <div class="menu-item active" onclick="changeScreen('home', this)">ホーム</div>
     <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
     <div class="menu-item" onclick="changeScreen('zukan', this)">図鑑</div>
-    <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
-</div>
-
-<div id="detail-overlay" class="overlay" onclick="this.style.display='none'">
-    <div class="modal" id="detail-content"></div>
-</div>
-
-<div id="help-overlay" class="overlay" onclick="this.style.display='none'">
-    <div class="modal">
-        <h4>招集確率</h4>
-        <p>★5: 1% / ★4: 5% / ★1-3: 94%</p>
-        <button>閉じる</button>
-    </div>
 </div>
 
 <script src="cards.js"></script>
 <script>
-    let state = {
-        coins: 0, rareCoins: 0, power: 1, inv: {},
-        totalCoins: 0, totalClicks: 0, totalGacha: 0, totalRare: 0
-    };
+    let state = { coins: 0, rareCoins: 0, inv: {}, stats: { p: 1, pAdd: 0, m: 1.0, c: 0, r: 0.005 } };
 
-    function save() { localStorage.setItem('yaoyoro_v2', JSON.stringify(state)); }
+    function save() { localStorage.setItem('yaoyoro_v4', JSON.stringify(state)); }
     function load() {
-        const saved = localStorage.getItem('yaoyoro_v2');
-        if (saved) state = JSON.parse(saved);
-        calculatePower();
+        const s = localStorage.getItem('yaoyoro_v4');
+        if (s) state = JSON.parse(s);
+        updateStats();
         updateDisplay();
     }
 
-    function calculatePower() {
-        let p = 1;
+    function updateStats() {
+        let p = 1; let pa = 0; let m = 1.0; let c = 0; let r = 0.005;
         for (let id in state.inv) {
-            const card = cardData.find(c => c.id == id);
-            if (card) p += (state.inv[id].l * card.rare * 5);
+            const card = cardData.find(x => x.id == id);
+            const l = state.inv[id].l;
+            if (!card || l === 0) continue;
+            if (card.attr === "fire") pa += card.bonus * l;
+            if (card.attr === "water") m += card.bonus * l;
+            if (card.attr === "earth") c += card.bonus * l;
+            if (card.attr === "sky") r += card.bonus * l;
+            if (card.attr === "evil") m *= (1 + card.bonus * l);
         }
-        state.power = p;
+        state.stats = { p: p, pAdd: pa, m: m, c: c, r: r };
     }
 
-    // メインクリック
-    document.getElementById('main-btn').onclick = (e) => {
-        state.totalClicks++;
-        let isCrit = Math.random() < 0.05;
-        let gain = isCrit ? state.power * 5 : state.power;
-        
+    document.getElementById('main-btn').onclick = () => {
+        let isCrit = Math.random() < state.stats.c;
+        let gain = (state.stats.p + state.stats.pAdd) * state.stats.m * (isCrit ? 5 : 1);
         state.coins += gain;
-        state.totalCoins += gain;
-
-        if (Math.random() < 0.005) { state.rareCoins++; state.totalRare++; }
-
-        // 演出
-        showTapEffect(e.clientX, e.clientY, gain, isCrit);
-        if (isCrit) triggerShake();
-        
+        if (Math.random() < state.stats.r) state.rareCoins++;
         updateDisplay();
         save();
     };
 
-    function showTapEffect(x, y, val, crit) {
-        const el = document.createElement('div');
-        el.className = 'float-num';
-        el.innerText = (crit ? "CRITICAL! " : "") + "+" + val;
-        el.style.left = x + 'px';
-        el.style.top = y + 'px';
-        if (crit) el.style.color = "red";
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 600);
-    }
+    function gacha(type, times) {
+        let cost = type === 'normal' ? 100 * times : 5 * times;
+        let currency = type === 'normal' ? 'coins' : 'rareCoins';
+        if (state[currency] < cost) return alert("霊貨または神結晶が足りません");
+        state[currency] -= cost;
 
-    function triggerShake() {
-        document.getElementById('game-body').classList.add('critical-shake');
-        setTimeout(() => document.getElementById('game-body').classList.remove('critical-shake'), 300);
-    }
-
-    function pullGacha(times) {
-        if (state.coins < 100 * times) return alert("霊貨不足");
-        state.coins -= 100 * times;
-        state.totalGacha += times;
-
-        document.getElementById('gacha-flash').style.animation = 'flashAnim 0.5s forwards';
-        setTimeout(() => document.getElementById('gacha-flash').style.animation = '', 500);
-
-        let res = "";
-        for(let i=0; i<times; i++) {
-            const card = cardData[Math.floor(Math.random() * cardData.length)];
-            if(!state.inv[card.id]) state.inv[card.id] = { c: 0, l: 0 };
-            state.inv[card.id].c++;
-            if(state.inv[card.id].c >= Math.pow(state.inv[card.id].l + 1, 2)) {
-                state.inv[card.id].l++; state.inv[card.id].count = 0;
+        let results = [];
+        for (let i = 0; i < times; i++) {
+            let roll = Math.random() * 100;
+            let rarity = 1;
+            if (type === 'normal') {
+                if (roll < 0.0001) rarity = 4;
+                else if (roll < 5) rarity = 3;
+                else if (roll < 25) rarity = 2;
+                else rarity = 1;
+            } else {
+                if (roll < 2) rarity = 5;
+                else if (roll < 15) rarity = 4;
+                else rarity = 3;
             }
-            res += `★${card.rare}${card.name} / `;
+            let pool = cardData.filter(x => x.rare === rarity);
+            if (pool.length === 0) pool = [cardData[0]];
+            let card = pool[Math.floor(Math.random() * pool.length)];
+            
+            if (!state.inv[card.id]) state.inv[card.id] = { c: 0, l: 0 };
+            state.inv[card.id].c++;
+            let next = Math.pow(state.inv[card.id].l + 1, 2);
+            if (state.inv[card.id].c >= next) { state.inv[card.id].l++; state.inv[card.id].c = 0; }
+            results.push(card);
         }
-        document.getElementById('gacha-res').innerText = res;
-        calculatePower();
+        showRes(results);
+        updateStats();
         updateDisplay();
         save();
     }
 
-    function showDetail(id) {
-        const card = cardData.find(c => c.id == id);
-        const info = state.inv[id];
-        document.getElementById('detail-content').innerHTML = `
-            <h2 style="color:var(--main-gold)">★${card.rare} ${card.name}</h2>
-            <p style="color:#aaa">属性: ${card.attr.toUpperCase()}</p>
-            <p>${card.text}</p>
-            <p>現在の強化値: +${info.l}</p>
-            <button onclick="document.getElementById('detail-overlay').style.display='none'">閉じる</button>
-        `;
-        document.getElementById('detail-overlay').style.display = 'flex';
+    function showRes(list) {
+        document.getElementById('gacha-res-list').innerHTML = list.map(c => `
+            <div class="res-card attr-${c.attr}">★${c.rare}<br>${c.name}</div>
+        `).join('');
+        document.getElementById('gacha-overlay').style.display = 'flex';
     }
 
     function updateDisplay() {
         document.getElementById('coins').innerText = Math.floor(state.coins).toLocaleString();
         document.getElementById('rare-coins').innerText = state.rareCoins;
-        document.getElementById('power').innerText = state.power;
-        
-        // 統計反映
-        document.getElementById('stat-total-coins').innerText = Math.floor(state.totalCoins).toLocaleString();
-        document.getElementById('stat-total-clicks').innerText = state.totalClicks;
-        document.getElementById('stat-total-gacha').innerText = state.totalGacha;
-        document.getElementById('stat-total-rare').innerText = state.totalRare;
+        document.getElementById('st-p-add').innerText = state.stats.pAdd;
+        document.getElementById('st-m').innerText = state.stats.m.toFixed(2);
+        document.getElementById('st-c').innerText = (state.stats.c * 100).toFixed(1);
+        document.getElementById('st-r').innerText = (state.stats.r * 100).toFixed(3);
 
         const invBox = document.getElementById('inventory');
         invBox.innerHTML = "";
         for (let id in state.inv) {
-            const card = cardData.find(c => c.id == id);
+            const c = cardData.find(x => x.id == id);
             const info = state.inv[id];
+            const next = Math.pow(info.l + 1, 2);
             invBox.innerHTML += `
-                <div class="card attr-${card.attr} ${card.rare>=5?'rare-5':''}" onclick="showDetail(${id})">
-                    <div class="lvl">+${info.l}</div>
-                    <small>★${card.rare}</small><br>
-                    <b>${card.name}</b>
-                    <progress value="${info.c}" max="${Math.pow(info.l+1, 2)}"></progress>
+                <div class="card attr-${c.attr}">
+                    <div class="lvl-badge">+${info.l}</div>
+                    <b>★${c.rare} ${c.name}</b>
+                    <div class="bonus-txt">${c.attr === 'fire' ? '効率' : c.attr === 'water' ? '倍率' : c.attr === 'earth' ? '会心' : c.attr === 'sky' ? '結晶率' : '全体'} +${c.bonus}</div>
+                    <progress value="${info.c}" max="${next}" style="width:100%"></progress>
+                    <div class="prog-val">${info.c} / ${next}</div>
                 </div>
             `;
         }
@@ -240,7 +201,7 @@
         document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
         el.classList.add('active');
     }
-    function openHelp() { document.getElementById('help-overlay').style.display='flex'; }
+
     window.onload = load;
 </script>
 </body>
