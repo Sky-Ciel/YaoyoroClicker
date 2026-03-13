@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --gold: #d4af37; --urushi: #0a0505; --syu: #a62e2e; 
+            --gold: #d4af37; --urushi: #160606; --syu: #a62e2e; 
             --fire: #ff4500; --water: #1e90ff; --earth: #cd853f; --sky: #00ffff; --evil: #ba55d3;
         }
         
@@ -21,8 +21,9 @@
         #game-container {
             width: 100%; max-width: 500px; height: 100%; position: relative; 
             background: var(--urushi); color: #f0e6d2;
-            background-image: radial-gradient(circle at 50% 50%, rgba(212,175,55,0.06) 0%, transparent 70%);
-            box-shadow: 0 0 30px rgba(212,175,55,0.1); overflow: hidden;
+            background-image: radial-gradient(circle at 20% 20%, rgba(212,175,55,0.08) 0%, transparent 60%),
+                              radial-gradient(circle at 80% 80%, rgba(166,46,46,0.15) 0%, transparent 60%);
+            box-shadow: 0 0 30px rgba(212,175,55,0.15); overflow: hidden;
         }
 
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; }
@@ -33,8 +34,8 @@
         .crit-flash.show { opacity: 1; }
 
         #header { 
-            background: linear-gradient(180deg, #1a0a0a, #0a0505); padding: 15px 10px; 
-            border-bottom: 2px solid var(--gold); position: fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:500px; z-index:1000;
+            background: linear-gradient(180deg, #1f0a0a, #160606); padding: 15px 10px; 
+            border-bottom: 2px solid var(--gold); position: absolute; top:0; width:100%; z-index:1000;
             display: flex; justify-content: space-around; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
         .val { color: var(--gold); font-weight: 900; text-shadow: 0 0 5px rgba(212,175,55,0.4); font-family: sans-serif; }
@@ -52,12 +53,13 @@
         .btn-pressed { transform: scale(0.92) translateY(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.8) !important; filter: brightness(1.3); }
 
         .gacha-box {
-            width: 100%; background: linear-gradient(135deg, #1a0505, #0a0505); border: 2px solid var(--gold); 
+            width: 100%; background: linear-gradient(135deg, #1f0a0a, #160606); border: 2px solid var(--gold); 
             border-radius: 12px; padding: 20px 15px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.6); margin: auto;
         }
         .dyn-btn { width: 100%; background: linear-gradient(45deg, var(--syu), #000); font-size: 1rem; padding: 15px 5px; margin-top: 10px; border-color: var(--gold); color: #fff; text-shadow: 0 0 5px var(--gold); transition: 0.2s;}
         .dyn-btn:disabled { filter: grayscale(1); opacity: 0.3; border-color: #555; }
 
+        /* 3Dガチャ・確定カットイン演出 */
         #summon-scene { display: none; position: absolute; inset: 0; background: radial-gradient(circle, #2a0a0a, #000); z-index: 5000; align-items: center; justify-content: center; perspective: 1000px; overflow: hidden; }
         #summon-scene.scene-star5 { background: #000; }
         
@@ -90,27 +92,22 @@
 
         /* 魔導書＆リザルトカード */
         .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; flex: 1; align-content: start; margin-top: 10px; }
-        /* リザルト用グリッド（表示崩れ対策で height を固定） */
         .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; grid-auto-rows: min-content; align-items: start; }
         
         .file-slot { 
             border-radius: 8px; position: relative; 
             display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            background: #111; border: 2px solid #333; transition: transform 0.2s; overflow: hidden;
-            padding: 8px 2px;
+            background: #111; border: 2px solid #333; transition: transform 0.2s; overflow: hidden; padding: 8px 2px;
         }
-        /* 図鑑用 */
         .book-grid .file-slot { aspect-ratio: 1/1.4; }
-        /* リザルト用（潰れ防止） */
         .res-grid .file-slot { height: 110px; cursor: pointer; }
-
         .file-slot.empty { opacity: 0.15; border-style: dashed; }
         
-        .bg-fire { background: linear-gradient(135deg, rgba(230,57,70,0.5), #0d0505); }
-        .bg-water { background: linear-gradient(135deg, rgba(69,123,157,0.5), #0d0505); }
-        .bg-earth { background: linear-gradient(135deg, rgba(139,69,19,0.5), #0d0505); }
-        .bg-sky { background: linear-gradient(135deg, rgba(0,180,216,0.5), #0d0505); }
-        .bg-evil { background: linear-gradient(135deg, rgba(148,0,211,0.5), #0d0505); }
+        .bg-fire { background: linear-gradient(135deg, rgba(230,57,70,0.5), #0a0505); }
+        .bg-water { background: linear-gradient(135deg, rgba(69,123,157,0.5), #0a0505); }
+        .bg-earth { background: linear-gradient(135deg, rgba(139,69,19,0.5), #0a0505); }
+        .bg-sky { background: linear-gradient(135deg, rgba(0,180,216,0.5), #0a0505); }
+        .bg-evil { background: linear-gradient(135deg, rgba(148,0,211,0.5), #0a0505); }
 
         .attr-icon { position: absolute; top: 2px; left: 4px; font-size: 0.75rem; text-shadow: 0 0 3px #000; z-index: 5; }
 
@@ -126,10 +123,13 @@
         .slot-stars { font-size: 0.45rem; color: var(--gold); letter-spacing: 2px; text-shadow: 0 0 2px #000; z-index: 5;}
         .file-lvl { position: absolute; top: -1px; right: -1px; background: rgba(0,0,0,0.8); color: #fff; font-size: 0.6rem; padding: 2px 6px; font-weight: 900; border-bottom-left-radius: 8px; border: 1px solid var(--gold); border-top:none; border-right:none; z-index: 5;}
 
-        /* オーバーレイ */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; }
-        /* 詳細画面はリザルトより手前に出すために z-index を高く設定 */
+        /* ふわっとオーバーレイ */
+        .overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; opacity: 0; }
         #detail-overlay { z-index: 7000; }
+        .overlay.fade-in { display: flex; animation: fadeOverlayIn 0.25s forwards; }
+        .overlay.fade-out { animation: fadeOverlayOut 0.25s forwards; }
+        @keyframes fadeOverlayIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeOverlayOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.98); } }
 
         .modal { width: 100%; max-width: 450px; max-height: 85vh; background: var(--urushi); padding: 20px; border-radius: 12px; border: 2px solid var(--gold); overflow-y: auto; touch-action: pan-y; text-align: left; }
         
@@ -139,13 +139,12 @@
         .suck-anim { animation: suckIn 0.6s ease-in forwards; pointer-events: none; }
         @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
 
-        #menu-bar { position: fixed; bottom: 0; left:50%; transform:translateX(-50%); width: 100%; max-width: 500px; background: #050202; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+        #menu-bar { position: absolute; bottom: 0; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
         .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; cursor: pointer; }
         .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
 
         button { background: var(--syu); color: #fff; border: 1px solid var(--gold); padding: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: bold; }
         .btn-outline { background: #222; color: var(--gold); }
-        
         .tips-btn { background: #222; color: var(--gold); border: 1px solid var(--gold); border-radius: 50%; width: 22px; height: 22px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; margin-left: 5px; }
 
         .float-num { position: absolute; font-weight: 900; pointer-events: none; animation: floatUp 0.6s forwards; z-index: 2000; text-shadow: 0 0 5px #000; color: var(--gold); }
@@ -178,11 +177,15 @@
                 <div>効率: <span id="st-p" class="val">1</span></div>
                 <div>倍率: <span id="st-m" class="val">1.0</span>x</div>
                 <div style="display:flex; align-items:center;">
-                    会心: <span id="st-c" class="val" style="margin-left:5px;">0</span> 
+                    会心: <span id="st-c" class="val" style="margin-left:5px;">0</span>% 
                     <button class="tips-btn" onclick="showGlobalTips('crit')">?</button>
                 </div>
                 <div>結晶: <span id="st-r" class="val">0.5</span>%</div>
             </div>
+            <div id="crit-power-box" style="display:none; font-size:0.75rem; color:#ff00ff; margin-top:3px; text-align:right;">
+                └ 超会心威力: <span id="st-cp" style="font-weight:bold;">2.0</span>x
+            </div>
+            
             <div style="margin-top:8px; border-top:1px dashed #555; padding-top:8px; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center;">
                 <div>深淵倍率: <span id="st-e" class="val" style="color:var(--evil);">1.0</span>x</div>
                 <button class="tips-btn" onclick="showGlobalTips('evil')">?</button>
@@ -261,18 +264,15 @@
         <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
     </div>
 
-    <div id="detail-overlay" class="overlay" onclick="this.style.display='none'">
+    <div id="detail-overlay" class="overlay" onclick="closeOverlay('detail-overlay')">
         <div class="modal" id="detail-content" onclick="event.stopPropagation()"></div>
     </div>
 
     <div id="gacha-result-overlay" class="overlay" onclick="handleGachaAction(event)">
         <div class="modal" onclick="event.stopPropagation()" id="gacha-result-modal">
             <h3 style="color:var(--gold); text-align:center; border-bottom:1px solid #444; padding-bottom:10px;">招集結果</h3>
-            
             <div id="gacha-res-list" class="res-grid" style="max-height:55vh; overflow-y:auto; padding:5px;"></div>
-            
             <div id="gacha-res-summary" style="display:none; max-height:50vh; overflow-y:auto; padding:10px; font-size:1.1rem; line-height:2; text-align:center;"></div>
-            
             <button id="gacha-action-btn" onclick="handleGachaAction(event)" style="width:100%; margin-top:20px;">確認</button>
         </div>
     </div>
@@ -280,24 +280,33 @@
 
 <script src="cards.js"></script>
 <script>
-    let state = { coins: 0, rareCoins: 0, inv: {}, invOrder: [], stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0 }, totalCoins: 0, totalClicks: 0, totalCrit: 0, totalGacha: 0, totalRare: 0 };
+    let state = { coins: 0, rareCoins: 0, inv: {}, invOrder: [], stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0, critPower: 2.0 }, totalCoins: 0, totalClicks: 0, totalCrit: 0, totalGacha: 0, totalRare: 0 };
     let curPage = 0, showAll = true;
     let gachaSummaryHtml = "";
     let isShowingSummary = true;
 
     function getAttrIcon(attr) { return { fire: "🔥", water: "💧", earth: "⛰️", sky: "🪽", evil: "🔯" }[attr] || ""; }
 
-    function save() { localStorage.setItem('yaoyoro_max_v8', JSON.stringify(state)); }
+    function openOverlay(id) {
+        let el = document.getElementById(id);
+        el.classList.remove('fade-out');
+        el.classList.add('fade-in');
+    }
+    function closeOverlay(id) {
+        let el = document.getElementById(id);
+        el.classList.remove('fade-in');
+        el.classList.add('fade-out');
+        setTimeout(() => { el.classList.remove('fade-out'); }, 250);
+    }
+
+    function save() { localStorage.setItem('yaoyoro_max_v9', JSON.stringify(state)); }
     function load() {
-        const s = localStorage.getItem('yaoyoro_max_v8');
+        const s = localStorage.getItem('yaoyoro_max_v9');
         if (s) {
             let loaded = JSON.parse(s);
             state = { ...state, ...loaded };
-            state.totalCoins = state.totalCoins || 0;
-            state.totalClicks = state.totalClicks || 0;
-            state.totalCrit = state.totalCrit || 0;
-            state.totalGacha = state.totalGacha || 0;
-            state.totalRare = state.totalRare || 0;
+            state.totalCoins = state.totalCoins || 0; state.totalClicks = state.totalClicks || 0;
+            state.totalCrit = state.totalCrit || 0; state.totalGacha = state.totalGacha || 0; state.totalRare = state.totalRare || 0;
             if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
         }
         updateStats(); updateDisplay();
@@ -317,7 +326,10 @@
             if (card.attr === "evil") e *= (1 + card.bonus * l);
         }
         let final_r = (raw_r * 0.5) / (raw_r + 0.5);
-        state.stats = { p, m, c, r: final_r, e };
+        let critPow = 2.0;
+        if (c > 1.0) critPow = 2.0 + Math.log2(1 + (c - 1.0)) * 0.5; // 限界突破時の倍率（緩やか）
+        
+        state.stats = { p, m, c, r: final_r, e, critPower: critPow };
     }
 
     const mainBtn = document.getElementById('main-btn');
@@ -325,16 +337,11 @@
         state.totalClicks++;
         let cRate = state.stats.c;
         let isCrit = false;
-        let critMulti = 2; // デフォルト倍率を2倍に抑制
         
-        if (cRate > 1.0) {
-            isCrit = true;
-            critMulti = 2 + Math.log10(1 + (cRate - 1.0)) * 1.5; // マイルドな伸び
-        } else {
-            isCrit = Math.random() < cRate;
-        }
+        if (cRate > 1.0) { isCrit = true; } 
+        else { isCrit = Math.random() < cRate; }
 
-        let gain = state.stats.p * state.stats.m * state.stats.e * (isCrit ? critMulti : 1);
+        let gain = state.stats.p * state.stats.m * state.stats.e * (isCrit ? state.stats.critPower : 1);
         state.coins += gain; state.totalCoins += gain;
         if (isCrit) state.totalCrit++;
         if (Math.random() < state.stats.r) { state.rareCoins++; state.totalRare++; }
@@ -355,8 +362,7 @@
         }
 
         const rect = document.getElementById('game-container').getBoundingClientRect();
-        const relX = x - rect.left;
-        const relY = y - rect.top;
+        const relX = x - rect.left; const relY = y - rect.top;
 
         const el = document.createElement('div');
         el.className = 'float-num';
@@ -396,11 +402,10 @@
         
         let rollCounts = {};
         let rarityCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
-        let isStar4 = false;
-        let isStar5 = false;
+        let isStar4 = false; let isStar5 = false;
         let displayCards = [];
 
-        // 高速期待値アルゴリズム
+        // 乱数揺らぎ付き高速期待値アルゴリズム
         if (times <= 1000) {
             for(let i=0; i<times; i++) {
                 let roll = Math.random() * 100, rarity = 1;
@@ -421,14 +426,21 @@
             }
         } else {
             let rates = type === 'normal' ? { 4: 0.000001, 3: 0.03, 2: 0.20, 1: 0.769999 } : { 5: 0.02, 4: 0.13, 3: 0.85 };
-            for (let rare in rates) {
-                let expected = times * rates[rare];
-                let count = Math.floor(expected);
-                if (Math.random() < (expected - count)) count++;
+            let remaining = times;
+            
+            // レア度の高い順に乱数で揺らがせて枚数決定
+            let order = type === 'normal' ? [4,3,2] : [5,4];
+            for (let rare of order) {
+                // ±15%のランダムな揺らぎ
+                let fluctuation = 1 + (Math.random() * 0.3 - 0.15); 
+                let count = Math.round(times * rates[rare] * fluctuation);
+                if (count > remaining) count = remaining;
+                remaining -= count;
+                
                 if (count > 0) {
                     if (rare == 4) isStar4 = true;
                     if (rare == 5) isStar5 = true;
-                    rarityCounts[rare] += count;
+                    rarityCounts[rare] = count;
                     let pool = cardData.filter(x => x.rare == rare);
                     if (pool.length === 0) pool = [cardData[0]];
                     let base = Math.floor(count / pool.length);
@@ -439,6 +451,22 @@
                             rollCounts[pool[i].id] = (rollCounts[pool[i].id] || 0) + c;
                             if (displayCards.length < 100) displayCards.push(pool[i]);
                         }
+                    }
+                }
+            }
+            // 最低レアリティで帳尻合わせ
+            let baseRare = type === 'normal' ? 1 : 3;
+            if (remaining > 0) {
+                rarityCounts[baseRare] = remaining;
+                let pool = cardData.filter(x => x.rare == baseRare);
+                if (pool.length === 0) pool = [cardData[0]];
+                let base = Math.floor(remaining / pool.length);
+                let rem = remaining % pool.length;
+                for(let i=0; i<pool.length; i++) {
+                    let c = base + (i < rem ? 1 : 0);
+                    if (c > 0) {
+                        rollCounts[pool[i].id] = (rollCounts[pool[i].id] || 0) + c;
+                        if (displayCards.length < 100) displayCards.push(pool[i]);
                     }
                 }
             }
@@ -533,8 +561,8 @@
     }
 
     function showGachaResults(cards, leveledUpIds, totalTimes, rarityCounts) {
-        // レア度順にソートして表示
-        cards.sort((a, b) => b.rare - a.rare);
+        // 表示カードをレア度順＞ID順で綺麗にソート
+        cards.sort((a, b) => b.rare !== a.rare ? b.rare - a.rare : a.id - b.id);
 
         let displayHtml = '';
         cards.forEach(card => {
@@ -556,7 +584,6 @@
 
         document.getElementById('gacha-res-list').innerHTML = displayHtml;
         
-        // 集計ダイアログ用のHTML構築
         gachaSummaryHtml = `
             <div style="margin-bottom:15px; font-weight:bold; color:var(--gold); border-bottom:1px solid #444; padding-bottom:10px;">総招集回数: ${totalTimes.toLocaleString()} 回</div>
             ${rarityCounts[5] > 0 ? `<div style="color:#ff00ff; text-shadow:0 0 5px #ff00ff;">★★★★★ : ${rarityCounts[5].toLocaleString()} 柱</div>` : ''}
@@ -578,7 +605,7 @@
             isShowingSummary = true;
         }
 
-        document.getElementById('gacha-result-overlay').style.display = 'flex';
+        openOverlay('gacha-result-overlay');
         updateStats(); updateDisplay(); save();
     }
 
@@ -602,9 +629,9 @@
         const nav = document.getElementById('nav-zukan');
         nav.style.background = 'var(--gold)'; nav.style.color = '#000';
         setTimeout(() => {
-            document.getElementById('gacha-result-overlay').style.display = 'none';
+            closeOverlay('gacha-result-overlay');
             nav.style.background = ''; nav.style.color = '';
-        }, 600);
+        }, 500);
     }
 
     function changePage(dir) {
@@ -626,19 +653,19 @@
     function showGlobalTips(type) {
         let title = "", desc = "";
         if (type === 'crit') {
-            title = "神の秘伝：会心と限界突破";
-            desc = "会心発生率は通常最大100%ですが、それを超過して強化した場合、無駄にはならず<b>「超会心」</b>として発動時の倍率自体が緩やかに上昇します。<br><br>限界を突破した者だけが見る景色があります。";
+            title = "神の秘伝：極限の会心";
+            desc = "己の限界を超えた時、奇跡はより重みを持つ。<br><br>会心の確率が溢れた分（100%超過分）は無駄にはならず、その一撃の『威力（倍率）』へと緩やかに昇華される。";
         } else if (type === 'evil') {
-            title = "神の秘伝：深淵倍率";
-            desc = "悪属性の神々が司る「深淵倍率」は、他の全ての計算が終わった最後に<b>掛け算</b>される恐るべき力です。<br><br>他の属性が育つほど、その破壊力は膨れ上がります。";
+            title = "神の秘伝：深淵の理";
+            desc = "全てを飲み込む深淵の力。<br><br>他の全ての加護が掛かった後に、最後の最後に『全てを掛け算』して増幅させる禁忌の加護である。";
         }
         
         document.getElementById('detail-content').innerHTML = `
             <h3 style="color:var(--gold); border-bottom:1px solid var(--syu); padding-bottom:10px; margin-top:0;">${title}</h3>
             <div style="font-size:0.9rem; line-height:1.8; color:var(--paper); padding:10px;">${desc}</div>
-            <button onclick="document.getElementById('detail-overlay').style.display='none'" style="width:100%; margin-top:25px;">閉じる</button>
+            <button onclick="closeOverlay('detail-overlay')" style="width:100%; margin-top:25px;">閉じる</button>
         `;
-        document.getElementById('detail-overlay').style.display = 'flex';
+        openOverlay('detail-overlay');
     }
 
     function showDetail(id, ev) {
@@ -648,11 +675,6 @@
         const b = (c.bonus * (info.l || 1));
         const bT = (c.attr === "earth" || c.attr === "sky") ? (b * 100).toFixed(2) + "%" : b.toLocaleString(undefined, {maximumFractionDigits:2});
         
-        let tipsHtml = c.attr === "evil" ? `
-            <div style="background:rgba(186,85,211,0.1); border:1px solid var(--evil); border-left:4px solid var(--evil); padding:12px; border-radius:4px; margin-top:15px; font-size:0.75rem; line-height:1.6;">
-                <b style="color:var(--gold);">【秘伝：深淵倍率について】</b><br>深淵倍率は、他の全ての効率や倍率の計算が終わった後に適用される<b>「最終的な掛け算」</b>です。他の加護が育つほど、その力は恐ろしいほどに膨れ上がります。
-            </div>` : '';
-
         document.getElementById('detail-content').innerHTML = `
             <div style="text-align:center; margin-bottom:10px;"><span style="color:var(--gold); font-size:1.2rem; letter-spacing:2px;">${"★".repeat(c.rare)}</span></div>
             <h2 style="color:var(--${c.attr}); margin-top:0; border-bottom:1px solid var(--syu); padding-bottom:10px;">${getAttrIcon(c.attr)} ${c.name}</h2>
@@ -661,11 +683,10 @@
                 <b style="color:var(--gold)">神徳：</b> ${getEffectName(c.attr)} +${bT}<br>
                 <div style="margin-top:8px; font-size:0.75rem; color:#888;">顕現進捗: ${info.c} / ${Math.pow(info.l+1, 2)} 枚</div>
             </div>
-            ${tipsHtml}
             <div style="margin-top:20px; font-style:italic; line-height:1.8; color:#eee; padding:15px; border-left:3px solid var(--${c.attr}); background:rgba(255,255,255,0.05);">「${c.story}」</div>
-            <button onclick="document.getElementById('detail-overlay').style.display='none'" style="width:100%; margin-top:25px;">閉じる</button>
+            <button onclick="closeOverlay('detail-overlay')" style="width:100%; margin-top:25px;">閉じる</button>
         `;
-        document.getElementById('detail-overlay').style.display = 'flex';
+        openOverlay('detail-overlay');
     }
 
     function getEffectName(attr) { return { fire: "基礎効率", water: "霊貨倍率", earth: "会心発生率", sky: "結晶発見率", evil: "深淵倍率" }[attr]; }
@@ -676,11 +697,18 @@
         document.getElementById('st-p').innerText = state.stats.p.toLocaleString();
         document.getElementById('st-m').innerText = state.stats.m.toLocaleString(undefined, {maximumFractionDigits:2});
         
-        let cText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1});
-        if(state.stats.c > 1.0) cText += ' <span style="color:#ff00ff; font-size:0.6rem;">(限界突破)</span>';
+        let cText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1}) + "%";
         document.getElementById('st-c').innerHTML = cText;
+
+        let critPowBox = document.getElementById('crit-power-box');
+        if(state.stats.c > 1.0) {
+            critPowBox.style.display = 'block';
+            document.getElementById('st-cp').innerText = state.stats.critPower.toLocaleString(undefined, {maximumFractionDigits:2});
+        } else {
+            critPowBox.style.display = 'none';
+        }
         
-        document.getElementById('st-r').innerText = (state.stats.r * 100).toLocaleString(undefined, {maximumFractionDigits:3});
+        document.getElementById('st-r').innerText = (state.stats.r * 100).toLocaleString(undefined, {maximumFractionDigits:3}) + "%";
         document.getElementById('st-e').innerText = state.stats.e.toLocaleString(undefined, {maximumFractionDigits:2});
         
         document.getElementById('stat-total-coins').innerText = Math.floor(state.totalCoins || 0).toLocaleString();
