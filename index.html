@@ -56,7 +56,6 @@
         }
         .btn-pressed { transform: scale(0.92) translateY(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.9) !important; filter: brightness(1.3); }
 
-        /* オート観測ボタン */
         #auto-click-btn {
             position: absolute; top: 10px; right: 10px; background: linear-gradient(45deg, #111, #333); border: 1px solid var(--gold); color: var(--gold); border-radius: 20px; padding: 8px 12px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px;
         }
@@ -67,7 +66,6 @@
         .dyn-btn { width: 100%; background: linear-gradient(45deg, var(--syu), #000); font-size: 1rem; padding: 15px 5px; margin-top: 10px; border-color: var(--gold); color: #fff; text-shadow: 0 0 5px var(--gold); transition: 0.2s;}
         .dyn-btn:disabled { filter: grayscale(1); opacity: 0.3; border-color: #555; }
 
-        /* 3Dガチャ演出 */
         #summon-scene { display: none; position: absolute; inset: 0; background: radial-gradient(circle, #2a0a0a, #000); z-index: 5000; align-items: center; justify-content: center; perspective: 1000px; overflow: hidden; }
         #summon-scene.scene-star5 { background: #000; }
         .anim-torii { font-size: 8rem; opacity: 0; filter: drop-shadow(0 0 20px var(--syu)); }
@@ -89,10 +87,8 @@
         @keyframes cardShoot { 0% { transform: scale(0.1) translateZ(-500px) rotateY(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: scale(2.2) translateZ(200px) rotateY(1440deg); opacity: 1; } }
 
         .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0.8; }
-        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         @keyframes explode { 0% { transform: scale(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; } }
 
-        /* 魔導書・リザルト */
         .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; flex: 1; align-content: start; margin-top: 10px; padding: 0 10px; }
         .res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; grid-auto-rows: min-content; align-items: start; }
         
@@ -132,22 +128,17 @@
         .file-lvl { position: absolute; top: -1px; right: -1px; background: rgba(0,0,0,0.8); color: #fff; font-size: 0.6rem; padding: 2px 6px; font-weight: 900; border-bottom-left-radius: 8px; border: 1px solid var(--gold); border-top:none; border-right:none; z-index: 5;}
         .stack-badge { position: absolute; bottom: 20px; right: 2px; background: var(--syu); color: #fff; font-size: 0.55rem; padding: 2px 4px; border-radius: 4px; font-weight: bold; border: 1px solid #fff; z-index: 5; box-shadow: 0 2px 5px #000; }
 
-        /* オーバーレイ */
         .overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; padding: 15px; opacity: 0; transition: opacity 0.25s ease-out; }
         .overlay.show { display: flex; opacity: 1; }
         #detail-overlay { z-index: 7000; }
         #ad-overlay { z-index: 8000; }
-
         .modal { width: 100%; max-width: 450px; max-height: 85vh; background: var(--urushi); padding: 20px; border-radius: 12px; border: 2px solid var(--gold); overflow-y: auto; touch-action: pan-y; text-align: left; transform: scale(0.95); transition: transform 0.25s ease-out; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         .overlay.show .modal { transform: scale(1); }
         
         .lvl-up-badge { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); color: #ff00ff; font-weight: 900; font-size: 0.9rem; text-shadow: 0 0 5px #fff, 0 0 10px #ff00ff; animation: popUp 1s forwards; pointer-events: none; z-index: 10; white-space: nowrap;}
         @keyframes popUp { 0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -80%) scale(1); opacity: 0; } }
 
-        .suck-anim { animation: suckIn 0.5s ease-in forwards; pointer-events: none; }
-        @keyframes suckIn { to { transform: translate(0, 500px) scale(0.1) rotate(180deg); opacity: 0; } }
-
-        /* プロフィール豪華装飾 */
+        /* プロフィール画面のレイアウト拡張 */
         .profile-card { background: rgba(30,10,10,0.8); padding: 15px 12px; border-radius: 10px; border: 1px solid var(--gold); text-align: left; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); margin-bottom: 15px; width: 100%; box-sizing: border-box;}
         .profile-title { margin-top: 0; margin-bottom: 12px; color: var(--gold); font-size: 1.1rem; text-align: center; border-bottom: 1px dashed var(--syu); padding-bottom: 8px; }
         .progress-wrap { width: 100%; height: 10px; background: #222; border-radius: 5px; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
@@ -158,13 +149,16 @@
         .stat-label { color: #aaa; font-size: 0.65rem; margin-bottom: 3px; }
         .stat-val { font-weight: bold; color: #fff; font-size: 0.95rem; word-break: break-all; }
 
-        .badge-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; text-align: center; margin-bottom: 8px; }
+        .badge-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; text-align: center; margin-bottom: 8px; }
         .badge-box { background: #222; border-radius: 4px; padding: 4px 1px; border: 1px solid #444; display: flex; flex-direction: column; align-items: center;}
         .badge-title { font-size: 0.6rem; margin-bottom: 2px; display: block; white-space: nowrap; }
         .badge-val { color: #fff; font-size: 0.75rem; font-weight: bold; }
 
         .btn-share { background: #1DA1F2; color: #fff; border: 1px solid #fff; border-radius: 8px; font-weight: bold; padding: 12px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; width: 80%; box-shadow: 0 4px 10px rgba(29,161,242,0.4); transition: 0.2s; }
         .btn-share:hover { filter: brightness(1.2); transform: translateY(-2px); }
+        
+        /* 放置報酬ボタンのCSS追加 */
+        @keyframes pulseGreen { from { box-shadow: 0 0 5px #00ff00; } to { box-shadow: 0 0 15px #00ff00; } }
         .btn-ad { background: linear-gradient(45deg, #008000, #004d00); color: #fff; border: 2px solid #00ff00; border-radius: 8px; padding: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 0 15px rgba(0,255,0,0.4); width: 100%; transition: 0.2s;}
         .btn-ad:hover { filter: brightness(1.2); }
 
@@ -208,7 +202,11 @@
             <button id="auto-click-btn" onclick="openAutoClickAd()">▶️ オート観測 <span id="auto-rem" style="font-weight:normal;">(3/3)</span></button>
         </div>
         <div style="width:calc(100% - 20px); background:rgba(20,8,8,0.85); padding:15px; border-radius:10px; border:1px solid #553333; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); text-align:left; margin-bottom:10px;">
-            <h4 style="margin:0 0 8px; color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:5px;">観測の加護</h4>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--gold); padding-bottom:5px; margin-bottom:8px;">
+                <h4 style="margin:0; color:var(--gold);">観測の加護</h4>
+                <button id="offline-reward-btn" style="display:none; background:linear-gradient(45deg, #006400, #003300); color:#00ff00; border:1px solid #00ff00; padding:4px 8px; font-size:0.65rem; border-radius:4px; font-weight:bold; cursor:pointer; box-shadow:0 0 5px rgba(0,255,0,0.5); animation:pulseGreen 1.5s infinite alternate;" onclick="openOfflineRewardAd()">🎁 放置報酬</button>
+            </div>
+
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85rem;">
                 <div>効率: <span id="st-p" class="val">1</span></div>
                 <div>倍率: <span id="st-m" class="val">1.00x</span></div>
@@ -300,7 +298,7 @@
         <div id="book-container" class="book-grid"></div>
     </div>
 
-    <div id="screen-profile" class="screen" style="padding-left:10px; padding-right:10px;">
+    <div id="screen-profile" class="screen" style="padding-left:5px; padding-right:5px;">
         
         <div class="profile-card" style="text-align:center; background: linear-gradient(135deg, rgba(50,20,20,0.9), rgba(20,5,5,0.9)); border-color:#ff4500; box-shadow: 0 0 20px rgba(255,69,0,0.3);">
             <div style="font-size:0.85rem; color:#aaa; margin-bottom:5px;">観測者の総合神力</div>
@@ -342,7 +340,7 @@
                 <div class="badge-box"><span class="badge-title">🪽 空</span><span id="col-sky" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title">🔯 悪</span><span id="col-evil" class="badge-val">0/0</span></div>
             </div>
-            <div class="badge-grid" style="margin-top:10px;">
+            <div class="badge-grid" style="margin-top:8px;">
                 <div class="badge-box"><span class="badge-title" style="color:#ff00ff;">★5</span><span id="col-r5" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title" style="color:#ffaa00;">★4</span><span id="col-r4" class="badge-val">0/0</span></div>
                 <div class="badge-box"><span class="badge-title" style="color:#e0e0e0;">★3</span><span id="col-r3" class="badge-val">0/0</span></div>
@@ -419,8 +417,7 @@
     </div>
 
     <div id="ad-overlay" class="overlay" onclick="closeOverlay('ad-overlay')">
-        <div class="modal" id="ad-content" onclick="event.stopPropagation()" style="text-align:center;">
-            </div>
+        <div class="modal" id="ad-content" onclick="event.stopPropagation()" style="text-align:center;"></div>
     </div>
 </div>
 
@@ -433,13 +430,14 @@
         spentCoins: 0, spentRareCoins: 0, totalSublimation: 0, maxGain: 0,
         maxP: 1, maxM: 1.0, totalStar5: 0,
         playerName: "名もなき観測者", startTime: Date.now(),
-        lastSaveTime: Date.now(), autoClickUses: 0, lastAutoDate: "" // 【新規】放置・オート用
+        lastSaveTime: Date.now(), autoClickUses: 0, lastAutoDate: ""
     };
     let curPage = 0, showAll = true;
     let gachaSummaryHtml = "";
     let isShowingSummary = true;
     let autoClickInterval = null;
     let autoClickRemaining = 0;
+    let offlineRewardAmount = 0;
     
     function initInnerParticles() {
         const bg = document.getElementById('inner-particles');
@@ -498,35 +496,45 @@
     }
 
     function save() { 
-        state.lastSaveTime = Date.now(); // セーブ時に時刻記録
+        state.lastSaveTime = Date.now();
         const json = JSON.stringify(state);
         const encoded = btoa(unescape(encodeURIComponent(json)));
         const hash = generateHash(encoded);
         localStorage.setItem('yaoyoro_secure_v7', JSON.stringify({p: encoded, h: hash}));
     }
     
+    // 【重要】不備のある cards.js を強引にパースして復旧する処理
     function initGame() {
-        if (typeof cardData === 'undefined') {
-            setTimeout(() => {
-                if (typeof cardData !== 'undefined') {
+        if (typeof cardData === 'undefined' || cardData.length === 0) {
+            fetch('cards.js')
+                .then(res => res.text())
+                .then(text => {
+                    window.cardData = [];
+                    // 正規表現で { ... } を強引に抽出
+                    let matches = text.match(/\{[\s\S]*?\}/g);
+                    if (matches) {
+                        matches.forEach(m => {
+                            try {
+                                // evalの安全な代替としてnew Functionを使用
+                                let obj = new Function('return ' + m)();
+                                if(obj && obj.id) window.cardData.push(obj);
+                            } catch(e) {}
+                        });
+                    }
+                    if (window.cardData.length === 0) createDummyCard();
                     proceedInit();
-                } else {
-                    document.getElementById('game-container').innerHTML = `
-                        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#120404; color:#ff4500; text-align:center; padding:20px; box-sizing:border-box;">
-                            <div style="font-size:4rem; margin-bottom:15px; filter:drop-shadow(0 0 10px #ff0000);">⚠️</div>
-                            <h2 style="color:var(--gold); margin-bottom:10px;">神々の記録が途切れています</h2>
-                            <p style="color:#ccc; font-size:0.85rem; line-height:1.6;">
-                                <code>cards.js</code> の読み込みに失敗しました。<br><br>
-                                ファイルの最後が <code>];</code> で終わっているか<br>
-                                途中で文字が切れていないか確認してください。
-                            </p>
-                        </div>
-                    `;
-                }
-            }, 500);
+                })
+                .catch(err => {
+                    createDummyCard();
+                    proceedInit();
+                });
         } else {
             proceedInit();
         }
+    }
+
+    function createDummyCard() {
+        window.cardData = [{ id: 1, name: "原初の光", rare: 1, attr: "fire", story: "観測の始まり。", bonus: 0.1 }];
     }
 
     function proceedInit() {
@@ -552,8 +560,10 @@
         if(!state.startTime) state.startTime = Date.now();
         if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
 
-        // 日付変更でオートクリック回数リセット
-        let today = new Date().toDateString();
+        // 朝6時リセット判定
+        let now = new Date();
+        now.setHours(now.getHours() - 6);
+        let today = now.toDateString();
         if(state.lastAutoDate !== today) {
             state.autoClickUses = 0;
             state.lastAutoDate = today;
@@ -561,77 +571,74 @@
 
         updateStats(); 
         updateDisplay();
-
-        // 【新規】放置報酬の計算と表示
         checkOfflineReward();
     }
 
+    // 放置報酬ロジック
     function checkOfflineReward() {
         if (!state.lastSaveTime) return;
         let now = Date.now();
         let diffSec = Math.floor((now - state.lastSaveTime) / 1000);
         
-        // 1分(60秒)以上の放置で発動
-        if (diffSec >= 60 && state.stats.p > 1) {
-            // 最大12時間(43200秒)まで
-            let effectiveSec = Math.min(diffSec, 43200);
-            
-            // 1時間(3600秒)あたり (効率 × 360) ＝ 1秒あたり (効率 × 0.1)
+        if (diffSec >= 60 && state.stats.p > 1) { 
+            let effectiveSec = Math.min(diffSec, 43200); 
             let rewardBase = state.stats.p * 0.1 * effectiveSec;
-            // 倍率や深淵も乗せる
             let finalReward = Math.floor(rewardBase * state.stats.m * state.stats.e);
             
             if (finalReward > 0) {
-                showOfflineRewardDialog(finalReward, effectiveSec);
+                offlineRewardAmount = finalReward;
+                document.getElementById('offline-reward-btn').style.display = 'block';
             }
         }
     }
 
-    function showOfflineRewardDialog(reward, sec) {
-        let h = Math.floor(sec / 3600);
-        let m = Math.floor((sec % 3600) / 60);
-        let timeStr = h > 0 ? `${h}時間 ${m}分` : `${m}分`;
-
+    function openOfflineRewardAd() {
         document.getElementById('ad-content').innerHTML = `
             <div style="font-size:3rem; margin-bottom:10px;">🎁</div>
             <h3 style="color:var(--gold); margin-top:0;">神々の恩恵（放置報酬）</h3>
             <p style="font-size:0.85rem; color:#ccc; line-height:1.6;">
-                観測者が不在の ${timeStr} の間、<br>神々が霊貨を集めておいてくれました。
+                観測者が不在の間、神々が霊貨を集めておいてくれました。<br>
+                動画広告を見ることで、報酬が<b style="color:#ff0000;">2倍</b>になります！
             </p>
             <div style="background:#1a0a0a; border:1px solid #444; border-radius:8px; padding:15px; margin:15px 0;">
-                <span style="color:#aaa; font-size:0.8rem;">獲得予定</span><br>
-                <b style="color:var(--gold); font-size:1.5rem;">${reward.toLocaleString()} 霊貨</b>
+                <span style="color:#aaa; font-size:0.8rem;">現在の報酬額</span><br>
+                <b style="color:var(--gold); font-size:1.5rem;">${offlineRewardAmount.toLocaleString()} 霊貨</b>
             </div>
-            <button class="btn-ad" onclick="claimOfflineReward(${reward}, true)">▶️ 動画を見て 2倍 受け取る！</button>
-            <button class="btn-outline" style="width:100%; margin-top:10px;" onclick="claimOfflineReward(${reward}, false)">そのまま受け取る</button>
+            <button class="btn-ad" onclick="claimOfflineReward(true)">▶️ 動画を見て 2倍 受け取る！</button>
+            <button class="btn-outline" style="width:100%; margin-top:10px;" onclick="claimOfflineReward(false)">そのまま受け取る</button>
         `;
         openOverlay('ad-overlay');
     }
 
-    function claimOfflineReward(reward, isDouble) {
+    function claimOfflineReward(isDouble) {
+        let reward = offlineRewardAmount;
         if (isDouble) {
             playDummyAd(() => {
                 state.coins += reward * 2;
                 state.totalCoins += reward * 2;
                 alert(`神々の恩恵が倍増しました！\n${(reward * 2).toLocaleString()} 霊貨を獲得しました！`);
-                save();
-                updateDisplay();
-                closeOverlay('ad-overlay');
+                completeOfflineReward();
             });
         } else {
             state.coins += reward;
             state.totalCoins += reward;
-            save();
-            updateDisplay();
-            closeOverlay('ad-overlay');
+            completeOfflineReward();
         }
+    }
+
+    function completeOfflineReward() {
+        offlineRewardAmount = 0;
+        document.getElementById('offline-reward-btn').style.display = 'none';
+        save();
+        updateDisplay();
+        closeOverlay('ad-overlay');
     }
 
     function calcPower() {
         let total = 0, fire = 0, water = 0, earth = 0, sky = 0, evil = 0;
-        if (typeof cardData !== 'undefined') {
+        if (typeof window.cardData !== 'undefined') {
             for (let id in state.inv) {
-                const card = cardData.find(x => x.id == id);
+                const card = window.cardData.find(x => x.id == id);
                 if(!card) continue;
                 const l = state.inv[id].l;
                 const count = state.inv[id].c;
@@ -652,9 +659,9 @@
         let p = 1, m = 1.0, c = 0, raw_r = 0.005, evilBonusSum = 0;
         let power = calcPower();
 
-        if (typeof cardData !== 'undefined') {
+        if (typeof window.cardData !== 'undefined') {
             for (let id in state.inv) {
-                const card = cardData.find(x => x.id == id);
+                const card = window.cardData.find(x => x.id == id);
                 if(!card) continue;
                 const l = state.inv[id].l;
                 if (l === 0) continue;
@@ -720,7 +727,6 @@
             setTimeout(() => { container.classList.remove('crit-active'); flash.classList.remove('show'); }, 100);
         }
 
-        // オートの場合は位置をボタン中央付近で散らす
         if (isAuto && (!x || !y)) {
             const rect = mainBtn.getBoundingClientRect();
             x = rect.left + rect.width / 2 + (Math.random() * 40 - 20);
@@ -739,13 +745,12 @@
         setTimeout(() => el.remove(), 600);
         
         updateDisplay(); 
-        if(!isAuto) save(); // オート中は負荷軽減のためセーブ間引く
+        if(!isAuto) save();
     };
 
     mainBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(e.touches[0].clientX, e.touches[0].clientY); }, {passive: false});
     mainBtn.addEventListener('mousedown', (e) => { handleTap(e.clientX, e.clientY); });
 
-    // 【新規】オート観測機能
     function openAutoClickAd() {
         if (autoClickRemaining > 0) return alert("現在オート観測中です！");
         if (state.autoClickUses >= 3) return alert("本日のオート観測の回数上限（3回）に達しました。\n明日またご利用ください。");
@@ -777,7 +782,6 @@
                 autoClickRemaining--;
                 btn.innerHTML = `⏳ オート中 (${autoClickRemaining}秒)`;
                 
-                // 1秒間に2回タップ
                 handleTap(null, null, true);
                 setTimeout(() => handleTap(null, null, true), 500);
 
@@ -785,13 +789,12 @@
                     clearInterval(autoClickInterval);
                     btn.classList.remove('active');
                     btn.innerHTML = `▶️ オート観測 <span style="font-weight:normal;">(${3 - state.autoClickUses}/3)</span>`;
-                    save(); // 終わったらセーブ
+                    save(); 
                 }
             }, 1000);
         });
     }
 
-    // ダミーの広告再生プログレス
     function playDummyAd(callback) {
         document.getElementById('ad-content').innerHTML = `
             <h4 style="color:#fff;">動画広告を再生中...</h4>
@@ -850,8 +853,8 @@
                 } else {
                     if (roll < 2) rarity = 5; else if (roll < 15) rarity = 4; else rarity = 3;
                 }
-                let pool = cardData.filter(x => x.rare === rarity);
-                let card = pool.length ? pool[Math.floor(Math.random()*pool.length)] : cardData[0];
+                let pool = window.cardData.filter(x => x.rare === rarity);
+                let card = pool.length ? pool[Math.floor(Math.random()*pool.length)] : (window.cardData[0] || {id:1, rare:1, attr:'fire'});
                 
                 rollCounts[card.id] = (rollCounts[card.id] || 0) + 1;
                 rarityCounts[card.rare]++;
@@ -873,8 +876,8 @@
                     if (rare == 4) isStar4 = true;
                     if (rare == 5) { isStar5 = true; state.totalStar5 += count; }
                     rarityCounts[rare] = count;
-                    let pool = cardData.filter(x => x.rare == rare);
-                    if (pool.length === 0) pool = [cardData[0]];
+                    let pool = window.cardData.filter(x => x.rare == rare);
+                    if (pool.length === 0) pool = [window.cardData[0]];
                     let base = Math.floor(count / pool.length);
                     let rem = count % pool.length;
                     for(let i=0; i<pool.length; i++) {
@@ -888,8 +891,8 @@
             let baseRare = type === 'normal' ? 1 : 3;
             if (remaining > 0) {
                 rarityCounts[baseRare] = remaining;
-                let pool = cardData.filter(x => x.rare == baseRare);
-                if (pool.length === 0) pool = [cardData[0]];
+                let pool = window.cardData.filter(x => x.rare == baseRare);
+                if (pool.length === 0) pool = [window.cardData[0]];
                 let base = Math.floor(remaining / pool.length);
                 let rem = remaining % pool.length;
                 for(let i=0; i<pool.length; i++) {
@@ -965,7 +968,7 @@
     function showGachaResults(rollCounts, leveledUpIds, totalTimes, rarityCounts, oldPower, newPower) {
         let cards = [];
         for (let id in rollCounts) {
-            let cardObj = cardData.find(c => c.id == id);
+            let cardObj = window.cardData.find(c => c.id == id);
             if(cardObj) cards.push({ card: cardObj, count: rollCounts[id] });
         }
         cards.sort((a, b) => b.card.rare !== a.card.rare ? b.card.rare - a.card.rare : a.card.id - b.card.id);
@@ -1079,7 +1082,7 @@
         let attrFilter = document.getElementById('filter-attr') ? document.getElementById('filter-attr').value : 'all';
         let sortType = document.getElementById('sort-select') ? document.getElementById('sort-select').value : 'id-asc';
         
-        let list = showAll ? [...cardData] : cardData.filter(c => !!state.inv[c.id]);
+        let list = showAll ? [...window.cardData] : window.cardData.filter(c => !!state.inv[c.id]);
 
         if (rareFilter !== 'all') list = list.filter(c => c.rare == rareFilter);
         if (attrFilter !== 'all') list = list.filter(c => c.attr === attrFilter);
@@ -1121,7 +1124,7 @@
 
     function showDetail(id, ev) {
         if(ev) ev.stopPropagation();
-        const c = cardData.find(x => x.id == id);
+        const c = window.cardData.find(x => x.id == id);
         const info = state.inv[id] || { l: 0, c: 0 };
         const b = (c.bonus * (info.l || 1));
         const bT = (c.attr === "earth" || c.attr === "sky") ? (b * 100).toFixed(2) + "%" : b.toLocaleString(undefined, {maximumFractionDigits:2});
@@ -1150,69 +1153,6 @@
     }
 
     function getEffectName(attr) { return { fire: "基礎効率", water: "霊貨倍率", earth: "会心発生率", sky: "結晶発見率", evil: "深淵倍率" }[attr]; }
-
-    function changePlayerName() {
-        let newName = prompt("新たな観測者の名を入力してください (最大15文字)", state.playerName);
-        if (newName !== null) {
-            newName = newName.trim().substring(0, 15);
-            if (newName !== "") {
-                state.playerName = newName;
-                updateDisplay();
-                save();
-            }
-        }
-    }
-
-    function formatTime(ms) {
-        let totalSec = Math.floor(ms / 1000);
-        let d = Math.floor(totalSec / 86400);
-        let h = Math.floor((totalSec % 86400) / 3600);
-        let m = Math.floor((totalSec % 3600) / 60);
-        let s = totalSec % 60;
-        
-        let res = "";
-        if (d > 0) res += `${d}日 `;
-        res += `${h.toString().padStart(2, '0')}時間 ${m.toString().padStart(2, '0')}分 ${s.toString().padStart(2, '0')}秒`;
-        return res;
-    }
-    
-    setInterval(() => {
-        let ptEl = document.getElementById('stat-playtime');
-        if(ptEl && state.startTime) ptEl.innerText = formatTime(Date.now() - state.startTime);
-    }, 1000);
-
-    // 【新規】超豪華版 X（Twitter）シェア機能
-    function shareToX() {
-        let pwr = calcPower().total;
-        let gain = Math.floor(state.maxGain || 0);
-        let collectedCount = Object.keys(state.inv).length;
-        let totalCards = typeof cardData !== 'undefined' ? cardData.length : 460;
-        let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
-        let playtime = document.getElementById('stat-playtime').innerText;
-        
-        let text = `【ヤオヨロクリッカー】\n📜 観測者：${state.playerName}\n⚔️ 総合神力：${Math.floor(pwr).toLocaleString()}\n💥 最大一撃：${gain.toLocaleString()} 霊貨\n📚 図鑑完成度：${collectedCount} / ${totalCards} (${collectionRate}%)\n⏱️ プレイ時間：${playtime}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
-        
-        let url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
-    }
-
-    function resetGame() {
-        if(confirm("本当に世界を初期化しますか？")) {
-            if(confirm("この操作は絶対に取り消せません。今まで集めた神々もすべて失われます。本当によろしいですか？")) {
-                if(confirm("神々との絆がすべて失われます。最終確認です。消去しますか？")) {
-                    localStorage.removeItem('yaoyoro_secure_v7');
-                    localStorage.removeItem('yaoyoro_secure_v6');
-                    localStorage.removeItem('yaoyoro_secure_v5');
-                    localStorage.removeItem('yaoyoro_secure_v4');
-                    localStorage.removeItem('yaoyoro_secure_v3');
-                    localStorage.removeItem('yaoyoro_secure_v2');
-                    localStorage.removeItem('yaoyoro_secure_v1');
-                    localStorage.removeItem('yaoyoro_max_v10');
-                    location.reload();
-                }
-            }
-        }
-    }
 
     function updateDisplay() {
         document.getElementById('coins').innerText = Math.floor(state.coins).toLocaleString();
@@ -1259,22 +1199,23 @@
         document.getElementById('stat-total-rare').innerText = Math.floor(state.totalRare || 0).toLocaleString();
         document.getElementById('stat-spent-rare').innerText = Math.floor(state.spentRareCoins || 0).toLocaleString();
 
-        let totalCards = typeof cardData !== 'undefined' ? cardData.length : 460;
+        let totalCards = typeof window.cardData !== 'undefined' ? window.cardData.length : 460;
         let collectedCount = Object.keys(state.inv).length;
         let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
+        if (isNaN(collectionRate)) collectionRate = "0.0";
         
         document.getElementById('stat-collection').innerText = `${collectedCount} / ${totalCards} (${collectionRate}%)`;
         document.getElementById('stat-prog').style.width = `${collectionRate}%`;
 
         let maxTotals = { rare: {1:0, 2:0, 3:0, 4:0, 5:0}, attr: {fire:0, water:0, earth:0, sky:0, evil:0} };
-        if (typeof cardData !== 'undefined') {
-            cardData.forEach(c => { maxTotals.rare[c.rare]++; maxTotals.attr[c.attr]++; });
+        if (typeof window.cardData !== 'undefined') {
+            window.cardData.forEach(c => { maxTotals.rare[c.rare]++; maxTotals.attr[c.attr]++; });
         }
 
         let attrCounts = {fire:0, water:0, earth:0, sky:0, evil:0};
         let rareCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
         for(let id in state.inv) {
-            let c = cardData.find(x => x.id == id);
+            let c = window.cardData.find(x => x.id == id);
             if(c) { attrCounts[c.attr]++; rareCounts[c.rare]++; }
         }
         
@@ -1291,7 +1232,7 @@
         document.getElementById('col-r1').innerText = `${rareCounts[1]}/${maxTotals.rare[1]}`;
 
         let maxNorm = Math.floor(state.coins / 100);
-        let safeMaxNorm = Math.min(1000000000, maxNorm); // 10億連
+        let safeMaxNorm = Math.min(1000000000, maxNorm); 
         let btnN = document.getElementById('dyn-btn-normal');
         btnN.innerText = `全力招集 (${safeMaxNorm.toLocaleString()}連)`; btnN.disabled = safeMaxNorm === 0;
         
@@ -1328,7 +1269,6 @@
         
         document.getElementById('page-info').innerText = `${curPage + 1} / ${maxP}`;
 
-        // オート観測ボタンの表示更新
         let autoBtn = document.getElementById('auto-click-btn');
         if (autoBtn && autoClickRemaining <= 0) {
             autoBtn.innerHTML = `▶️ オート観測 <span style="font-weight:normal;">(${3 - state.autoClickUses}/3)</span>`;
