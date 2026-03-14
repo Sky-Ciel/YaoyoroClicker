@@ -208,6 +208,30 @@
 
         .float-num { position: absolute; font-weight: 900; pointer-events: none; animation: floatUp 0.6s forwards; z-index: 2000; text-shadow: 0 0 5px #000; color: var(--gold); }
         @keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-70px) scale(1.3); } }
+
+        /* ====== 実績タブ ====== */
+        .ach-grid { display: flex; flex-direction: column; gap: 7px; width: 100%; }
+        .ach-card { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; border: 2px solid #333; background: #0e0606; cursor: pointer; transition: transform 0.1s, opacity 0.1s; }
+        .ach-card:active { transform: scale(0.98); }
+        .ach-card.unlocked-bronze { border-color: #cd7f32; background: linear-gradient(135deg, #1a0e06, #0d0803); box-shadow: 0 0 8px rgba(205,127,50,0.25); }
+        .ach-card.unlocked-silver { border-color: #c0c0c0; background: linear-gradient(135deg, #141414, #0a0a0a); box-shadow: 0 0 8px rgba(192,192,192,0.25); }
+        .ach-card.unlocked-gold { border-color: var(--gold); background: linear-gradient(135deg, #1f1505, #0d0803); box-shadow: 0 0 12px rgba(212,175,55,0.35); }
+        .ach-card.locked { opacity: 0.45; }
+        .ach-rank-badge { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .badge-bronze { background: radial-gradient(circle, #e8a060, #8b4513); box-shadow: 0 0 6px rgba(205,127,50,0.6); }
+        .badge-silver { background: radial-gradient(circle, #e8e8e8, #a0a0a0); box-shadow: 0 0 6px rgba(192,192,192,0.6); }
+        .badge-gold { background: radial-gradient(circle, #f0d060, #a0820d); box-shadow: 0 0 10px rgba(212,175,55,0.8); }
+        .ach-body { flex: 1; min-width: 0; }
+        .ach-title { font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ach-req { font-size: 0.65rem; color: #888; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ach-prog-wrap { width: 100%; height: 4px; background: #222; border-radius: 2px; margin-top: 5px; overflow: hidden; }
+        .ach-prog-bar { height: 100%; border-radius: 2px; transition: width 0.4s; }
+        .prog-bronze { background: linear-gradient(90deg, #8b4513, #cd7f32); }
+        .prog-silver { background: linear-gradient(90deg, #a9a9a9, #e0e0e0); }
+        .prog-gold { background: linear-gradient(90deg, #a0820d, var(--gold)); }
+        .ach-detail-flavor { font-style: italic; font-size: 0.85rem; line-height: 1.8; color: #ddd; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; border-left: 3px solid var(--gold); }
+        .ach-toast { position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%); background: rgba(12,4,4,0.96); border: 2px solid var(--gold); border-radius: 10px; padding: 10px 16px; z-index: 6000; white-space: nowrap; box-shadow: 0 0 20px rgba(212,175,55,0.5); animation: toastSlide 3s forwards; pointer-events: none; }
+        @keyframes toastSlide { 0%{opacity:0;transform:translateX(-50%) translateY(20px);} 15%{opacity:1;transform:translateX(-50%) translateY(0);} 75%{opacity:1;} 100%{opacity:0;transform:translateX(-50%) translateY(-10px);} }
     </style>
 </head>
 <body>
@@ -434,10 +458,59 @@
         </div>
     </div>
 
+    <div id="screen-achievement" class="screen" style="padding-left:10px; padding-right:10px;">
+
+        <div style="width:100%; background:linear-gradient(135deg,rgba(30,12,4,0.95),rgba(10,5,2,0.95)); padding:14px; border-radius:10px; border:1px solid var(--gold); margin-bottom:10px; text-align:center; box-shadow:inset 0 0 15px rgba(0,0,0,0.8);">
+            <div style="font-size:0.75rem; color:#aaa; margin-bottom:4px;">実績達成数</div>
+            <div id="ach-summary-text" style="font-size:1.6rem; font-weight:900; color:var(--gold); text-shadow:0 0 8px rgba(212,175,55,0.5);">0 / 0</div>
+            <div class="progress-wrap" style="margin:6px 0 4px;"><div class="progress-bar" id="ach-summary-bar" style="width:0%;"></div></div>
+            <div style="display:flex; justify-content:space-around; font-size:0.75rem; margin-top:6px;">
+                <span>🥉&nbsp;<span id="ach-cnt-bronze" style="color:#cd7f32; font-weight:bold;">0</span></span>
+                <span>🥈&nbsp;<span id="ach-cnt-silver" style="color:#c0c0c0; font-weight:bold;">0</span></span>
+                <span>🥇&nbsp;<span id="ach-cnt-gold" style="color:var(--gold); font-weight:bold;">0</span></span>
+            </div>
+        </div>
+
+        <div style="width:100%; display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px;">
+            <select id="ach-filter-cat" onchange="renderAchievements()" style="background:#222; color:var(--gold); border:1px solid var(--gold); border-radius:5px; padding:5px 3px; font-size:0.6rem; outline:none; flex:1; min-width:0;">
+                <option value="all">全カテゴリ</option>
+                <option value="observation">観測</option>
+                <option value="luck">招集</option>
+                <option value="money">霊貨</option>
+                <option value="collection">収集</option>
+                <option value="time">時間</option>
+                <option value="system">システム</option>
+                <option value="myth">神話</option>
+                <option value="parodee">パロディ</option>
+                <option value="terminal">到達</option>
+            </select>
+            <select id="ach-filter-rank" onchange="renderAchievements()" style="background:#222; color:var(--gold); border:1px solid var(--gold); border-radius:5px; padding:5px 3px; font-size:0.6rem; outline:none; flex:1; min-width:0;">
+                <option value="all">全ランク</option>
+                <option value="bronze">🥉 銅</option>
+                <option value="silver">🥈 銀</option>
+                <option value="gold">🥇 金</option>
+            </select>
+            <select id="ach-filter-status" onchange="renderAchievements()" style="background:#222; color:var(--gold); border:1px solid var(--gold); border-radius:5px; padding:5px 3px; font-size:0.6rem; outline:none; flex:1; min-width:0;">
+                <option value="all">全て</option>
+                <option value="unlocked">達成済</option>
+                <option value="locked">未達成</option>
+            </select>
+            <select id="ach-sort" onchange="renderAchievements()" style="background:#222; color:var(--gold); border:1px solid var(--gold); border-radius:5px; padding:5px 3px; font-size:0.6rem; outline:none; flex:1; min-width:0;">
+                <option value="default">標準順</option>
+                <option value="rank-desc">ランク▼</option>
+                <option value="unlocked-first">達成順</option>
+                <option value="progress">進捗順</option>
+            </select>
+        </div>
+
+        <div id="ach-list" class="ach-grid"></div>
+    </div>
+
     <div id="menu-bar">
         <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
         <div class="menu-item" onclick="changeScreen('gacha', this)">ガチャ</div>
         <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
+        <div class="menu-item" onclick="changeScreen('achievement', this)">実績</div>
         <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
     </div>
 
@@ -485,13 +558,21 @@
         spentCoins: 0, spentRareCoins: 0, totalSublimation: 0, maxGain: 0,
         maxP: 1, maxM: 1.0, totalStar5: 0,
         playerName: "名もなき観測者", startTime: Date.now(),
-        lastSaveTime: Date.now(), autoClickUses: 0, lastAutoDate: ""
+        lastSaveTime: Date.now(), autoClickUses: 0, lastAutoDate: "",
+        unlockedAchievements: {},
+        maxCps: 0, unluckyStreak: 0, consecutiveDays: 1,
+        lastPlayDate: new Date().toDateString(),
+        hoursObserved: [], weekdaysObserved: [],
+        lastClickTime: 0, idleTimeSec: 0,
+        batteryLevel: 100, batteryCharging: false
     };
     let curPage = 0, showAll = true;
     let gachaSummaryHtml = "";
     let isShowingSummary = true;
     let autoClickInterval = null;
     let autoClickRemaining = 0;
+    let achievementData = null;
+    let clickTimestamps = [];
     
     function initInnerParticles() {
         const bg = document.getElementById('inner-particles');
@@ -604,6 +685,40 @@
         if(!state.startTime) state.startTime = Date.now();
         if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
 
+        // Backward-compat for new state fields
+        if(!state.unlockedAchievements) state.unlockedAchievements = {};
+        if(!state.hoursObserved) state.hoursObserved = [];
+        if(!state.weekdaysObserved) state.weekdaysObserved = [];
+        if(!state.maxCps) state.maxCps = 0;
+        if(!state.unluckyStreak) state.unluckyStreak = 0;
+        if(!state.idleTimeSec) state.idleTimeSec = 0;
+        if(state.batteryLevel === undefined) state.batteryLevel = 100;
+        if(state.batteryCharging === undefined) state.batteryCharging = false;
+
+        // Consecutive days tracking
+        const todayStr = new Date().toDateString();
+        if (state.lastPlayDate && state.lastPlayDate !== todayStr) {
+            const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+            if (state.lastPlayDate === yesterday.toDateString()) {
+                state.consecutiveDays = (state.consecutiveDays || 0) + 1;
+            } else {
+                state.consecutiveDays = 1;
+            }
+        } else if (!state.lastPlayDate) {
+            state.consecutiveDays = 1;
+        }
+        state.lastPlayDate = todayStr;
+
+        // Battery API
+        if (navigator.getBattery) {
+            navigator.getBattery().then(bat => {
+                state.batteryLevel = Math.floor(bat.level * 100);
+                state.batteryCharging = bat.charging;
+                bat.addEventListener('levelchange', () => { state.batteryLevel = Math.floor(bat.level * 100); });
+                bat.addEventListener('chargingchange', () => { state.batteryCharging = bat.charging; });
+            });
+        }
+
         let now = new Date();
         let offsetDate = new Date(now.getTime() - 6 * 3600 * 1000).toDateString();
         if(state.lastAutoDate !== offsetDate) {
@@ -614,6 +729,7 @@
         updateStats(); 
         updateDisplay();
         checkOfflineReward();
+        loadAchievements();
     }
 
     function checkOfflineReward() {
@@ -743,6 +859,24 @@
         state.totalClicks++;
         let cRate = state.stats.c;
         let isCrit = false;
+
+        // Track CPS, idle time, hours/weekdays
+        const nowTs = Date.now();
+        if (!isAuto) {
+            if (state.lastClickTime > 0) {
+                const idleSec = Math.floor((nowTs - state.lastClickTime) / 1000);
+                if (idleSec > (state.idleTimeSec || 0)) state.idleTimeSec = idleSec;
+            }
+            state.lastClickTime = nowTs;
+            clickTimestamps.push(nowTs);
+            clickTimestamps = clickTimestamps.filter(t => nowTs - t <= 1000);
+            const cps = clickTimestamps.length;
+            if (cps > (state.maxCps || 0)) state.maxCps = cps;
+            const nowDate = new Date(nowTs);
+            const h = nowDate.getHours(), d = nowDate.getDay();
+            if (!state.hoursObserved.includes(h)) state.hoursObserved.push(h);
+            if (!state.weekdaysObserved.includes(d)) state.weekdaysObserved.push(d);
+        }
         
         if (cRate > 1.0) { isCrit = true; } 
         else { isCrit = Math.random() < cRate; }
@@ -947,6 +1081,13 @@
         }
         
         state[curr] -= cost; state.totalGacha += times;
+
+        // Track unlucky streak
+        if (!isStar4 && !isStar5) {
+            state.unluckyStreak = (state.unluckyStreak || 0) + times;
+        } else {
+            state.unluckyStreak = 0;
+        }
 
         let newPower = calcPower().total;
 
@@ -1243,8 +1384,11 @@
         let totalCards = typeof cardData !== 'undefined' ? cardData.length : 460;
         let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
         let playtime = document.getElementById('stat-playtime').innerText;
+        let totalAch = achievementData ? achievementData.length : 0;
+        let unlockedAch = Object.keys(state.unlockedAchievements).length;
+        let achRate = totalAch > 0 ? ((unlockedAch / totalAch) * 100).toFixed(1) : "0.0";
         
-        let text = `【ヤオヨロクリッカー】\n📜 観測者：${state.playerName}\n⚔️ 総合神力：${Math.floor(pwr).toLocaleString()}\n💥 最大一撃：${gain.toLocaleString()} 霊貨\n📚 図鑑完成度：${collectedCount} / ${totalCards} (${collectionRate}%)\n⏱️ プレイ時間：${playtime}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
+        let text = `【ヤオヨロクリッカー】\n📜 観測者：${state.playerName}\n⚔️ 総合神力：${Math.floor(pwr).toLocaleString()}\n💥 最大一撃：${gain.toLocaleString()} 霊貨\n📚 図鑑完成度：${collectedCount} / ${totalCards} (${collectionRate}%)\n🏆 実績達成率：${unlockedAch} / ${totalAch} (${achRate}%)\n⏱️ プレイ時間：${playtime}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
         
         let url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank');
@@ -1393,8 +1537,274 @@
         document.getElementById('screen-' + id).classList.add('active');
         document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
         el.classList.add('active');
+        if (id === 'achievement') renderAchievements();
     }
     
+    // ====== 実績システム ======
+
+    function loadAchievements() {
+        fetch('achievements.json')
+            .then(r => r.json())
+            .then(data => {
+                achievementData = data;
+                checkAchievements();
+            })
+            .catch(e => console.warn('実績データ読み込みエラー:', e));
+    }
+
+    function buildAchievementContext() {
+        const ctx = {};
+        ctx.total_clicks = state.totalClicks || 0;
+        ctx.total_gacha = state.totalGacha || 0;
+        ctx.total_coins = Math.floor(state.totalCoins || 0);
+        ctx.total_sublimation = state.totalSublimation || 0;
+        ctx.current_coins = Math.floor(state.coins || 0);
+        ctx.current_rare_coins = Math.floor(state.rareCoins || 0);
+        ctx.play_time_sec = Math.floor((Date.now() - (state.startTime || Date.now())) / 1000);
+
+        const power = calcPower();
+        ctx.current_power = Math.floor(power.total);
+        ctx.power_fire = Math.floor(power.fire);
+        ctx.power_water = Math.floor(power.water);
+        ctx.power_earth = Math.floor(power.earth);
+        ctx.power_sky = Math.floor(power.sky);
+        ctx.power_evil = Math.floor(power.evil);
+
+        ctx.total_cards = Object.keys(state.inv).length;
+        const rareCounts = {1:0,2:0,3:0,4:0,5:0};
+        const categories = new Set();
+        if (typeof cardData !== 'undefined') {
+            for (let id in state.inv) {
+                const card = cardData.find(x => x.id == id);
+                if (card) { rareCounts[card.rare]++; categories.add(card.attr); }
+            }
+        }
+        ctx.rarity_1_count = rareCounts[1]; ctx.rarity_2_count = rareCounts[2];
+        ctx.rarity_3_count = rareCounts[3]; ctx.rarity_4_count = rareCounts[4];
+        ctx.rarity_5_count = rareCounts[5];
+        ctx.rarity_4_or_higher_count = rareCounts[4] + rareCounts[5];
+        ctx.collected_types = categories.size;
+
+        for (let id in state.inv) {
+            ctx['has_card_id_' + id] = true;
+            const item = state.inv[id];
+            let total = item.c || 0;
+            for (let k = 1; k <= (item.l || 0); k++) total += k * k;
+            ctx['card_count_id_' + id] = total;
+        }
+
+        const now = new Date();
+        ctx.current_hour = now.getHours();
+        ctx.day_of_week = now.getDay();
+        ctx.max_cps = state.maxCps || 0;
+        ctx.unlucky_streak = state.unluckyStreak || 0;
+        ctx.consecutive_days = state.consecutiveDays || 0;
+        ctx.idle_time = state.idleTimeSec || 0;
+        ctx.battery_level = state.batteryLevel || 0;
+        ctx.battery_charging = state.batteryCharging || false;
+
+        const hoursSet = new Set(state.hoursObserved || []);
+        const daysSet = new Set(state.weekdaysObserved || []);
+        ctx.all_hours_observed = hoursSet.size >= 24;
+        ctx.all_weekdays_observed = daysSet.size >= 7;
+        ctx.all_species_collected = typeof cardData !== 'undefined' && ctx.total_cards >= cardData.length;
+        if (typeof cardData !== 'undefined') {
+            const r1Cards = cardData.filter(c => c.rare === 1);
+            ctx.all_rarity1_by_category = r1Cards.length > 0 && r1Cards.every(c => !!state.inv[c.id]);
+        } else { ctx.all_rarity1_by_category = false; }
+        ctx.has_olympian_twelve = false;
+
+        return ctx;
+    }
+
+    function evaluateAchievement(ach, ctx) {
+        try {
+            const m = ach.condition.trim().match(/^(\S+)\s*(>=|<=|==|!=|>|<)\s*(\S+)$/);
+            if (!m) return { unlocked: false, progress: 0, total: 1 };
+            const [, varName, op, rightStr] = m;
+            let leftVal = ctx[varName];
+            if (leftVal === undefined) leftVal = false;
+            let rightVal = rightStr === 'true' ? true : rightStr === 'false' ? false : parseFloat(rightStr.replace(/,/g, ''));
+            let unlocked = false;
+            if (op === '>=') unlocked = leftVal >= rightVal;
+            else if (op === '<=') unlocked = leftVal <= rightVal;
+            else if (op === '==') unlocked = leftVal == rightVal;
+            else if (op === '!=') unlocked = leftVal != rightVal;
+            else if (op === '>') unlocked = leftVal > rightVal;
+            else if (op === '<') unlocked = leftVal < rightVal;
+            let progress = 0, total = 1;
+            if (ach.show_progress && typeof leftVal === 'number' && typeof rightVal === 'number' && rightVal > 0) {
+                progress = Math.min(leftVal, rightVal); total = rightVal;
+            }
+            return { unlocked, progress, total };
+        } catch(e) { return { unlocked: false, progress: 0, total: 1 }; }
+    }
+
+    function checkAchievements() {
+        if (!achievementData) return;
+        const ctx = buildAchievementContext();
+        let newlyUnlocked = [];
+        for (const ach of achievementData) {
+            if (state.unlockedAchievements[ach.id]) continue;
+            if (evaluateAchievement(ach, ctx).unlocked) {
+                state.unlockedAchievements[ach.id] = Date.now();
+                newlyUnlocked.push(ach);
+            }
+        }
+        if (newlyUnlocked.length > 0) {
+            save();
+            updateAchievementSummary();
+            newlyUnlocked.slice(0, 3).forEach((ach, i) =>
+                setTimeout(() => showAchievementToast(ach), i * 1000));
+        }
+    }
+
+    function showAchievementToast(ach) {
+        const rankEmoji = {bronze:'🥉',silver:'🥈',gold:'🥇'}[ach.rank] || '🏆';
+        const container = document.getElementById('game-container');
+        const toast = document.createElement('div');
+        toast.className = 'ach-toast';
+        toast.innerHTML = `<div style="font-size:0.65rem;color:#aaa;margin-bottom:2px;">実績解除!</div><b style="color:var(--gold);font-size:0.85rem;">${rankEmoji} ${ach.title}</b>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3200);
+    }
+
+    function updateAchievementSummary() {
+        if (!achievementData) return;
+        const total = achievementData.length;
+        const unlocked = Object.keys(state.unlockedAchievements).length;
+        const pct = total > 0 ? ((unlocked / total) * 100).toFixed(1) : 0;
+        const cntB = achievementData.filter(a => a.rank === 'bronze' && state.unlockedAchievements[a.id]).length;
+        const cntS = achievementData.filter(a => a.rank === 'silver' && state.unlockedAchievements[a.id]).length;
+        const cntG = achievementData.filter(a => a.rank === 'gold' && state.unlockedAchievements[a.id]).length;
+        const sumText = document.getElementById('ach-summary-text');
+        const sumBar = document.getElementById('ach-summary-bar');
+        if (sumText) sumText.innerText = `${unlocked} / ${total} (${pct}%)`;
+        if (sumBar) sumBar.style.width = pct + '%';
+        const cB = document.getElementById('ach-cnt-bronze');
+        const cS = document.getElementById('ach-cnt-silver');
+        const cG = document.getElementById('ach-cnt-gold');
+        if (cB) cB.innerText = cntB; if (cS) cS.innerText = cntS; if (cG) cG.innerText = cntG;
+    }
+
+    const _achRankOrder = {gold:0,silver:1,bronze:2};
+
+    function renderAchievements() {
+        if (!achievementData) return;
+        updateAchievementSummary();
+        const ctx = buildAchievementContext();
+        const catF = document.getElementById('ach-filter-cat')?.value || 'all';
+        const rankF = document.getElementById('ach-filter-rank')?.value || 'all';
+        const statF = document.getElementById('ach-filter-status')?.value || 'all';
+        const sortT = document.getElementById('ach-sort')?.value || 'default';
+
+        let list = achievementData.filter(a => {
+            if (catF !== 'all' && a.category !== catF) return false;
+            if (rankF !== 'all' && a.rank !== rankF) return false;
+            const un = !!state.unlockedAchievements[a.id];
+            if (statF === 'unlocked' && !un) return false;
+            if (statF === 'locked' && un) return false;
+            return true;
+        });
+
+        if (sortT !== 'default') {
+            list.sort((a, b) => {
+                const ua = !!state.unlockedAchievements[a.id], ub = !!state.unlockedAchievements[b.id];
+                if (sortT === 'rank-desc') {
+                    const rd = _achRankOrder[a.rank] - _achRankOrder[b.rank];
+                    if (rd !== 0) return rd;
+                    return ua === ub ? 0 : (ub ? -1 : 1);
+                }
+                if (sortT === 'unlocked-first') {
+                    if (ua !== ub) return ub ? 1 : -1;
+                    if (ua && ub) return (state.unlockedAchievements[b.id] || 0) - (state.unlockedAchievements[a.id] || 0);
+                }
+                if (sortT === 'progress') {
+                    if (ua !== ub) return ub ? 1 : -1;
+                    if (!ua) {
+                        const ra = evaluateAchievement(a, ctx), rb = evaluateAchievement(b, ctx);
+                        const pa = ra.total > 0 ? ra.progress / ra.total : 0;
+                        const pb = rb.total > 0 ? rb.progress / rb.total : 0;
+                        return pb - pa;
+                    }
+                }
+                return 0;
+            });
+        }
+
+        const rankEmoji = {bronze:'🥉',silver:'🥈',gold:'🥇'};
+        let html = '';
+        for (const ach of list) {
+            const unlocked = !!state.unlockedAchievements[ach.id];
+            const result = ach.show_progress ? evaluateAchievement(ach, ctx) : null;
+            const cardCls = unlocked ? `ach-card unlocked-${ach.rank}` : 'ach-card locked';
+            const titleText = unlocked ? ach.title : (ach.hint || '???');
+            const titleColor = unlocked ? '#fff' : '#888';
+            const reqText = ach.display_req || '';
+            let progHtml = '';
+            if (ach.show_progress && !unlocked && result && result.total > 0) {
+                const pct = Math.min(100, (result.progress / result.total) * 100).toFixed(1);
+                progHtml = `<div class="ach-prog-wrap"><div class="ach-prog-bar prog-${ach.rank}" style="width:${pct}%"></div></div><div style="font-size:0.55rem;color:#888;margin-top:2px;">${result.progress.toLocaleString()} / ${result.total.toLocaleString()}</div>`;
+            }
+            html += `<div class="${cardCls}" onclick="showAchievementDetail('${ach.id}')"><div class="ach-rank-badge badge-${ach.rank}">${rankEmoji[ach.rank]}</div><div class="ach-body"><div class="ach-title" style="color:${titleColor};">${titleText}</div><div class="ach-req">${unlocked ? reqText : ''}</div>${progHtml}</div></div>`;
+        }
+
+        const listEl = document.getElementById('ach-list');
+        if (listEl) listEl.innerHTML = html || '<div style="text-align:center;color:#666;padding:30px;font-size:0.85rem;">該当する実績がありません</div>';
+    }
+
+    function showAchievementDetail(id) {
+        if (!achievementData) return;
+        const ach = achievementData.find(a => a.id === id);
+        if (!ach) return;
+        const unlocked = !!state.unlockedAchievements[id];
+        const ctx = buildAchievementContext();
+        const result = evaluateAchievement(ach, ctx);
+        const rankLabel = {bronze:'🥉 銅の実績', silver:'🥈 銀の実績', gold:'🥇 金の実績'}[ach.rank];
+        const rankColor = {bronze:'#cd7f32', silver:'#c0c0c0', gold:'var(--gold)'}[ach.rank];
+        let progHtml = '';
+        if (ach.show_progress && result.total > 0) {
+            const pct = unlocked ? 100 : Math.min(100, (result.progress / result.total) * 100).toFixed(1);
+            progHtml = `<div style="margin-top:12px;"><div style="font-size:0.75rem;color:#aaa;margin-bottom:4px;">進捗: ${Math.min(result.progress,result.total).toLocaleString()} / ${result.total.toLocaleString()}</div><div class="progress-wrap"><div class="progress-bar" style="width:${pct}%;"></div></div></div>`;
+        }
+        let timeHtml = '';
+        if (unlocked) {
+            const t = new Date(state.unlockedAchievements[id]);
+            timeHtml = `<div style="font-size:0.7rem;color:#888;margin-top:8px;text-align:center;">達成日時: ${t.toLocaleString('ja-JP')}</div>`;
+        }
+        let shareHtml = unlocked ? `<button onclick="shareAchievement('${id}')" class="btn-share" style="width:100%;margin-top:10px;display:block;">𝕏 この実績をシェア</button>` : '';
+        document.getElementById('detail-content').innerHTML = `
+            <div style="text-align:center;margin-bottom:8px;font-size:0.8rem;color:${rankColor};font-weight:bold;letter-spacing:1px;">${rankLabel}</div>
+            <h2 style="color:${unlocked?'#fff':'#888'};margin:0 0 10px;text-align:center;font-size:1.1rem;">${unlocked ? ach.title : (ach.hint || '???')}</h2>
+            <div style="text-align:center;padding:8px 10px;background:rgba(0,0,0,0.4);border-radius:6px;border:1px solid #333;margin-bottom:12px;">
+                <span style="font-size:0.7rem;color:#aaa;">達成条件: </span><span style="font-size:0.8rem;color:#ccc;">${unlocked ? ach.display_req : '秘匿されています'}</span>
+            </div>
+            ${unlocked && ach.flavor ? `<div class="ach-detail-flavor">「${ach.flavor}」</div>` : `<div style="padding:12px;color:#555;text-align:center;font-style:italic;font-size:0.85rem;">実績を解除すると詳細が表示されます...</div>`}
+            ${progHtml}${timeHtml}${shareHtml}
+            <button onclick="closeOverlay('detail-overlay')" style="width:100%;margin-top:15px;">閉じる</button>
+        `;
+        openOverlay('detail-overlay');
+    }
+
+    function shareAchievement(id) {
+        if (!achievementData) return;
+        const ach = achievementData.find(a => a.id === id);
+        if (!ach) return;
+        const rankEmoji = {bronze:'🥉',silver:'🥈',gold:'🥇'}[ach.rank]||'🏆';
+        const total = achievementData.length;
+        const unlocked = Object.keys(state.unlockedAchievements).length;
+        const text = `【ヤオヨロクリッカー】\n${rankEmoji} 実績「${ach.title}」を達成！\n🏆 達成率: ${unlocked} / ${total} (${((unlocked/total)*100).toFixed(1)}%)\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // 実績チェックタイマー (5秒ごと)
+    setInterval(() => {
+        checkAchievements();
+        if (document.getElementById('screen-achievement')?.classList.contains('active')) {
+            renderAchievements();
+        }
+    }, 5000);
+
     window.addEventListener('DOMContentLoaded', initGame);
 </script>
 </body>
