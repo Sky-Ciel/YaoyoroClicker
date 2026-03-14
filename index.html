@@ -63,7 +63,7 @@
         .val { color: var(--gold); font-weight: 900; text-shadow: 0 0 5px rgba(212,175,55,0.4); font-family: sans-serif; }
 
         /* 【修正】メニュー(50px)＋スマホ広告(50px)＝下部100pxの余白を確保 */
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 5px 100px; opacity: 0; overflow-y: auto; touch-action: pan-y; z-index: 2; position: relative;}
+        .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 5px calc(100px + env(safe-area-inset-bottom, 0px)); opacity: 0; overflow-y: auto; touch-action: pan-y; z-index: 2; position: relative;}
         .screen.active { display: flex; animation: fadeIn 0.4s forwards; }
         @keyframes fadeIn { from { opacity: 0; filter: sepia(1); } to { opacity: 1; filter: sepia(0); } }
 
@@ -190,17 +190,20 @@
         .btn-ad:hover { filter: brightness(1.2); }
 
         /* 【修正】メニューバーを下部固定し、スマホ広告をそのすぐ下に隔離 */
-        #menu-bar { position: absolute; bottom: 50px; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 2000; height: 50px;}
+        #menu-bar { position: absolute; bottom: calc(50px + env(safe-area-inset-bottom, 0px)); width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 2000; height: 50px;}
         .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.73rem; text-align: center; cursor: pointer; line-height: 1;}
         .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
 
         /* スマホ用下部広告（一番下に固定） */
         #bottom-ad-container { 
-            position: absolute; 
-            bottom: 0; left: 0; width: 100%; height: 50px; 
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; 
+            height: calc(50px + env(safe-area-inset-bottom, 0px));
+            padding-bottom: env(safe-area-inset-bottom, 0px);
             display: flex; justify-content: center; align-items: center;
-            background: #000; z-index: 1500; 
+            background: #000; z-index: 1500; overflow: hidden;
         }
+        @media (min-width: 1150px) { #bottom-ad-container { display: none; } }
 
         button { background: var(--syu); color: #fff; border: 1px solid var(--gold); padding: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: bold; }
         .btn-outline { background: #222; color: var(--gold); }
@@ -377,6 +380,8 @@
                 <option value="id-desc">番号 ▼</option>
                 <option value="rare-desc">レア度 ▼</option>
                 <option value="get-desc">入手 (新)</option>
+                <option value="bonus-desc">加護値 ▼</option>
+                <option value="level-desc">強化段位 ▼</option>
             </select>
         </div>
         <div style="display:flex; justify-content:space-between; width:100%; align-items:center; padding:0 10px;">
@@ -480,7 +485,7 @@
         </div>
         
         <div style="margin-top:5px; text-align:center; width: 100%;">
-            <a href="javascript:void(0)" onclick="shareToX()" class="btn-share">𝕏 で記録をシェアする</a>
+            <a href="javascript:void(0)" onclick="shareToX()" class="btn-share">📤 記録をシェアする</a>
         </div>
         
         <div style="text-align:center; width: 100%;">
@@ -544,17 +549,31 @@
 
     <div id="screen-formation" class="screen" style="padding-left:10px; padding-right:10px;">
 
-        <!-- Header -->
-        <div style="width:100%; background:linear-gradient(135deg,rgba(0,80,140,0.25),rgba(0,0,0,0)); border:1px solid rgba(30,144,255,0.5); border-radius:10px; padding:12px; text-align:center; margin-bottom:10px;">
-            <div style="font-size:0.9rem; color:var(--sky); font-weight:bold; letter-spacing:2px; margin-bottom:2px;">⚔ 観測者の陣</div>
-            <div style="font-size:0.65rem; color:#888; line-height:1.5;">神々を編成して加護の力を最大化せよ<br><span style="color:#555;">主神×2.0 / 眷属×1.0 / 未編成×0.25</span></div>
+        <!-- Header (同一デザイン) -->
+        <div style="width:100%; background:linear-gradient(135deg,rgba(30,12,4,0.95),rgba(10,5,2,0.95)); padding:14px; border-radius:10px; border:1px solid var(--gold); margin-bottom:10px; text-align:center; box-shadow:inset 0 0 15px rgba(0,0,0,0.8);">
+            <div style="font-size:0.75rem; color:#aaa; margin-bottom:4px;">観測者の陣</div>
+            <div style="font-size:1.6rem; font-weight:900; color:var(--gold); text-shadow:0 0 8px rgba(212,175,55,0.5);">⚔ 神々の編成</div>
+            <div style="font-size:0.6rem; color:#666; margin-top:4px;">主神×2.0 / リーダースキル(★3以上) / 眷属×1.0 / 未編成×0.25</div>
         </div>
+
+        <!-- Toast for confirm/discard -->
+        <div id="formation-toast" style="position:sticky;top:0;z-index:200;text-align:center;font-size:0.8rem;color:var(--gold);padding:4px 0;opacity:0;transition:opacity 0.5s;pointer-events:none;"></div>
+
+        <!-- Confirm/Discard Bar (shown when dirty) -->
+        <div id="formation-confirm-bar" style="display:none; background:rgba(20,10,40,0.98); border:1px solid #aa44ff; border-radius:8px; padding:8px 12px; margin-bottom:8px; gap:8px; align-items:center;">
+            <div style="flex:1; font-size:0.72rem; color:#cc88ff;">⚠ 未確定の編成変更があります</div>
+            <button onclick="confirmFormation()" style="background:linear-gradient(45deg,#220044,#440088);border-color:#aa44ff;color:#fff;padding:6px 14px;font-size:0.72rem;">✅ 編成確定</button>
+            <button onclick="discardFormation()" style="background:#222;border-color:#666;color:#aaa;padding:6px 10px;font-size:0.72rem;">↩ 破棄</button>
+        </div>
+
+        <!-- Compare panel (shown when dirty) -->
+        <div id="formation-compare-panel" style="display:none; background:rgba(10,5,20,0.9); border:1px solid #553388; border-radius:8px; padding:10px 12px; margin-bottom:8px; font-size:0.7rem; color:#ccc;"></div>
 
         <!-- Main Slot -->
         <div class="profile-card" style="border-color:var(--gold); margin-bottom:8px; padding:12px;">
             <div class="fm-section-header">
                 <span style="color:var(--gold); font-size:0.85rem; font-weight:bold;">⚔ 主神スロット</span>
-                <span class="fm-slot-badge" style="background:rgba(212,175,55,0.15); color:var(--gold); border:1px solid var(--gold);">加護効果 ×2.0</span>
+                <span class="fm-slot-badge" style="background:rgba(212,175,55,0.15); color:var(--gold); border:1px solid var(--gold);">主神×2.0 / ★3以上リーダースキル有</span>
             </div>
             <div id="formation-main-slot" class="formation-main-slot" onclick="openFormationSelect('main', -1)">
                 <div class="formation-empty-hint">⚔<br>タップして主神を編成</div>
@@ -585,7 +604,7 @@
 
         <!-- Total Stats -->
         <div class="profile-card" style="border-color:rgba(255,100,0,0.4); padding:12px;">
-            <h4 class="profile-title" style="color:#ff8c00; font-size:0.9rem;">観測の加護 (合計)</h4>
+            <h4 class="profile-title" style="color:#ff8c00; font-size:0.9rem;">観測の加護 (確定値)</h4>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85rem;">
                 <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; border:1px solid #333;">
                     <div style="font-size:0.6rem; color:#aaa; margin-bottom:2px;">🔥 効率</div>
@@ -609,8 +628,13 @@
                 <span id="fm-st-e" class="val" style="color:var(--evil); font-size:0.95rem;">1.00x</span>
             </div>
             <div style="margin-top:8px; font-size:0.58rem; color:#555; text-align:center; line-height:1.6;">
-                ※ 編成中の効果 + 未編成カードのサブ効果 (×0.25) の合計
+                ※ 「編成確定」を押すまでステータスには反映されません
             </div>
+        </div>
+
+        <!-- Formation Share -->
+        <div style="margin-top:5px; text-align:center; width:100%;">
+            <button onclick="shareFormation()" class="btn-share" style="display:inline-block;padding:10px 20px;font-size:0.78rem;border-radius:20px;width:100%;">📤 編成をシェアする</button>
         </div>
 
     </div>
@@ -645,7 +669,7 @@
             <div id="gacha-res-list" class="res-grid" style="max-height:50vh; overflow-y:auto; padding:5px;"></div>
             <div id="gacha-res-summary" style="display:none; max-height:45vh; overflow-y:auto; padding:10px; font-size:1.1rem; line-height:2; text-align:center;"></div>
             <div id="gacha-res-share" style="display:none; text-align:center; margin-top:10px;">
-                <button onclick="shareGachaResult()" class="btn-share" style="width:90%;">𝕏 招集結果をシェア</button>
+                <button onclick="shareGachaResult()" class="btn-share" style="width:90%;">📤 招集結果をシェア</button>
             </div>
             <button id="gacha-action-btn" onclick="handleGachaAction(event)" style="width:100%; margin-top:20px;">確認</button>
         </div>
@@ -657,9 +681,39 @@
     </div>
 
     <div id="formation-select-overlay" class="overlay" onclick="closeOverlay('formation-select-overlay')">
-        <div class="modal" onclick="event.stopPropagation()" style="max-height:82vh;">
-            <h3 id="formation-select-title" style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--syu); padding-bottom:10px; font-size:1rem;">神を選択</h3>
-            <div id="formation-card-list" style="max-height:58vh; overflow-y:auto; padding-right:4px;"></div>
+        <div class="modal" onclick="event.stopPropagation()" style="max-height:88vh;">
+            <h3 id="formation-select-title" style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--syu); padding-bottom:8px; font-size:1rem; margin-bottom:8px;">神を選択</h3>
+            <!-- 検索・絞り込み・並び替え -->
+            <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px;">
+                <input id="fm-sel-search" type="text" placeholder="🔍 名前で検索..." oninput="renderFormationSelectList()"
+                    style="flex:1; min-width:100px; background:#1a1a1a; color:#fff; border:1px solid #444; border-radius:5px; padding:6px 8px; font-size:0.72rem; outline:none;" />
+            </div>
+            <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px;">
+                <select id="fm-sel-attr" onchange="renderFormationSelectList()" style="background:#222; color:var(--gold); border:1px solid #444; border-radius:5px; padding:5px; font-size:0.65rem; outline:none;">
+                    <option value="all">全属性</option>
+                    <option value="fire">🔥 火</option>
+                    <option value="water">💧 水</option>
+                    <option value="earth">⛰️ 地</option>
+                    <option value="sky">🪽 空</option>
+                    <option value="evil">🔯 悪</option>
+                </select>
+                <select id="fm-sel-rare" onchange="renderFormationSelectList()" style="background:#222; color:var(--gold); border:1px solid #444; border-radius:5px; padding:5px; font-size:0.65rem; outline:none;">
+                    <option value="all">全レア度</option>
+                    <option value="5">★5</option>
+                    <option value="4">★4</option>
+                    <option value="3">★3</option>
+                    <option value="2">★2</option>
+                    <option value="1">★1</option>
+                </select>
+                <select id="fm-sel-sort" onchange="renderFormationSelectList()" style="background:#222; color:var(--gold); border:1px solid #444; border-radius:5px; padding:5px; font-size:0.65rem; outline:none;">
+                    <option value="rare-desc">レア度 ▼</option>
+                    <option value="rare-asc">レア度 ▲</option>
+                    <option value="level-desc">Lv ▼</option>
+                    <option value="bonus-desc">加護値 ▼</option>
+                    <option value="id-asc">番号 ▲</option>
+                </select>
+            </div>
+            <div id="formation-card-list" style="max-height:52vh; overflow-y:auto; padding-right:4px;"></div>
             <button onclick="closeOverlay('formation-select-overlay')" style="width:100%; margin-top:12px; background:#222; border-color:#444; color:#888;">閉じる</button>
         </div>
     </div>
@@ -697,6 +751,35 @@
     const SUB_EFFECT_MULT = 0.25;      // 未編成カード (サブ効果): ×0.25
     let _fmSelectSlot = null;
     let _fmSelectSubIdx = -1;
+    let _pendingTeam = null;           // 編成確定前の仮チーム
+    let _formationDirty = false;       // 未確定の編成変更フラグ
+
+    // ====== リーダースキル計算ヘルパー ======
+    // mainCard: 主神スロットのカード, targetCard: 効果を受けるカード
+    // isInFormation: 主神または眷属スロット, isInSubSlot: 眷属スロットのみ
+    // formationAttrs: 現在の編成属性Set, subsFull: 眷属スロット全埋めか
+    function getLeaderSkillMult(mainCard, targetCard, isInFormation, isInSubSlot, formationAttrs, subsFull) {
+        if (!mainCard || !mainCard.leaderSkill) return 1.0;
+        const sk = mainCard.leaderSkill;
+        switch (sk.type) {
+            case 'attr_boost':
+                if (isInFormation && sk.attrs.includes(targetCard.attr)) return sk.mult;
+                break;
+            case 'all_attrs':
+                if (formationAttrs.size >= 5 && isInFormation) return sk.mult;
+                break;
+            case 'sub_boost':
+                if (isInSubSlot) return sk.mult;
+                break;
+            case 'full_sub':
+                if (subsFull && isInFormation) return sk.mult;
+                break;
+            case 'all_formation':
+                if (isInFormation) return sk.mult;
+                break;
+        }
+        return 1.0;
+    }
 
     let sessionClicks = 0;
     let toastSlots = [];
@@ -947,13 +1030,33 @@
     function calcPower() {
         let total = 0, fire = 0, water = 0, earth = 0, sky = 0, evil = 0;
         if (typeof cardData !== 'undefined') {
+            if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
+            const mainId = state.team.main !== null ? Number(state.team.main) : null;
+            const subIds = new Set(state.team.subs.filter(id => id !== null).map(Number));
+            const mainCard = mainId !== null ? cardData.find(x => x.id === mainId) : null;
+            const formationAttrs = new Set();
+            if (mainCard) formationAttrs.add(mainCard.attr);
+            subIds.forEach(sid => { const sc = cardData.find(x => x.id === sid); if (sc) formationAttrs.add(sc.attr); });
+            const subsFull = state.team.subs.filter(id => id !== null).length === 4;
             for (let id in state.inv) {
                 const card = cardData.find(x => x.id == id);
                 if(!card) continue;
                 const l = state.inv[id].l;
                 const count = state.inv[id].c;
-                
-                let pwr = (card.rare * card.rare) * 10 * (1 + l) + count;
+                let basePwr = (card.rare * card.rare) * 10 * (1 + l) + count;
+                const numId = Number(id);
+                const isInSubSlot = subIds.has(numId);
+                const isInFormation = numId === mainId || isInSubSlot;
+                let mult;
+                if (numId === mainId) {
+                    mult = FORMATION_MAIN_MULT;
+                } else if (isInSubSlot) {
+                    mult = FORMATION_SUB_MULT;
+                } else {
+                    mult = SUB_EFFECT_MULT;
+                }
+                const lsMult = isInFormation ? getLeaderSkillMult(mainCard, card, isInFormation, isInSubSlot, formationAttrs, subsFull) : 1.0;
+                let pwr = basePwr * mult * lsMult;
                 total += pwr;
                 if(card.attr === 'fire') fire += pwr;
                 if(card.attr === 'water') water += pwr;
@@ -973,6 +1076,11 @@
             if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
             const _mainId = state.team.main !== null ? Number(state.team.main) : null;
             const _subIds = new Set(state.team.subs.filter(id => id !== null).map(Number));
+            const _mainCard = _mainId !== null ? cardData.find(x => x.id === _mainId) : null;
+            const _formationAttrs = new Set();
+            if (_mainCard) _formationAttrs.add(_mainCard.attr);
+            _subIds.forEach(sid => { const sc = cardData.find(x => x.id === sid); if (sc) _formationAttrs.add(sc.attr); });
+            const _subsFull = state.team.subs.filter(id => id !== null).length === 4;
 
             for (let id in state.inv) {
                 const card = cardData.find(x => x.id == id);
@@ -983,15 +1091,21 @@
                 let bonus = (card.bonus !== undefined && !isNaN(card.bonus)) ? card.bonus : 0.001;
 
                 const numId = Number(id);
+                const isInSubSlot = _subIds.has(numId);
+                const isInFormation = numId === _mainId || isInSubSlot;
                 let mult = SUB_EFFECT_MULT;
-                if (numId === _mainId) mult = FORMATION_MAIN_MULT;
-                else if (_subIds.has(numId)) mult = FORMATION_SUB_MULT;
+                if (numId === _mainId) {
+                    mult = FORMATION_MAIN_MULT;
+                } else if (isInSubSlot) {
+                    mult = FORMATION_SUB_MULT;
+                }
+                const lsMult = isInFormation ? getLeaderSkillMult(_mainCard, card, isInFormation, isInSubSlot, _formationAttrs, _subsFull) : 1.0;
 
-                if (card.attr === "fire") p += bonus * l * mult;
-                if (card.attr === "water") m += bonus * l * mult;
-                if (card.attr === "earth") c += bonus * l * mult;
-                if (card.attr === "sky") raw_r += bonus * l * mult;
-                if (card.attr === "evil") evilBonusSum += bonus * l * mult;
+                if (card.attr === "fire") p += bonus * l * mult * lsMult;
+                if (card.attr === "water") m += bonus * l * mult * lsMult;
+                if (card.attr === "earth") c += bonus * l * mult * lsMult;
+                if (card.attr === "sky") raw_r += bonus * l * mult * lsMult;
+                if (card.attr === "evil") evilBonusSum += bonus * l * mult * lsMult;
             }
         }
         
@@ -1455,6 +1569,18 @@
             if (sortType === 'id-desc') return b.id - a.id;
             if (sortType === 'rare-desc') return b.rare !== a.rare ? b.rare - a.rare : a.id - b.id;
             if (sortType === 'rare-asc') return a.rare !== b.rare ? a.rare - b.rare : a.id - b.id;
+            if (sortType === 'bonus-desc') {
+                const la = state.inv[a.id]?.l || 0;
+                const lb = state.inv[b.id]?.l || 0;
+                const bA = a.bonus * la;
+                const bB = b.bonus * lb;
+                return bB !== bA ? bB - bA : b.rare - a.rare;
+            }
+            if (sortType === 'level-desc') {
+                const la = state.inv[a.id]?.l || 0;
+                const lb = state.inv[b.id]?.l || 0;
+                return lb !== la ? lb - la : b.rare - a.rare;
+            }
             if (sortType.startsWith('get')) {
                 let idxA = state.invOrder.indexOf(a.id);
                 let idxB = state.invOrder.indexOf(b.id);
@@ -1547,21 +1673,70 @@
         if(ptEl && state.startTime) ptEl.innerText = formatTime(Date.now() - state.startTime);
     }, 1000);
 
-    function shareToX() {
+    function buildShareText_profile() {
         let pwr = calcPower().total;
         let gain = Math.floor(state.maxGain || 0);
         let collectedCount = Object.keys(state.inv).length;
         let totalCards = typeof cardData !== 'undefined' ? cardData.length : 460;
         let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
-        let playtime = document.getElementById('stat-playtime').innerText;
+        let playtime = document.getElementById('stat-playtime')?.innerText || '-';
         let totalAch = achievementData ? achievementData.length : 0;
         let unlockedAch = Object.keys(state.unlockedAchievements).length;
         let achRate = totalAch > 0 ? ((unlockedAch / totalAch) * 100).toFixed(1) : "0.0";
-        
-        let text = `【ヤオヨロクリッカー】\n📜 観測者：${state.playerName}\n⚔️ 総合神力：${Math.floor(pwr).toLocaleString()}\n💥 最大一撃：${gain.toLocaleString()} 霊貨\n📚 図鑑完成度：${collectedCount} / ${totalCards} (${collectionRate}%)\n🏆 実績達成率：${unlockedAch} / ${totalAch} (${achRate}%)\n⏱️ プレイ時間：${playtime}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
-        
-        let url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        return `【ヤオヨロクリッカー】\n📜 観測者：${state.playerName}\n⚔️ 総合神力：${Math.floor(pwr).toLocaleString()}\n💥 最大一撃：${gain.toLocaleString()} 霊貨\n📚 図鑑完成度：${collectedCount} / ${totalCards} (${collectionRate}%)\n🏆 実績達成率：${unlockedAch} / ${totalAch} (${achRate}%)\n⏱️ プレイ時間：${playtime}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
+    }
+
+    function shareToX() {
+        openSnsShareModal(buildShareText_profile());
+    }
+
+    function openSnsShareModal(text) {
+        _pendingShareText = text;
+        const gameUrl = 'https://sky-ciel.github.io/YaoyoroClicker/';
+        const enc = encodeURIComponent(text);
+        const encUrl = encodeURIComponent(gameUrl);
+        document.getElementById('detail-content').innerHTML = `
+            <h3 style="color:var(--gold);margin-top:0;border-bottom:1px solid var(--syu);padding-bottom:10px;">📤 シェアする</h3>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:15px;">
+                <button onclick="window.open('https://twitter.com/intent/tweet?text=${enc}','_blank')" style="background:#000;border:1px solid #fff;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">𝕏 (Twitter) でシェア</button>
+                <button onclick="window.open('https://bsky.app/intent/compose?text=${enc}','_blank')" style="background:#0085ff;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">🦋 Bluesky でシェア</button>
+                <button onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${encUrl}','_blank')" style="background:#1877f2;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">📘 Facebook でシェア</button>
+                <button onclick="window.open('https://social-plugins.line.me/lineit/share?url=${encUrl}&text=${enc}','_blank')" style="background:#00b900;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">💬 LINE でシェア</button>
+                <button onclick="copyShareText(_pendingShareText)" style="background:#444;border:1px solid #888;color:#ccc;padding:12px;border-radius:8px;font-size:0.9rem;">📋 テキストをコピー</button>
+            </div>
+            <button onclick="closeOverlay('detail-overlay')" style="width:100%;background:#222;border-color:#444;color:#888;">閉じる</button>
+        `;
+        openOverlay('detail-overlay');
+    }
+
+    let _pendingShareText = '';
+
+    function copyShareText(text) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => alert('コピーしました！'));
+        } else {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            alert('コピーしました！');
+        }
+    }
+
+    function shareFormation() {
+        if (!state.team || typeof cardData === 'undefined') return;
+        const mainC = state.team.main !== null ? cardData.find(x => x.id == state.team.main) : null;
+        const subNames = (state.team.subs || [])
+            .filter(id => id !== null)
+            .map(id => { const c = cardData.find(x => x.id == id); return c ? c.name : ''; })
+            .filter(Boolean);
+        const mainStr = mainC ? `⚔ 主神: ${mainC.name}(${'★'.repeat(mainC.rare)})` : '⚔ 主神: なし';
+        const subStr = subNames.length > 0 ? `🌊 眷属: ${subNames.join(' / ')}` : '🌊 眷属: なし';
+        const pwr = Math.floor(calcPower().total);
+        const text = `【ヤオヨロクリッカー】私の編成\n${mainStr}\n${subStr}\n⚔️ 総合神力: ${pwr.toLocaleString()}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
+        openSnsShareModal(text);
     }
 
     function resetGame() {
@@ -1708,6 +1883,17 @@
     }
 
     function changeScreen(id, el) {
+        // 編成画面から離れる際、未確定の変更があれば確認
+        const currentActive = document.querySelector('.screen.active');
+        const currentId = currentActive ? currentActive.id.replace('screen-', '') : null;
+        if (currentId === 'formation' && _formationDirty && id !== 'formation') {
+            const choice = confirm('編成に未確定の変更があります。\n\n「OK」→ 変更を確定して移動\n「キャンセル」→ 変更を破棄して移動\n（移動をやめる場合は画面外をタップしてください）');
+            if (choice) {
+                confirmFormation();
+            } else {
+                discardFormation();
+            }
+        }
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById('screen-' + id).classList.add('active');
         document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
@@ -1719,6 +1905,9 @@
             renderAchievements();
         }
         if (id === 'formation') {
+            // 編成画面に入ったら確定済みチームをベースに仮チームを作る
+            _pendingTeam = JSON.parse(JSON.stringify(state.team || { main: null, subs: [null, null, null, null] }));
+            _formationDirty = false;
             renderFormation();
         }
     }
@@ -2014,7 +2203,7 @@
         const total = achievementData.length;
         const unlocked = Object.keys(state.unlockedAchievements).length;
         const text = `【ヤオヨロクリッカー】\n${rankEmoji} 実績「${ach.title}」を達成！\n🏆 達成率: ${unlocked} / ${total} (${((unlocked/total)*100).toFixed(1)}%)\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+        openSnsShareModal(text);
     }
 
     function shareGachaResult() {
@@ -2026,7 +2215,7 @@
         if ((d.rarityCounts[4] || 0) > 0) rarityText += `🌟★4 x${d.rarityCounts[4]} `;
         if ((d.rarityCounts[3] || 0) > 0) rarityText += `⭐★3 x${d.rarityCounts[3]}`;
         const text = `【ヤオヨロクリッカー】\n${typeName}を${d.totalTimes.toLocaleString()}回実施！\n${rarityText.trim() || '結果なし'}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+        openSnsShareModal(text);
     }
 
     // 実績チェックタイマー (5秒ごと)
@@ -2069,10 +2258,37 @@
         const slotName = slot === 'main' ? '主神' : `眷属 ${subIndex + 1}`;
         document.getElementById('formation-select-title').innerText = `⚔ ${slotName}に編成する神を選択`;
 
-        const teamIds = getTeamCardIds();
+        // Reset filters
+        const searchEl = document.getElementById('fm-sel-search');
+        const attrEl = document.getElementById('fm-sel-attr');
+        const rareEl = document.getElementById('fm-sel-rare');
+        const sortEl = document.getElementById('fm-sel-sort');
+        if (searchEl) searchEl.value = '';
+        if (attrEl) attrEl.value = 'all';
+        if (rareEl) rareEl.value = 'all';
+        if (sortEl) sortEl.value = 'rare-desc';
+
+        renderFormationSelectList();
+        openOverlay('formation-select-overlay');
+    }
+
+    function renderFormationSelectList() {
+        if (typeof cardData === 'undefined') return;
+        if (!_pendingTeam) _pendingTeam = JSON.parse(JSON.stringify(state.team || { main: null, subs: [null, null, null, null] }));
+
+        const searchVal = (document.getElementById('fm-sel-search')?.value || '').toLowerCase();
+        const attrVal = document.getElementById('fm-sel-attr')?.value || 'all';
+        const rareVal = document.getElementById('fm-sel-rare')?.value || 'all';
+        const sortVal = document.getElementById('fm-sel-sort')?.value || 'rare-desc';
+
+        const slot = _fmSelectSlot;
+        const subIndex = _fmSelectSubIdx;
+        const pendingIds = new Set();
+        if (_pendingTeam.main !== null) pendingIds.add(Number(_pendingTeam.main));
+        for (const s of _pendingTeam.subs) { if (s !== null) pendingIds.add(Number(s)); }
         let currentSlotId = null;
-        if (slot === 'main' && state.team) currentSlotId = state.team.main !== null ? Number(state.team.main) : null;
-        if (slot === 'sub' && state.team) currentSlotId = state.team.subs[subIndex] !== null ? Number(state.team.subs[subIndex]) : null;
+        if (slot === 'main') currentSlotId = _pendingTeam.main !== null ? Number(_pendingTeam.main) : null;
+        if (slot === 'sub') currentSlotId = _pendingTeam.subs[subIndex] !== null ? Number(_pendingTeam.subs[subIndex]) : null;
 
         let ownedCards = [];
         for (let id in state.inv) {
@@ -2081,21 +2297,44 @@
                 if (c) ownedCards.push({ card: c, info: state.inv[id] });
             }
         }
-        ownedCards.sort((a, b) => b.card.rare !== a.card.rare ? b.card.rare - a.card.rare : a.card.id - b.card.id);
+
+        // Filter
+        if (searchVal) ownedCards = ownedCards.filter(({card:c}) => c.name.toLowerCase().includes(searchVal));
+        if (attrVal !== 'all') ownedCards = ownedCards.filter(({card:c}) => c.attr === attrVal);
+        if (rareVal !== 'all') ownedCards = ownedCards.filter(({card:c}) => c.rare == rareVal);
+
+        // Sort
+        ownedCards.sort((a, b) => {
+            if (sortVal === 'rare-desc') return b.card.rare !== a.card.rare ? b.card.rare - a.card.rare : a.card.id - b.card.id;
+            if (sortVal === 'rare-asc') return a.card.rare !== b.card.rare ? a.card.rare - b.card.rare : a.card.id - b.card.id;
+            if (sortVal === 'level-desc') return b.info.l !== a.info.l ? b.info.l - a.info.l : b.card.rare - a.card.rare;
+            if (sortVal === 'bonus-desc') {
+                const bA = a.card.bonus * a.info.l;
+                const bB = b.card.bonus * b.info.l;
+                return bB !== bA ? bB - bA : b.card.rare - a.card.rare;
+            }
+            if (sortVal === 'id-asc') return a.card.id - b.card.id;
+            return 0;
+        });
+
+        const slotMult = (slot === 'main') ? FORMATION_MAIN_MULT : FORMATION_SUB_MULT;
 
         let html = '';
         if (ownedCards.length === 0) {
-            html = '<div style="text-align:center; color:#555; padding:20px 0; font-size:0.8rem;">所持している神がいません</div>';
+            html = '<div style="text-align:center; color:#555; padding:20px 0; font-size:0.8rem;">条件に合う神がいません</div>';
         }
 
         for (const { card: c, info } of ownedCards) {
             const cId = Number(c.id);
-            const inTeam = teamIds.has(cId) && cId !== currentSlotId;
+            const inTeam = pendingIds.has(cId) && cId !== currentSlotId;
             const isCurrentSlot = cId === currentSlotId;
-            const bonusStr = getFormationBonusText(c, info.l, slot);
+            const effectiveMult = slotMult;
+            const bonusStr = getFormationBonusTextMult(c, info.l, effectiveMult);
             const attrCol = getAttrColor(c.attr);
             const rareCols = { 1: '#8b4513', 2: '#a9a9a9', 3: '#e0e0e0', 4: '#ffaa00', 5: '#ff00ff' };
             const rareCol = rareCols[c.rare] || '#fff';
+            const leaderTag = (slot === 'main' && c.leaderSkill)
+                ? `<div style="font-size:0.5rem;color:#ff00ff;margin-top:1px;">✨ ${c.leaderSkill.name}：${c.leaderSkill.desc}</div>` : '';
 
             html += `
                 <div class="fm-card-list-item ${inTeam ? 'in-team' : ''}"
@@ -2105,6 +2344,7 @@
                     <div style="flex:1;min-width:0;">
                         <div style="font-size:0.8rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${getAttrIcon(c.attr)} ${c.name}</div>
                         <div style="font-size:0.6rem;color:${attrCol};margin-top:1px;">${bonusStr}</div>
+                        ${leaderTag}
                         ${inTeam ? '<div style="font-size:0.55rem;color:#666;margin-top:1px;">既に編成中</div>' : ''}
                         ${isCurrentSlot ? '<div style="font-size:0.55rem;color:var(--gold);margin-top:1px;">現在このスロットに編成中</div>' : ''}
                     </div>
@@ -2113,7 +2353,6 @@
         }
 
         document.getElementById('formation-card-list').innerHTML = html;
-        openOverlay('formation-select-overlay');
     }
 
     function selectFormationCard(cardId) {
@@ -2122,34 +2361,97 @@
     }
 
     function setFormationCard(slot, subIndex, cardId) {
-        if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
+        if (!_pendingTeam) _pendingTeam = JSON.parse(JSON.stringify(state.team || { main: null, subs: [null, null, null, null] }));
         const numId = Number(cardId);
-
-        // Remove from other slots if already in team
-        if (state.team.main === numId) state.team.main = null;
+        // Remove from other slots if already in pending team
+        if (_pendingTeam.main === numId) _pendingTeam.main = null;
         for (let i = 0; i < 4; i++) {
-            if (state.team.subs[i] === numId) state.team.subs[i] = null;
+            if (_pendingTeam.subs[i] === numId) _pendingTeam.subs[i] = null;
         }
-
         if (slot === 'main') {
-            state.team.main = numId;
+            _pendingTeam.main = numId;
         } else {
-            state.team.subs[subIndex] = numId;
+            _pendingTeam.subs[subIndex] = numId;
         }
-
-        updateStats();
+        _formationDirty = true;
         renderFormation();
-        save();
+        updateFormationComparePanel();
     }
 
     function removeFromFormation(slot, subIndex) {
-        if (!state.team) return;
-        if (slot === 'main') state.team.main = null;
-        else state.team.subs[subIndex] = null;
-
-        updateStats();
+        if (!_pendingTeam) _pendingTeam = JSON.parse(JSON.stringify(state.team || { main: null, subs: [null, null, null, null] }));
+        if (slot === 'main') _pendingTeam.main = null;
+        else _pendingTeam.subs[subIndex] = null;
+        _formationDirty = true;
         renderFormation();
+        updateFormationComparePanel();
+    }
+
+    function confirmFormation() {
+        state.team = JSON.parse(JSON.stringify(_pendingTeam));
+        _formationDirty = false;
+        updateStats();
+        updateDisplay();
+        renderFormation();
+        updateFormationComparePanel();
         save();
+        showFormationConfirmToast('✅ 編成を確定しました');
+    }
+
+    function discardFormation() {
+        _pendingTeam = JSON.parse(JSON.stringify(state.team || { main: null, subs: [null, null, null, null] }));
+        _formationDirty = false;
+        renderFormation();
+        updateFormationComparePanel();
+        showFormationConfirmToast('↩ 変更を破棄しました');
+    }
+
+    function showFormationConfirmToast(msg) {
+        let t = document.getElementById('formation-toast');
+        if (!t) return;
+        t.textContent = msg;
+        t.style.opacity = '1';
+        setTimeout(() => { t.style.opacity = '0'; }, 2000);
+    }
+
+    function calcStatsForTeam(team) {
+        let p = 1, m = 1.0, c = 0, raw_r = 0.005, evilBonusSum = 0;
+        if (typeof cardData !== 'undefined') {
+            if (!team) team = { main: null, subs: [null, null, null, null] };
+            const mainId = team.main !== null ? Number(team.main) : null;
+            const subIds = new Set((team.subs || []).filter(id => id !== null).map(Number));
+            const mainCard = mainId !== null ? cardData.find(x => x.id === mainId) : null;
+            const formationAttrs = new Set();
+            if (mainCard) formationAttrs.add(mainCard.attr);
+            subIds.forEach(sid => { const sc = cardData.find(x => x.id === sid); if (sc) formationAttrs.add(sc.attr); });
+            const subsFull = (team.subs || []).filter(id => id !== null).length === 4;
+            for (let id in state.inv) {
+                const card = cardData.find(x => x.id == id);
+                if (!card) continue;
+                const l = state.inv[id].l;
+                if (!l || l === 0) continue;
+                const bonus = (card.bonus !== undefined && !isNaN(card.bonus)) ? card.bonus : 0.001;
+                const numId = Number(id);
+                const isInSubSlot = subIds.has(numId);
+                const isInFormation = numId === mainId || isInSubSlot;
+                let mult = SUB_EFFECT_MULT;
+                if (numId === mainId) {
+                    mult = FORMATION_MAIN_MULT;
+                } else if (isInSubSlot) {
+                    mult = FORMATION_SUB_MULT;
+                }
+                const lsMult = isInFormation ? getLeaderSkillMult(mainCard, card, isInFormation, isInSubSlot, formationAttrs, subsFull) : 1.0;
+                if (card.attr === "fire") p += bonus * l * mult * lsMult;
+                if (card.attr === "water") m += bonus * l * mult * lsMult;
+                if (card.attr === "earth") c += bonus * l * mult * lsMult;
+                if (card.attr === "sky") raw_r += bonus * l * mult * lsMult;
+                if (card.attr === "evil") evilBonusSum += bonus * l * mult * lsMult;
+            }
+        }
+        const e = 1.0 + evilBonusSum;
+        const final_r = (raw_r * 0.5) / (raw_r + 0.5);
+        const critPow = c > 1.0 ? 2.0 + Math.log10(1 + (c - 1.0)) * 1.5 : 2.0;
+        return { p, m, c, r: final_r, e, critPower: critPow, raw_r };
     }
 
     function showFormationCardMenu(slot, subIndex, cardId) {
@@ -2157,41 +2459,68 @@
         if (!c) return;
         const info = state.inv[cardId] || { l: 0, c: 0 };
         const slotLabel = slot === 'main' ? '⚔ 主神スロット' : `🌊 眷属スロット ${subIndex + 1}`;
-        const bonusStr = getFormationBonusText(c, info.l, slot);
+        const multForSlot = (slot === 'main') ? FORMATION_MAIN_MULT : FORMATION_SUB_MULT;
+        const bonusStr = getFormationBonusTextMult(c, info.l, multForSlot);
+        const leaderSkillHtml = (slot === 'main' && c.leaderSkill)
+            ? `<div style="background:rgba(80,0,80,0.3);border:1px solid #880088;border-radius:5px;padding:6px 8px;margin-top:8px;font-size:0.72rem;">
+                <div style="color:#ff88ff;font-weight:bold;">✨ リーダースキル「${c.leaderSkill.name}」</div>
+                <div style="color:#cc99cc;margin-top:2px;">${c.leaderSkill.desc}</div>
+               </div>` : '';
 
         document.getElementById('detail-content').innerHTML = `
             <div style="text-align:center;margin-bottom:10px;"><span style="color:var(--gold);font-size:1.1rem;letter-spacing:2px;">${"★".repeat(c.rare)}</span></div>
             <h2 style="color:var(--${c.attr});margin-top:0;border-bottom:1px solid var(--syu);padding-bottom:10px;">${getAttrIcon(c.attr)} ${c.name}</h2>
-            <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;margin-bottom:15px;font-size:0.8rem;text-align:center;">
+            <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;margin-bottom:5px;font-size:0.8rem;text-align:center;">
                 <div style="color:#888;font-size:0.7rem;">${slotLabel}に編成中</div>
                 <div style="color:var(--gold);font-weight:bold;margin-top:5px;">${bonusStr}</div>
             </div>
+            ${leaderSkillHtml}
+            <div style="margin-top:15px;">
             <button onclick="openFormationSelect('${slot}', ${subIndex}); closeOverlay('detail-overlay');" style="width:100%;margin-bottom:10px;">別の神に変更する</button>
             <button onclick="removeFromFormation('${slot}', ${subIndex}); closeOverlay('detail-overlay');" style="width:100%;background:rgba(74,0,0,0.8);border-color:#ff4500;">編成から外す</button>
             <button onclick="closeOverlay('detail-overlay')" style="width:100%;margin-top:10px;background:#222;border-color:#444;color:#888;">閉じる</button>
+            </div>
         `;
         openOverlay('detail-overlay');
+    }
+
+    // helper: bonus text using explicit multiplier (supports leader skill)
+    function getFormationBonusTextMult(card, level, mult) {
+        if (!level || level === 0) return '-';
+        const bonus = card.bonus * level * mult;
+        if (card.attr === 'earth' || card.attr === 'sky') {
+            return `${getEffectName(card.attr)} +${(bonus * 100).toFixed(1)}%`;
+        }
+        return `${getEffectName(card.attr)} +${bonus.toFixed(2)}`;
     }
 
     function renderFormation() {
         if (typeof cardData === 'undefined') return;
         if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
+        if (!_pendingTeam) _pendingTeam = JSON.parse(JSON.stringify(state.team));
 
         const mainSlot = document.getElementById('formation-main-slot');
         if (!mainSlot) return;
 
-        // === Main Slot ===
-        const mainId = state.team.main !== null ? Number(state.team.main) : null;
+        // === Main Slot (use _pendingTeam for display) ===
+        const mainId = _pendingTeam.main !== null ? Number(_pendingTeam.main) : null;
         if (mainId !== null && state.inv[mainId] && (state.inv[mainId].l || 0) > 0) {
             const c = cardData.find(x => x.id == mainId);
             const info = state.inv[mainId];
             if (c) {
                 mainSlot.className = `formation-main-slot occupied rare-${c.rare} bg-${c.attr}`;
                 mainSlot.setAttribute('onclick', `showFormationCardMenu('main', -1, ${mainId})`);
-                const bonusStr = getFormationBonusText(c, info.l, 'main');
+                const leaderSk = c.leaderSkill;
+                const bonusStr = getFormationBonusTextMult(c, info.l, FORMATION_MAIN_MULT);
+                const badgeText = leaderSk
+                    ? `✨ ${leaderSk.name}`
+                    : `⚔ 主神スキル ×${FORMATION_MAIN_MULT}`;
+                const badgeDesc = leaderSk ? leaderSk.desc : null;
+                const badgeColor = leaderSk ? '#ff00ff' : 'var(--gold)';
                 mainSlot.innerHTML = `
                     <div class="attr-icon">${getAttrIcon(c.attr)}</div>
-                    <div class="formation-leader-badge">リーダースキル ×${FORMATION_MAIN_MULT}</div>
+                    <div class="formation-leader-badge" style="color:${badgeColor};border-color:${badgeColor};">${badgeText}</div>
+                    ${badgeDesc ? `<div style="font-size:0.4rem;color:#cc88ff;text-align:center;padding:0 4px;line-height:1.3;margin-bottom:2px;">${badgeDesc}</div>` : ''}
                     <div class="formation-card-inner">
                         <div style="font-size:0.5rem;color:var(--gold);letter-spacing:1px;text-shadow:0 0 3px var(--gold);">${"★".repeat(c.rare)}</div>
                         <div style="font-size:2.4rem;margin:4px 0;filter:drop-shadow(0 0 8px var(--${c.attr}));">📜</div>
@@ -2210,7 +2539,7 @@
         for (let i = 0; i < 4; i++) {
             const subSlot = document.getElementById(`formation-sub-slot-${i}`);
             if (!subSlot) continue;
-            const subId = state.team.subs[i] !== null ? Number(state.team.subs[i]) : null;
+            const subId = _pendingTeam.subs[i] !== null ? Number(_pendingTeam.subs[i]) : null;
 
             if (subId !== null && state.inv[subId] && (state.inv[subId].l || 0) > 0) {
                 const c = cardData.find(x => x.id == subId);
@@ -2218,13 +2547,14 @@
                 if (c) {
                     subSlot.className = `formation-sub-slot occupied rare-${c.rare} bg-${c.attr}`;
                     subSlot.setAttribute('onclick', `showFormationCardMenu('sub', ${i}, ${subId})`);
-                    const bonusStr = getFormationBonusText(c, info.l, 'sub');
+                    const bonusStr = getFormationBonusTextMult(c, info.l, FORMATION_SUB_MULT);
                     subSlot.innerHTML = `
                         <div class="attr-icon" style="font-size:0.65rem;">${getAttrIcon(c.attr)}</div>
                         <div class="formation-card-inner">
                             <div style="font-size:0.4rem;color:var(--gold);letter-spacing:1px;">${"★".repeat(c.rare)}</div>
                             <div style="font-size:1.6rem;filter:drop-shadow(0 0 5px var(--${c.attr}));">📜</div>
                             <div class="fm-card-name" style="font-size:0.5rem;">${c.name}</div>
+                            <div style="font-size:0.48rem;color:#aaa;">Lv.${info.l}</div>
                             <div class="fm-bonus-text" style="color:var(--${c.attr});font-size:0.48rem;">${bonusStr}</div>
                         </div>`;
                 }
@@ -2237,16 +2567,63 @@
 
         updateFormationEffectsDisplay();
         updateFormationStatNumbers();
+        updateFormationConfirmBar();
+    }
+
+    function updateFormationConfirmBar() {
+        const bar = document.getElementById('formation-confirm-bar');
+        if (!bar) return;
+        if (_formationDirty) {
+            bar.style.display = 'flex';
+        } else {
+            bar.style.display = 'none';
+        }
+    }
+
+    function updateFormationComparePanel() {
+        const panel = document.getElementById('formation-compare-panel');
+        if (!panel) return;
+        if (!_formationDirty) {
+            panel.style.display = 'none';
+            return;
+        }
+        panel.style.display = 'block';
+        const before = calcStatsForTeam(state.team);
+        const after = calcStatsForTeam(_pendingTeam);
+
+        function diff(a, b, fmt) {
+            const d = b - a;
+            if (Math.abs(d) < 0.0001) return '<span style="color:#888;">変化なし</span>';
+            const sign = d > 0 ? '+' : '';
+            return `<span style="color:${d>0?'#4f4':'#f44'}">${sign}${fmt(d)}</span>`;
+        }
+
+        panel.innerHTML = `
+            <div style="font-size:0.7rem;color:var(--gold);font-weight:bold;margin-bottom:5px;">📊 編成変更プレビュー</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;font-size:0.65rem;">
+                <div style="color:#888;">ステータス</div><div style="color:#888;text-align:center;">確定前</div><div style="color:#888;text-align:center;">変化</div>
+                <div>🔥 効率</div><div style="text-align:center;color:var(--fire);">${Math.floor(before.p).toLocaleString()}</div><div style="text-align:center;">${diff(before.p, after.p, v=>Math.floor(Math.abs(v)).toLocaleString())}</div>
+                <div>💧 倍率</div><div style="text-align:center;color:var(--water);">${before.m.toFixed(2)}x</div><div style="text-align:center;">${diff(before.m, after.m, v=>Math.abs(v).toFixed(2)+'x')}</div>
+                <div>⛰️ 会心</div><div style="text-align:center;color:var(--earth);">${(before.c*100).toFixed(1)}%</div><div style="text-align:center;">${diff(before.c, after.c, v=>(Math.abs(v)*100).toFixed(1)+'%')}</div>
+                <div>🪽 結晶</div><div style="text-align:center;color:var(--sky);">${(before.r*100).toFixed(3)}%</div><div style="text-align:center;">${diff(before.r, after.r, v=>(Math.abs(v)*100).toFixed(3)+'%')}</div>
+                <div>🔯 深淵</div><div style="text-align:center;color:var(--evil);">${before.e.toFixed(2)}x</div><div style="text-align:center;">${diff(before.e, after.e, v=>Math.abs(v).toFixed(2)+'x')}</div>
+            </div>`;
     }
 
     function updateFormationEffectsDisplay() {
         const el = document.getElementById('formation-effect-list');
-        if (!el || !state.team || typeof cardData === 'undefined') return;
+        if (!el || typeof cardData === 'undefined') return;
 
+        const team = _pendingTeam || state.team || { main: null, subs: [null, null, null, null] };
         let fP = 0, fM = 0, fC = 0, fRawR = 0, fEvil = 0;
         let sP = 0, sM = 0, sC = 0, sRawR = 0, sEvil = 0;
-        const mainId = state.team.main !== null ? Number(state.team.main) : null;
-        const subIds = new Set(state.team.subs.filter(id => id !== null).map(Number));
+        const mainId = team.main !== null ? Number(team.main) : null;
+        const subIds = new Set((team.subs || []).filter(id => id !== null).map(Number));
+        const mainCard = mainId !== null ? cardData.find(x => x.id === mainId) : null;
+        const formationAttrs = new Set();
+        if (mainCard) formationAttrs.add(mainCard.attr);
+        subIds.forEach(sid => { const sc = cardData.find(x => x.id === sid); if (sc) formationAttrs.add(sc.attr); });
+        const subsFull = (team.subs || []).filter(id => id !== null).length === 4;
 
         for (let id in state.inv) {
             const c = cardData.find(x => x.id == id);
@@ -2255,14 +2632,18 @@
             if (!l || l === 0) continue;
             const bonus = (c.bonus !== undefined && !isNaN(c.bonus)) ? c.bonus : 0.001;
             const numId = Number(id);
+            const isInSubSlot = subIds.has(numId);
+            const isInFormation = numId === mainId || isInSubSlot;
 
             if (numId === mainId) {
-                const v = bonus * l * FORMATION_MAIN_MULT;
+                const lsMult = getLeaderSkillMult(mainCard, c, true, false, formationAttrs, subsFull);
+                const v = bonus * l * FORMATION_MAIN_MULT * lsMult;
                 if (c.attr === 'fire') fP += v; else if (c.attr === 'water') fM += v;
                 else if (c.attr === 'earth') fC += v; else if (c.attr === 'sky') fRawR += v;
                 else if (c.attr === 'evil') fEvil += v;
-            } else if (subIds.has(numId)) {
-                const v = bonus * l * FORMATION_SUB_MULT;
+            } else if (isInSubSlot) {
+                const lsMult = getLeaderSkillMult(mainCard, c, true, true, formationAttrs, subsFull);
+                const v = bonus * l * FORMATION_SUB_MULT * lsMult;
                 if (c.attr === 'fire') fP += v; else if (c.attr === 'water') fM += v;
                 else if (c.attr === 'earth') fC += v; else if (c.attr === 'sky') fRawR += v;
                 else if (c.attr === 'evil') fEvil += v;
@@ -2274,20 +2655,19 @@
             }
         }
 
-        const teamSize = (mainId !== null ? 1 : 0) + subIds.size;
-        if (teamSize === 0) {
-            el.innerHTML = '<div style="text-align:center;color:#555;font-size:0.75rem;padding:8px 0;">神を編成すると効果が表示されます</div>';
-            return;
-        }
-
         const rowStyle = 'display:flex;justify-content:space-between;padding:3px 0;';
         let html = '';
+        const hasFormation = fP + fM + fC + fRawR + fEvil > 0;
 
-        if (fP > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🔥 効率 <small style="color:#666;">(編成)</small></span><span style="color:var(--fire);font-weight:bold;font-size:0.78rem;">+${fP.toFixed(2)}</span></div>`;
-        if (fM > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">💧 倍率 <small style="color:#666;">(編成)</small></span><span style="color:var(--water);font-weight:bold;font-size:0.78rem;">+${fM.toFixed(2)}</span></div>`;
-        if (fC > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">⛰️ 会心 <small style="color:#666;">(編成)</small></span><span style="color:var(--earth);font-weight:bold;font-size:0.78rem;">+${(fC*100).toFixed(2)}%</span></div>`;
-        if (fRawR > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🪽 結晶 <small style="color:#666;">(編成)</small></span><span style="color:var(--sky);font-weight:bold;font-size:0.78rem;">+${(fRawR*100).toFixed(3)}%</span></div>`;
-        if (fEvil > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🔯 深淵 <small style="color:#666;">(編成)</small></span><span style="color:var(--evil);font-weight:bold;font-size:0.78rem;">+${fEvil.toFixed(2)}</span></div>`;
+        if (hasFormation) {
+            if (fP > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🔥 効率 <small style="color:#666;">(編成)</small></span><span style="color:var(--fire);font-weight:bold;font-size:0.78rem;">+${fP.toFixed(2)}</span></div>`;
+            if (fM > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">💧 倍率 <small style="color:#666;">(編成)</small></span><span style="color:var(--water);font-weight:bold;font-size:0.78rem;">+${fM.toFixed(2)}</span></div>`;
+            if (fC > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">⛰️ 会心 <small style="color:#666;">(編成)</small></span><span style="color:var(--earth);font-weight:bold;font-size:0.78rem;">+${(fC*100).toFixed(2)}%</span></div>`;
+            if (fRawR > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🪽 結晶(生値) <small style="color:#666;">(編成)</small></span><span style="color:var(--sky);font-weight:bold;font-size:0.78rem;">+${(fRawR*100).toFixed(3)}%</span></div>`;
+            if (fEvil > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🔯 深淵 <small style="color:#666;">(編成)</small></span><span style="color:var(--evil);font-weight:bold;font-size:0.78rem;">+${fEvil.toFixed(2)}</span></div>`;
+        } else {
+            html += `<div style="text-align:center;color:#555;font-size:0.72rem;padding:4px 0;">（編成中の神の効果なし）</div>`;
+        }
 
         const hasSub = sP + sM + sC + sRawR + sEvil > 0;
         if (hasSub) {
@@ -2295,8 +2675,12 @@
             if (sP > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">🔥 効率 <small>(サブ)</small></span><span style="color:#aa5533;font-size:0.72rem;">+${sP.toFixed(2)}</span></div>`;
             if (sM > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">💧 倍率 <small>(サブ)</small></span><span style="color:#336699;font-size:0.72rem;">+${sM.toFixed(2)}</span></div>`;
             if (sC > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">⛰️ 会心 <small>(サブ)</small></span><span style="color:#aa7733;font-size:0.72rem;">+${(sC*100).toFixed(2)}%</span></div>`;
-            if (sRawR > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">🪽 結晶 <small>(サブ)</small></span><span style="color:#336699;font-size:0.72rem;">+${(sRawR*100).toFixed(3)}%</span></div>`;
+            if (sRawR > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">🪽 結晶(生値) <small>(サブ)</small></span><span style="color:#336699;font-size:0.72rem;">+${(sRawR*100).toFixed(3)}%</span></div>`;
             if (sEvil > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">🔯 深淵 <small>(サブ)</small></span><span style="color:#7733aa;font-size:0.72rem;">+${sEvil.toFixed(2)}</span></div>`;
+        }
+
+        if (fRawR + sRawR > 0) {
+            html += `<div style="font-size:0.58rem;color:#555;margin-top:4px;padding:3px 5px;background:rgba(0,0,0,0.3);border-radius:4px;">※ 結晶の生値は上限補正(ソフトキャップ)後に実効結晶率が決まります</div>`;
         }
 
         el.innerHTML = html;
@@ -2308,6 +2692,7 @@
         const fmC = document.getElementById('fm-st-c');
         const fmR = document.getElementById('fm-st-r');
         const fmE = document.getElementById('fm-st-e');
+        // Show confirmed (state.team) stats in formation stat panel
         if (fmP) fmP.innerText = state.stats.p.toLocaleString();
         if (fmM) fmM.innerText = state.stats.m.toLocaleString(undefined, {maximumFractionDigits:2}) + 'x';
         if (fmC) fmC.innerText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1}) + '%';
