@@ -169,6 +169,24 @@
         .profile-title { margin-top: 0; margin-bottom: 12px; color: var(--gold); font-size: 1.1rem; text-align: center; border-bottom: 1px dashed var(--syu); padding-bottom: 8px; }
         .progress-wrap { width: 100%; height: 10px; background: #222; border-radius: 5px; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--syu), var(--gold)); transition: width 0.5s ease-out; }
+        @keyframes rainbowGlow {
+            0%   { color: #ff4444; text-shadow: 0 0 8px #ff4444; }
+            17%  { color: #ffaa00; text-shadow: 0 0 8px #ffaa00; }
+            33%  { color: #ffff00; text-shadow: 0 0 8px #ffff00; }
+            50%  { color: #44ff44; text-shadow: 0 0 8px #44ff44; }
+            67%  { color: #44ffff; text-shadow: 0 0 8px #44ffff; }
+            83%  { color: #aa44ff; text-shadow: 0 0 8px #aa44ff; }
+            100% { color: #ff4444; text-shadow: 0 0 8px #ff4444; }
+        }
+        @keyframes rainbowBar {
+            0%   { background: linear-gradient(90deg, #ff4444, #ffaa00); }
+            25%  { background: linear-gradient(90deg, #44ff44, #44ffff); }
+            50%  { background: linear-gradient(90deg, #44ffff, #aa44ff); }
+            75%  { background: linear-gradient(90deg, #aa44ff, #ff4444); }
+            100% { background: linear-gradient(90deg, #ff4444, #ffaa00); }
+        }
+        .rainbow-text { animation: rainbowGlow 2s infinite linear !important; }
+        .rainbow-bar  { animation: rainbowBar  2s infinite linear !important; }
         
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; line-height: 1.4; }
         .stat-box { background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; border: 1px solid #444; display: flex; flex-direction: column; justify-content: center; }
@@ -1043,7 +1061,9 @@
                 if(!card) continue;
                 const l = state.inv[id].l;
                 const count = state.inv[id].c;
-                let basePwr = (card.rare * card.rare) * 10 * (1 + l) + count;
+                // Use cumulative card count (total ever acquired) to ensure power never decreases on level-up
+                const totalAccumulated = Math.round(l * (l + 1) * (2 * l + 1) / 6) + count;
+                let basePwr = (card.rare * card.rare) * 10 * (1 + l) + totalAccumulated;
                 const numId = Number(id);
                 const isInSubSlot = subIds.has(numId);
                 const isInFormation = numId === mainId || isInSubSlot;
@@ -1069,7 +1089,7 @@
     }
 
     function updateStats() {
-        let p = 1, m = 1.0, c = 0, raw_r = 0.005, evilBonusSum = 0;
+        let p = 1, m = 1.0, c = 0, raw_r_base = 0.005, raw_r_sub = 0, raw_r_formation = 0, evilBonusSum = 0;
         let power = calcPower();
 
         if (typeof cardData !== 'undefined') {
@@ -1104,13 +1124,20 @@
                 if (card.attr === "fire") p += bonus * l * mult * lsMult;
                 if (card.attr === "water") m += bonus * l * mult * lsMult;
                 if (card.attr === "earth") c += bonus * l * mult * lsMult;
-                if (card.attr === "sky") raw_r += bonus * l * mult * lsMult;
+                if (card.attr === "sky") {
+                    if (isInFormation) {
+                        raw_r_formation += bonus * l * mult * lsMult;
+                    } else {
+                        raw_r_sub += bonus * l * mult * lsMult;
+                    }
+                }
                 if (card.attr === "evil") evilBonusSum += bonus * l * mult * lsMult;
             }
         }
         
         let e = 1.0 + evilBonusSum;
-        let final_r = (raw_r * 0.5) / (raw_r + 0.5);
+        let r_for_cap = raw_r_base + raw_r_sub;
+        let final_r = (r_for_cap * 0.5) / (r_for_cap + 0.5) + raw_r_formation;
         let critPow = 2.0;
         if (c > 1.0) critPow = 2.0 + Math.log10(1 + (c - 1.0)) * 1.5; 
         
@@ -1359,7 +1386,7 @@
         }
         
         state[curr] -= cost; state.totalGacha += times;
-        lastGachaData = { type, totalTimes: times, rarityCounts };
+        lastGachaData = { type, totalTimes: times, rarityCounts, rollCounts };
 
         // Track unlucky streak
         if (!isStar4 && !isStar5) {
@@ -1728,12 +1755,21 @@
     function shareFormation() {
         if (!state.team || typeof cardData === 'undefined') return;
         const mainC = state.team.main !== null ? cardData.find(x => x.id == state.team.main) : null;
-        const subNames = (state.team.subs || [])
-            .filter(id => id !== null)
-            .map(id => { const c = cardData.find(x => x.id == id); return c ? c.name : ''; })
-            .filter(Boolean);
-        const mainStr = mainC ? `⚔ 主神: ${mainC.name}(${'★'.repeat(mainC.rare)})` : '⚔ 主神: なし';
-        const subStr = subNames.length > 0 ? `🌊 眷属: ${subNames.join(' / ')}` : '🌊 眷属: なし';
+        const mainInfo = mainC && state.inv[mainC.id] ? state.inv[mainC.id] : null;
+        const mainStr = mainC
+            ? `⚔ 主神: ${mainC.name}(${'★'.repeat(mainC.rare)}) Lv.${mainInfo ? mainInfo.l : 0}`
+            : '⚔ 主神: なし';
+        const subSlotLabels = ['①', '②', '③', '④'];
+        const subLines = (state.team.subs || []).map((id, idx) => {
+            if (id === null) return null;
+            const c = cardData.find(x => x.id == id);
+            if (!c) return null;
+            const info = state.inv[id] || { l: 0 };
+            return `  ${subSlotLabels[idx]} ${c.name}(${'★'.repeat(c.rare)}) Lv.${info.l}`;
+        }).filter(Boolean);
+        const subStr = subLines.length > 0
+            ? `🌊 眷属:\n${subLines.join('\n')}`
+            : '🌊 眷属: なし';
         const pwr = Math.floor(calcPower().total);
         const text = `【ヤオヨロクリッカー】私の編成\n${mainStr}\n${subStr}\n⚔️ 総合神力: ${pwr.toLocaleString()}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
         openSnsShareModal(text);
@@ -1810,9 +1846,12 @@
         let totalCards = typeof cardData !== 'undefined' ? cardData.length : 460;
         let collectedCount = Object.keys(state.inv).length;
         let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
+        const isCollectionComplete = parseFloat(collectionRate) >= 100;
         
         document.getElementById('stat-collection').innerText = `${collectedCount} / ${totalCards} (${collectionRate}%)`;
+        document.getElementById('stat-collection').className = isCollectionComplete ? 'val rainbow-text' : 'val';
         document.getElementById('stat-prog').style.width = `${collectionRate}%`;
+        document.getElementById('stat-prog').className = isCollectionComplete ? 'progress-bar rainbow-bar' : 'progress-bar';
 
         let maxTotals = { rare: {1:0, 2:0, 3:0, 4:0, 5:0}, attr: {fire:0, water:0, earth:0, sky:0, evil:0} };
         if (typeof cardData !== 'undefined') {
@@ -2083,13 +2122,20 @@
         const total = achievementData.length;
         const unlocked = Object.keys(state.unlockedAchievements).length;
         const pct = total > 0 ? ((unlocked / total) * 100).toFixed(1) : 0;
+        const isAllUnlocked = total > 0 && unlocked >= total;
         const cntB = achievementData.filter(a => a.rank === 'bronze' && state.unlockedAchievements[a.id]).length;
         const cntS = achievementData.filter(a => a.rank === 'silver' && state.unlockedAchievements[a.id]).length;
         const cntG = achievementData.filter(a => a.rank === 'gold' && state.unlockedAchievements[a.id]).length;
         const sumText = document.getElementById('ach-summary-text');
         const sumBar = document.getElementById('ach-summary-bar');
-        if (sumText) sumText.innerText = `${unlocked} / ${total} (${pct}%)`;
-        if (sumBar) sumBar.style.width = pct + '%';
+        if (sumText) {
+            sumText.innerText = `${unlocked} / ${total} (${pct}%)`;
+            sumText.className = isAllUnlocked ? 'rainbow-text' : '';
+        }
+        if (sumBar) {
+            sumBar.style.width = pct + '%';
+            sumBar.className = isAllUnlocked ? 'progress-bar rainbow-bar' : 'progress-bar';
+        }
         const cB = document.getElementById('ach-cnt-bronze');
         const cS = document.getElementById('ach-cnt-silver');
         const cG = document.getElementById('ach-cnt-gold');
@@ -2210,11 +2256,35 @@
         if (!lastGachaData) return;
         const d = lastGachaData;
         const typeName = d.type === 'rare' ? '稀代招集' : '通常招集';
-        let rarityText = '';
-        if ((d.rarityCounts[5] || 0) > 0) rarityText += `✨★5 x${d.rarityCounts[5]} `;
-        if ((d.rarityCounts[4] || 0) > 0) rarityText += `🌟★4 x${d.rarityCounts[4]} `;
-        if ((d.rarityCounts[3] || 0) > 0) rarityText += `⭐★3 x${d.rarityCounts[3]}`;
-        const text = `【ヤオヨロクリッカー】\n${typeName}を${d.totalTimes.toLocaleString()}回実施！\n${rarityText.trim() || '結果なし'}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
+
+        // Build rarity summary (all tiers)
+        let rarityParts = [];
+        if ((d.rarityCounts[5] || 0) > 0) rarityParts.push(`✨★5 x${d.rarityCounts[5]}`);
+        if ((d.rarityCounts[4] || 0) > 0) rarityParts.push(`🌟★4 x${d.rarityCounts[4]}`);
+        if ((d.rarityCounts[3] || 0) > 0) rarityParts.push(`⭐★3 x${d.rarityCounts[3]}`);
+        if ((d.rarityCounts[2] || 0) > 0) rarityParts.push(`★2 x${d.rarityCounts[2]}`);
+        if ((d.rarityCounts[1] || 0) > 0) rarityParts.push(`★1 x${d.rarityCounts[1]}`);
+
+        // List notable characters (★4+ if any, otherwise ★3, otherwise all)
+        let notableCards = [];
+        if (d.rollCounts && typeof cardData !== 'undefined') {
+            const sorted = Object.entries(d.rollCounts)
+                .map(([id, cnt]) => ({ card: cardData.find(x => x.id == id), cnt }))
+                .filter(x => x.card)
+                .sort((a, b) => b.card.rare - a.card.rare);
+            const maxRare = sorted.length > 0 ? sorted[0].card.rare : 0;
+            const showRare = maxRare >= 4 ? maxRare : (maxRare >= 3 ? 3 : maxRare);
+            const notable = sorted.filter(x => x.card.rare === showRare).slice(0, 5);
+            notableCards = notable.map(x => {
+                const star = x.card.rare === 5 ? '✨' : (x.card.rare === 4 ? '🌟' : '⭐');
+                const cnt = x.cnt > 1 ? ` x${x.cnt}` : '';
+                return `${star}${x.card.name}(${'★'.repeat(x.card.rare)})${cnt}`;
+            });
+        }
+
+        const rarityText = rarityParts.join(' ') || 'なし';
+        const notableText = notableCards.length > 0 ? `\n${notableCards.join(' ')}` : '';
+        const text = `【ヤオヨロクリッカー】\n${typeName}を${d.totalTimes.toLocaleString()}回実施！\n${rarityText}${notableText}\n\n👇あなたも神々を集めよう！\nhttps://sky-ciel.github.io/YaoyoroClicker/\n#ヤオヨロクリッカー`;
         openSnsShareModal(text);
     }
 
@@ -2334,7 +2404,7 @@
             const rareCols = { 1: '#8b4513', 2: '#a9a9a9', 3: '#e0e0e0', 4: '#ffaa00', 5: '#ff00ff' };
             const rareCol = rareCols[c.rare] || '#fff';
             const leaderTag = (slot === 'main' && c.leaderSkill)
-                ? `<div style="font-size:0.5rem;color:#ff00ff;margin-top:1px;">✨ ${c.leaderSkill.name}：${c.leaderSkill.desc}</div>` : '';
+                ? `<div style="font-size:0.65rem;color:#ff00ff;margin-top:3px;line-height:1.4;">✨ ${c.leaderSkill.name}：${c.leaderSkill.desc}</div>` : '';
 
             html += `
                 <div class="fm-card-list-item ${inTeam ? 'in-team' : ''}"
@@ -2388,9 +2458,14 @@
     }
 
     function confirmFormation() {
+        const oldPower = Math.floor(calcPower().total);
         state.team = JSON.parse(JSON.stringify(_pendingTeam));
         _formationDirty = false;
         updateStats();
+        const newPower = Math.floor(calcPower().total);
+        if (oldPower !== newPower) {
+            animateValue('stat-total-power', oldPower, newPower, 1000);
+        }
         updateDisplay();
         renderFormation();
         updateFormationComparePanel();
@@ -2415,7 +2490,7 @@
     }
 
     function calcStatsForTeam(team) {
-        let p = 1, m = 1.0, c = 0, raw_r = 0.005, evilBonusSum = 0;
+        let p = 1, m = 1.0, c = 0, raw_r_base = 0.005, raw_r_sub = 0, raw_r_formation = 0, evilBonusSum = 0;
         if (typeof cardData !== 'undefined') {
             if (!team) team = { main: null, subs: [null, null, null, null] };
             const mainId = team.main !== null ? Number(team.main) : null;
@@ -2444,14 +2519,21 @@
                 if (card.attr === "fire") p += bonus * l * mult * lsMult;
                 if (card.attr === "water") m += bonus * l * mult * lsMult;
                 if (card.attr === "earth") c += bonus * l * mult * lsMult;
-                if (card.attr === "sky") raw_r += bonus * l * mult * lsMult;
+                if (card.attr === "sky") {
+                    if (isInFormation) {
+                        raw_r_formation += bonus * l * mult * lsMult;
+                    } else {
+                        raw_r_sub += bonus * l * mult * lsMult;
+                    }
+                }
                 if (card.attr === "evil") evilBonusSum += bonus * l * mult * lsMult;
             }
         }
         const e = 1.0 + evilBonusSum;
-        const final_r = (raw_r * 0.5) / (raw_r + 0.5);
+        const r_for_cap = raw_r_base + raw_r_sub;
+        const final_r = (r_for_cap * 0.5) / (r_for_cap + 0.5) + raw_r_formation;
         const critPow = c > 1.0 ? 2.0 + Math.log10(1 + (c - 1.0)) * 1.5 : 2.0;
-        return { p, m, c, r: final_r, e, critPower: critPow, raw_r };
+        return { p, m, c, r: final_r, e, critPower: critPow, raw_r: r_for_cap + raw_r_formation };
     }
 
     function showFormationCardMenu(slot, subIndex, cardId) {
@@ -2520,7 +2602,7 @@
                 mainSlot.innerHTML = `
                     <div class="attr-icon">${getAttrIcon(c.attr)}</div>
                     <div class="formation-leader-badge" style="color:${badgeColor};border-color:${badgeColor};">${badgeText}</div>
-                    ${badgeDesc ? `<div style="font-size:0.4rem;color:#cc88ff;text-align:center;padding:0 4px;line-height:1.3;margin-bottom:2px;">${badgeDesc}</div>` : ''}
+                    ${badgeDesc ? `<div style="font-size:0.55rem;color:#cc88ff;text-align:center;padding:0 4px;line-height:1.4;margin-bottom:2px;">${badgeDesc}</div>` : ''}
                     <div class="formation-card-inner">
                         <div style="font-size:0.5rem;color:var(--gold);letter-spacing:1px;text-shadow:0 0 3px var(--gold);">${"★".repeat(c.rare)}</div>
                         <div style="font-size:2.4rem;margin:4px 0;filter:drop-shadow(0 0 8px var(--${c.attr}));">📜</div>
