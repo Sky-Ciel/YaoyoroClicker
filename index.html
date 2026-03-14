@@ -553,7 +553,7 @@
         <div style="width:100%; background:linear-gradient(135deg,rgba(30,12,4,0.95),rgba(10,5,2,0.95)); padding:14px; border-radius:10px; border:1px solid var(--gold); margin-bottom:10px; text-align:center; box-shadow:inset 0 0 15px rgba(0,0,0,0.8);">
             <div style="font-size:0.75rem; color:#aaa; margin-bottom:4px;">観測者の陣</div>
             <div style="font-size:1.6rem; font-weight:900; color:var(--gold); text-shadow:0 0 8px rgba(212,175,55,0.5);">⚔ 神々の編成</div>
-            <div style="font-size:0.6rem; color:#666; margin-top:4px;">主神×2.0 / ★5リーダー×3.0 / 眷属×1.0 / 未編成×0.25</div>
+            <div style="font-size:0.6rem; color:#666; margin-top:4px;">主神×2.0 / リーダースキル(★3以上) / 眷属×1.0 / 未編成×0.25</div>
         </div>
 
         <!-- Toast for confirm/discard -->
@@ -573,7 +573,7 @@
         <div class="profile-card" style="border-color:var(--gold); margin-bottom:8px; padding:12px;">
             <div class="fm-section-header">
                 <span style="color:var(--gold); font-size:0.85rem; font-weight:bold;">⚔ 主神スロット</span>
-                <span class="fm-slot-badge" style="background:rgba(212,175,55,0.15); color:var(--gold); border:1px solid var(--gold);">主神×2.0 / ★5×3.0</span>
+                <span class="fm-slot-badge" style="background:rgba(212,175,55,0.15); color:var(--gold); border:1px solid var(--gold);">主神×2.0 / ★3以上リーダースキル有</span>
             </div>
             <div id="formation-main-slot" class="formation-main-slot" onclick="openFormationSelect('main', -1)">
                 <div class="formation-empty-hint">⚔<br>タップして主神を編成</div>
@@ -749,11 +749,37 @@
     const FORMATION_MAIN_MULT = 2.0;   // 主神スロット: 加護効果 ×2.0
     const FORMATION_SUB_MULT = 1.0;    // 眷属スロット: 加護効果 ×1.0
     const SUB_EFFECT_MULT = 0.25;      // 未編成カード (サブ効果): ×0.25
-    const LEADER_SKILL_MULT = 1.5;     // ★5リーダースキル追加倍率 (×2.0 × 1.5 = ×3.0)
     let _fmSelectSlot = null;
     let _fmSelectSubIdx = -1;
     let _pendingTeam = null;           // 編成確定前の仮チーム
     let _formationDirty = false;       // 未確定の編成変更フラグ
+
+    // ====== リーダースキル計算ヘルパー ======
+    // mainCard: 主神スロットのカード, targetCard: 効果を受けるカード
+    // isInFormation: 主神または眷属スロット, isInSubSlot: 眷属スロットのみ
+    // formationAttrs: 現在の編成属性Set, subsFull: 眷属スロット全埋めか
+    function getLeaderSkillMult(mainCard, targetCard, isInFormation, isInSubSlot, formationAttrs, subsFull) {
+        if (!mainCard || !mainCard.leaderSkill) return 1.0;
+        const sk = mainCard.leaderSkill;
+        switch (sk.type) {
+            case 'attr_boost':
+                if (isInFormation && sk.attrs.includes(targetCard.attr)) return sk.mult;
+                break;
+            case 'all_attrs':
+                if (formationAttrs.size >= 5 && isInFormation) return sk.mult;
+                break;
+            case 'sub_boost':
+                if (isInSubSlot) return sk.mult;
+                break;
+            case 'full_sub':
+                if (subsFull && isInFormation) return sk.mult;
+                break;
+            case 'all_formation':
+                if (isInFormation) return sk.mult;
+                break;
+        }
+        return 1.0;
+    }
 
     let sessionClicks = 0;
     let toastSlots = [];
@@ -1007,6 +1033,11 @@
             if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
             const mainId = state.team.main !== null ? Number(state.team.main) : null;
             const subIds = new Set(state.team.subs.filter(id => id !== null).map(Number));
+            const mainCard = mainId !== null ? cardData.find(x => x.id === mainId) : null;
+            const formationAttrs = new Set();
+            if (mainCard) formationAttrs.add(mainCard.attr);
+            subIds.forEach(sid => { const sc = cardData.find(x => x.id === sid); if (sc) formationAttrs.add(sc.attr); });
+            const subsFull = state.team.subs.filter(id => id !== null).length === 4;
             for (let id in state.inv) {
                 const card = cardData.find(x => x.id == id);
                 if(!card) continue;
@@ -1014,16 +1045,18 @@
                 const count = state.inv[id].c;
                 let basePwr = (card.rare * card.rare) * 10 * (1 + l) + count;
                 const numId = Number(id);
+                const isInSubSlot = subIds.has(numId);
+                const isInFormation = numId === mainId || isInSubSlot;
                 let mult;
                 if (numId === mainId) {
                     mult = FORMATION_MAIN_MULT;
-                    if (card.rare === 5) mult *= LEADER_SKILL_MULT;
-                } else if (subIds.has(numId)) {
+                } else if (isInSubSlot) {
                     mult = FORMATION_SUB_MULT;
                 } else {
                     mult = SUB_EFFECT_MULT;
                 }
-                let pwr = basePwr * mult;
+                const lsMult = isInFormation ? getLeaderSkillMult(mainCard, card, isInFormation, isInSubSlot, formationAttrs, subsFull) : 1.0;
+                let pwr = basePwr * mult * lsMult;
                 total += pwr;
                 if(card.attr === 'fire') fire += pwr;
                 if(card.attr === 'water') water += pwr;
@@ -1043,6 +1076,11 @@
             if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
             const _mainId = state.team.main !== null ? Number(state.team.main) : null;
             const _subIds = new Set(state.team.subs.filter(id => id !== null).map(Number));
+            const _mainCard = _mainId !== null ? cardData.find(x => x.id === _mainId) : null;
+            const _formationAttrs = new Set();
+            if (_mainCard) _formationAttrs.add(_mainCard.attr);
+            _subIds.forEach(sid => { const sc = cardData.find(x => x.id === sid); if (sc) _formationAttrs.add(sc.attr); });
+            const _subsFull = state.team.subs.filter(id => id !== null).length === 4;
 
             for (let id in state.inv) {
                 const card = cardData.find(x => x.id == id);
@@ -1053,20 +1091,21 @@
                 let bonus = (card.bonus !== undefined && !isNaN(card.bonus)) ? card.bonus : 0.001;
 
                 const numId = Number(id);
+                const isInSubSlot = _subIds.has(numId);
+                const isInFormation = numId === _mainId || isInSubSlot;
                 let mult = SUB_EFFECT_MULT;
                 if (numId === _mainId) {
                     mult = FORMATION_MAIN_MULT;
-                    // ★5リーダースキル: 主神が★5の場合、加護効果に追加倍率
-                    if (card.rare === 5) mult *= LEADER_SKILL_MULT;
-                } else if (_subIds.has(numId)) {
+                } else if (isInSubSlot) {
                     mult = FORMATION_SUB_MULT;
                 }
+                const lsMult = isInFormation ? getLeaderSkillMult(_mainCard, card, isInFormation, isInSubSlot, _formationAttrs, _subsFull) : 1.0;
 
-                if (card.attr === "fire") p += bonus * l * mult;
-                if (card.attr === "water") m += bonus * l * mult;
-                if (card.attr === "earth") c += bonus * l * mult;
-                if (card.attr === "sky") raw_r += bonus * l * mult;
-                if (card.attr === "evil") evilBonusSum += bonus * l * mult;
+                if (card.attr === "fire") p += bonus * l * mult * lsMult;
+                if (card.attr === "water") m += bonus * l * mult * lsMult;
+                if (card.attr === "earth") c += bonus * l * mult * lsMult;
+                if (card.attr === "sky") raw_r += bonus * l * mult * lsMult;
+                if (card.attr === "evil") evilBonusSum += bonus * l * mult * lsMult;
             }
         }
         
@@ -1661,6 +1700,7 @@
             <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:15px;">
                 <button onclick="window.open('https://twitter.com/intent/tweet?text=${enc}','_blank')" style="background:#000;border:1px solid #fff;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">𝕏 (Twitter) でシェア</button>
                 <button onclick="window.open('https://bsky.app/intent/compose?text=${enc}','_blank')" style="background:#0085ff;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">🦋 Bluesky でシェア</button>
+                <button onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${encUrl}','_blank')" style="background:#1877f2;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">📘 Facebook でシェア</button>
                 <button onclick="window.open('https://social-plugins.line.me/lineit/share?url=${encUrl}&text=${enc}','_blank')" style="background:#00b900;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">💬 LINE でシェア</button>
                 <button onclick="copyShareText(_pendingShareText)" style="background:#444;border:1px solid #888;color:#ccc;padding:12px;border-radius:8px;font-size:0.9rem;">📋 テキストをコピー</button>
             </div>
@@ -2288,13 +2328,13 @@
             const cId = Number(c.id);
             const inTeam = pendingIds.has(cId) && cId !== currentSlotId;
             const isCurrentSlot = cId === currentSlotId;
-            const effectiveMult = (slot === 'main' && c.rare === 5) ? FORMATION_MAIN_MULT * LEADER_SKILL_MULT : slotMult;
+            const effectiveMult = slotMult;
             const bonusStr = getFormationBonusTextMult(c, info.l, effectiveMult);
             const attrCol = getAttrColor(c.attr);
             const rareCols = { 1: '#8b4513', 2: '#a9a9a9', 3: '#e0e0e0', 4: '#ffaa00', 5: '#ff00ff' };
             const rareCol = rareCols[c.rare] || '#fff';
-            const leaderTag = (slot === 'main' && c.rare === 5)
-                ? `<div style="font-size:0.5rem;color:#ff00ff;margin-top:1px;">✨ リーダースキル ×${(FORMATION_MAIN_MULT * LEADER_SKILL_MULT).toFixed(1)}</div>` : '';
+            const leaderTag = (slot === 'main' && c.leaderSkill)
+                ? `<div style="font-size:0.5rem;color:#ff00ff;margin-top:1px;">✨ ${c.leaderSkill.name}：${c.leaderSkill.desc}</div>` : '';
 
             html += `
                 <div class="fm-card-list-item ${inTeam ? 'in-team' : ''}"
@@ -2380,6 +2420,11 @@
             if (!team) team = { main: null, subs: [null, null, null, null] };
             const mainId = team.main !== null ? Number(team.main) : null;
             const subIds = new Set((team.subs || []).filter(id => id !== null).map(Number));
+            const mainCard = mainId !== null ? cardData.find(x => x.id === mainId) : null;
+            const formationAttrs = new Set();
+            if (mainCard) formationAttrs.add(mainCard.attr);
+            subIds.forEach(sid => { const sc = cardData.find(x => x.id === sid); if (sc) formationAttrs.add(sc.attr); });
+            const subsFull = (team.subs || []).filter(id => id !== null).length === 4;
             for (let id in state.inv) {
                 const card = cardData.find(x => x.id == id);
                 if (!card) continue;
@@ -2387,18 +2432,20 @@
                 if (!l || l === 0) continue;
                 const bonus = (card.bonus !== undefined && !isNaN(card.bonus)) ? card.bonus : 0.001;
                 const numId = Number(id);
+                const isInSubSlot = subIds.has(numId);
+                const isInFormation = numId === mainId || isInSubSlot;
                 let mult = SUB_EFFECT_MULT;
                 if (numId === mainId) {
                     mult = FORMATION_MAIN_MULT;
-                    if (card.rare === 5) mult *= LEADER_SKILL_MULT;
-                } else if (subIds.has(numId)) {
+                } else if (isInSubSlot) {
                     mult = FORMATION_SUB_MULT;
                 }
-                if (card.attr === "fire") p += bonus * l * mult;
-                if (card.attr === "water") m += bonus * l * mult;
-                if (card.attr === "earth") c += bonus * l * mult;
-                if (card.attr === "sky") raw_r += bonus * l * mult;
-                if (card.attr === "evil") evilBonusSum += bonus * l * mult;
+                const lsMult = isInFormation ? getLeaderSkillMult(mainCard, card, isInFormation, isInSubSlot, formationAttrs, subsFull) : 1.0;
+                if (card.attr === "fire") p += bonus * l * mult * lsMult;
+                if (card.attr === "water") m += bonus * l * mult * lsMult;
+                if (card.attr === "earth") c += bonus * l * mult * lsMult;
+                if (card.attr === "sky") raw_r += bonus * l * mult * lsMult;
+                if (card.attr === "evil") evilBonusSum += bonus * l * mult * lsMult;
             }
         }
         const e = 1.0 + evilBonusSum;
@@ -2412,19 +2459,27 @@
         if (!c) return;
         const info = state.inv[cardId] || { l: 0, c: 0 };
         const slotLabel = slot === 'main' ? '⚔ 主神スロット' : `🌊 眷属スロット ${subIndex + 1}`;
-        const multForSlot = (slot === 'main') ? (c.rare === 5 ? FORMATION_MAIN_MULT * LEADER_SKILL_MULT : FORMATION_MAIN_MULT) : FORMATION_SUB_MULT;
+        const multForSlot = (slot === 'main') ? FORMATION_MAIN_MULT : FORMATION_SUB_MULT;
         const bonusStr = getFormationBonusTextMult(c, info.l, multForSlot);
+        const leaderSkillHtml = (slot === 'main' && c.leaderSkill)
+            ? `<div style="background:rgba(80,0,80,0.3);border:1px solid #880088;border-radius:5px;padding:6px 8px;margin-top:8px;font-size:0.72rem;">
+                <div style="color:#ff88ff;font-weight:bold;">✨ リーダースキル「${c.leaderSkill.name}」</div>
+                <div style="color:#cc99cc;margin-top:2px;">${c.leaderSkill.desc}</div>
+               </div>` : '';
 
         document.getElementById('detail-content').innerHTML = `
             <div style="text-align:center;margin-bottom:10px;"><span style="color:var(--gold);font-size:1.1rem;letter-spacing:2px;">${"★".repeat(c.rare)}</span></div>
             <h2 style="color:var(--${c.attr});margin-top:0;border-bottom:1px solid var(--syu);padding-bottom:10px;">${getAttrIcon(c.attr)} ${c.name}</h2>
-            <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;margin-bottom:15px;font-size:0.8rem;text-align:center;">
+            <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;margin-bottom:5px;font-size:0.8rem;text-align:center;">
                 <div style="color:#888;font-size:0.7rem;">${slotLabel}に編成中</div>
                 <div style="color:var(--gold);font-weight:bold;margin-top:5px;">${bonusStr}</div>
             </div>
+            ${leaderSkillHtml}
+            <div style="margin-top:15px;">
             <button onclick="openFormationSelect('${slot}', ${subIndex}); closeOverlay('detail-overlay');" style="width:100%;margin-bottom:10px;">別の神に変更する</button>
             <button onclick="removeFromFormation('${slot}', ${subIndex}); closeOverlay('detail-overlay');" style="width:100%;background:rgba(74,0,0,0.8);border-color:#ff4500;">編成から外す</button>
             <button onclick="closeOverlay('detail-overlay')" style="width:100%;margin-top:10px;background:#222;border-color:#444;color:#888;">閉じる</button>
+            </div>
         `;
         openOverlay('detail-overlay');
     }
@@ -2455,16 +2510,17 @@
             if (c) {
                 mainSlot.className = `formation-main-slot occupied rare-${c.rare} bg-${c.attr}`;
                 mainSlot.setAttribute('onclick', `showFormationCardMenu('main', -1, ${mainId})`);
-                const isLeader5 = c.rare === 5;
-                const mainMult = isLeader5 ? FORMATION_MAIN_MULT * LEADER_SKILL_MULT : FORMATION_MAIN_MULT;
-                const bonusStr = getFormationBonusTextMult(c, info.l, mainMult);
-                const badgeText = isLeader5
-                    ? `✨ リーダースキル ×${mainMult.toFixed(1)}`
+                const leaderSk = c.leaderSkill;
+                const bonusStr = getFormationBonusTextMult(c, info.l, FORMATION_MAIN_MULT);
+                const badgeText = leaderSk
+                    ? `✨ ${leaderSk.name}`
                     : `⚔ 主神スキル ×${FORMATION_MAIN_MULT}`;
-                const badgeColor = isLeader5 ? '#ff00ff' : 'var(--gold)';
+                const badgeDesc = leaderSk ? leaderSk.desc : null;
+                const badgeColor = leaderSk ? '#ff00ff' : 'var(--gold)';
                 mainSlot.innerHTML = `
                     <div class="attr-icon">${getAttrIcon(c.attr)}</div>
                     <div class="formation-leader-badge" style="color:${badgeColor};border-color:${badgeColor};">${badgeText}</div>
+                    ${badgeDesc ? `<div style="font-size:0.4rem;color:#cc88ff;text-align:center;padding:0 4px;line-height:1.3;margin-bottom:2px;">${badgeDesc}</div>` : ''}
                     <div class="formation-card-inner">
                         <div style="font-size:0.5rem;color:var(--gold);letter-spacing:1px;text-shadow:0 0 3px var(--gold);">${"★".repeat(c.rare)}</div>
                         <div style="font-size:2.4rem;margin:4px 0;filter:drop-shadow(0 0 8px var(--${c.attr}));">📜</div>
@@ -2563,6 +2619,11 @@
         let sP = 0, sM = 0, sC = 0, sRawR = 0, sEvil = 0;
         const mainId = team.main !== null ? Number(team.main) : null;
         const subIds = new Set((team.subs || []).filter(id => id !== null).map(Number));
+        const mainCard = mainId !== null ? cardData.find(x => x.id === mainId) : null;
+        const formationAttrs = new Set();
+        if (mainCard) formationAttrs.add(mainCard.attr);
+        subIds.forEach(sid => { const sc = cardData.find(x => x.id === sid); if (sc) formationAttrs.add(sc.attr); });
+        const subsFull = (team.subs || []).filter(id => id !== null).length === 4;
 
         for (let id in state.inv) {
             const c = cardData.find(x => x.id == id);
@@ -2571,15 +2632,18 @@
             if (!l || l === 0) continue;
             const bonus = (c.bonus !== undefined && !isNaN(c.bonus)) ? c.bonus : 0.001;
             const numId = Number(id);
+            const isInSubSlot = subIds.has(numId);
+            const isInFormation = numId === mainId || isInSubSlot;
 
             if (numId === mainId) {
-                const mult = (c.rare === 5) ? FORMATION_MAIN_MULT * LEADER_SKILL_MULT : FORMATION_MAIN_MULT;
-                const v = bonus * l * mult;
+                const lsMult = getLeaderSkillMult(mainCard, c, true, false, formationAttrs, subsFull);
+                const v = bonus * l * FORMATION_MAIN_MULT * lsMult;
                 if (c.attr === 'fire') fP += v; else if (c.attr === 'water') fM += v;
                 else if (c.attr === 'earth') fC += v; else if (c.attr === 'sky') fRawR += v;
                 else if (c.attr === 'evil') fEvil += v;
-            } else if (subIds.has(numId)) {
-                const v = bonus * l * FORMATION_SUB_MULT;
+            } else if (isInSubSlot) {
+                const lsMult = getLeaderSkillMult(mainCard, c, true, true, formationAttrs, subsFull);
+                const v = bonus * l * FORMATION_SUB_MULT * lsMult;
                 if (c.attr === 'fire') fP += v; else if (c.attr === 'water') fM += v;
                 else if (c.attr === 'earth') fC += v; else if (c.attr === 'sky') fRawR += v;
                 else if (c.attr === 'evil') fEvil += v;
