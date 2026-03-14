@@ -191,7 +191,7 @@
 
         /* 【修正】メニューバーを下部固定し、スマホ広告をそのすぐ下に隔離 */
         #menu-bar { position: absolute; bottom: 50px; width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 2000; height: 50px;}
-        .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.8rem; text-align: center; cursor: pointer; line-height: 1;}
+        .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.73rem; text-align: center; cursor: pointer; line-height: 1;}
         .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
 
         /* スマホ用下部広告（一番下に固定） */
@@ -233,6 +233,33 @@
         .ach-toast { position: absolute; top: 80px; right: 10px; max-width: 230px; background: rgba(12,4,4,0.96); border: 2px solid var(--gold); border-radius: 10px; padding: 10px 14px; z-index: 6000; box-shadow: 0 0 20px rgba(212,175,55,0.5); animation: toastSlide 3.5s forwards; pointer-events: none; word-break: break-word; }
         @keyframes toastSlide { 0%{opacity:0;transform:translateX(40px);} 12%{opacity:1;transform:translateX(0);} 80%{opacity:1;transform:translateX(0);} 100%{opacity:0;transform:translateX(40px);} }
         .ach-new-badge { display:inline-block; background:#ff4500; color:#fff; font-size:0.5rem; padding:1px 5px; border-radius:8px; margin-left:5px; vertical-align:middle; font-family:sans-serif; font-weight:bold; }
+
+        /* ====== 編成タブ ====== */
+        .formation-main-slot {
+            min-height: 130px; border: 2px dashed var(--gold); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            background: rgba(212,175,55,0.04); transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .formation-main-slot:active { transform: scale(0.98); background: rgba(212,175,55,0.12); }
+        .formation-main-slot.occupied { border-style: solid; background: linear-gradient(135deg, #1a1005, #0d0803); }
+        .formation-sub-slot {
+            height: 100px; border: 2px dashed rgba(30,144,255,0.45); border-radius: 8px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; background: rgba(30,144,255,0.03); transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .formation-sub-slot:active { transform: scale(0.97); background: rgba(30,144,255,0.1); }
+        .formation-sub-slot.occupied { border-style: solid; background: linear-gradient(135deg, #030812, #020408); }
+        .formation-empty-hint { color: #555; font-size: 0.65rem; text-align: center; pointer-events: none; line-height: 1.5; }
+        .formation-card-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 6px 4px; pointer-events: none; }
+        .fm-card-name { font-size: 0.55rem; font-weight: bold; text-align: center; width: 94%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .fm-bonus-text { font-size: 0.5rem; margin-top: 2px; font-weight: bold; text-align: center; }
+        .formation-leader-badge { position: absolute; top: 4px; right: 5px; font-size: 0.48rem; color: var(--gold); background: rgba(0,0,0,0.75); padding: 2px 5px; border-radius: 4px; font-weight: bold; border: 1px solid var(--gold); white-space: nowrap; }
+        #formation-select-overlay { z-index: 7500; }
+        .fm-card-list-item { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 6px; background: #111; border: 1px solid #333; cursor: pointer; transition: 0.15s; margin-bottom: 6px; }
+        .fm-card-list-item:active { transform: scale(0.98); background: #1a0a0a; }
+        .fm-card-list-item.in-team { border-color: #3a2a0a; opacity: 0.45; cursor: not-allowed; }
+        .fm-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .fm-slot-badge { font-size: 0.6rem; padding: 2px 7px; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -515,10 +542,84 @@
         <div id="ach-list" class="ach-grid" style="margin-top:8px;"></div>
     </div>
 
+    <div id="screen-formation" class="screen" style="padding-left:10px; padding-right:10px;">
+
+        <!-- Header -->
+        <div style="width:100%; background:linear-gradient(135deg,rgba(0,80,140,0.25),rgba(0,0,0,0)); border:1px solid rgba(30,144,255,0.5); border-radius:10px; padding:12px; text-align:center; margin-bottom:10px;">
+            <div style="font-size:0.9rem; color:var(--sky); font-weight:bold; letter-spacing:2px; margin-bottom:2px;">⚔ 観測者の陣</div>
+            <div style="font-size:0.65rem; color:#888; line-height:1.5;">神々を編成して加護の力を最大化せよ<br><span style="color:#555;">主神×2.0 / 眷属×1.0 / 未編成×0.25</span></div>
+        </div>
+
+        <!-- Main Slot -->
+        <div class="profile-card" style="border-color:var(--gold); margin-bottom:8px; padding:12px;">
+            <div class="fm-section-header">
+                <span style="color:var(--gold); font-size:0.85rem; font-weight:bold;">⚔ 主神スロット</span>
+                <span class="fm-slot-badge" style="background:rgba(212,175,55,0.15); color:var(--gold); border:1px solid var(--gold);">加護効果 ×2.0</span>
+            </div>
+            <div id="formation-main-slot" class="formation-main-slot" onclick="openFormationSelect('main', -1)">
+                <div class="formation-empty-hint">⚔<br>タップして主神を編成</div>
+            </div>
+        </div>
+
+        <!-- Sub Slots -->
+        <div class="profile-card" style="border-color:rgba(30,144,255,0.5); margin-bottom:8px; padding:12px;">
+            <div class="fm-section-header">
+                <span style="color:var(--sky); font-size:0.85rem; font-weight:bold;">🌊 眷属スロット</span>
+                <span class="fm-slot-badge" style="background:rgba(30,144,255,0.12); color:var(--sky); border:1px solid rgba(30,144,255,0.5);">加護効果 ×1.0</span>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:7px;">
+                <div id="formation-sub-slot-0" class="formation-sub-slot" onclick="openFormationSelect('sub', 0)"><div class="formation-empty-hint">編成</div></div>
+                <div id="formation-sub-slot-1" class="formation-sub-slot" onclick="openFormationSelect('sub', 1)"><div class="formation-empty-hint">編成</div></div>
+                <div id="formation-sub-slot-2" class="formation-sub-slot" onclick="openFormationSelect('sub', 2)"><div class="formation-empty-hint">編成</div></div>
+                <div id="formation-sub-slot-3" class="formation-sub-slot" onclick="openFormationSelect('sub', 3)"><div class="formation-empty-hint">編成</div></div>
+            </div>
+        </div>
+
+        <!-- Formation Effects Breakdown -->
+        <div class="profile-card" style="margin-bottom:8px; padding:12px;">
+            <h4 class="profile-title" style="font-size:0.9rem;">編成による加護の内訳</h4>
+            <div id="formation-effect-list" style="font-size:0.82rem; line-height:1.8;">
+                <div style="text-align:center;color:#555;font-size:0.75rem;padding:8px 0;">神を編成すると効果が表示されます</div>
+            </div>
+        </div>
+
+        <!-- Total Stats -->
+        <div class="profile-card" style="border-color:rgba(255,100,0,0.4); padding:12px;">
+            <h4 class="profile-title" style="color:#ff8c00; font-size:0.9rem;">観測の加護 (合計)</h4>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85rem;">
+                <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; border:1px solid #333;">
+                    <div style="font-size:0.6rem; color:#aaa; margin-bottom:2px;">🔥 効率</div>
+                    <div id="fm-st-p" class="val" style="font-size:1rem;">1</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; border:1px solid #333;">
+                    <div style="font-size:0.6rem; color:#aaa; margin-bottom:2px;">💧 倍率</div>
+                    <div id="fm-st-m" class="val" style="font-size:1rem;">1.00x</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; border:1px solid #333;">
+                    <div style="font-size:0.6rem; color:#aaa; margin-bottom:2px;">⛰️ 会心</div>
+                    <div id="fm-st-c" class="val" style="font-size:1rem;">0%</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; border:1px solid #333;">
+                    <div style="font-size:0.6rem; color:#aaa; margin-bottom:2px;">🪽 結晶</div>
+                    <div id="fm-st-r" class="val" style="font-size:1rem;">0.500%</div>
+                </div>
+            </div>
+            <div style="margin-top:8px; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; border:1px solid #333; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.6rem; color:#aaa;">🔯 深淵倍率</span>
+                <span id="fm-st-e" class="val" style="color:var(--evil); font-size:0.95rem;">1.00x</span>
+            </div>
+            <div style="margin-top:8px; font-size:0.58rem; color:#555; text-align:center; line-height:1.6;">
+                ※ 編成中の効果 + 未編成カードのサブ効果 (×0.25) の合計
+            </div>
+        </div>
+
+    </div>
+
     <div id="menu-bar">
         <div class="menu-item active" onclick="changeScreen('home', this)" id="nav-home">ホーム</div>
         <div class="menu-item" onclick="changeScreen('gacha', this)">招集</div>
         <div class="menu-item" onclick="changeScreen('zukan', this)" id="nav-zukan">図鑑</div>
+        <div class="menu-item" onclick="changeScreen('formation', this)" id="nav-formation">編成</div>
         <div class="menu-item" onclick="changeScreen('achievement', this)" id="nav-achievement">実績<span id="ach-new-dot" style="display:none; background:#ff4500; color:#fff; font-size:0.5rem; padding:1px 4px; border-radius:8px; margin-left:3px; vertical-align:middle; font-family:sans-serif; font-weight:bold;"></span></div>
         <div class="menu-item" onclick="changeScreen('profile', this)">記録</div>
     </div>
@@ -554,6 +655,14 @@
         <div class="modal" id="ad-content" onclick="event.stopPropagation()" style="text-align:center;">
         </div>
     </div>
+
+    <div id="formation-select-overlay" class="overlay" onclick="closeOverlay('formation-select-overlay')">
+        <div class="modal" onclick="event.stopPropagation()" style="max-height:82vh;">
+            <h3 id="formation-select-title" style="color:var(--gold); margin-top:0; border-bottom:1px solid var(--syu); padding-bottom:10px; font-size:1rem;">神を選択</h3>
+            <div id="formation-card-list" style="max-height:58vh; overflow-y:auto; padding-right:4px;"></div>
+            <button onclick="closeOverlay('formation-select-overlay')" style="width:100%; margin-top:12px; background:#222; border-color:#444; color:#888;">閉じる</button>
+        </div>
+    </div>
 </div>
 
 <div id="side-ad-right" class="side-ad">
@@ -579,8 +688,16 @@
         lastClickTime: 0, idleTimeSec: 0,
         batteryLevel: 100, batteryCharging: false,
         totalPlayDays: 0, weekdayPlayDays: [0,0,0,0,0,0,0],
-        totalSessions: 0, maxSessionClicks: 0, lastTrackedDay: ""
+        totalSessions: 0, maxSessionClicks: 0, lastTrackedDay: "",
+        team: { main: null, subs: [null, null, null, null] }
     };
+    // ====== 編成システム 定数 ======
+    const FORMATION_MAIN_MULT = 2.0;   // 主神スロット: 加護効果 ×2.0
+    const FORMATION_SUB_MULT = 1.0;    // 眷属スロット: 加護効果 ×1.0
+    const SUB_EFFECT_MULT = 0.25;      // 未編成カード (サブ効果): ×0.25
+    let _fmSelectSlot = null;
+    let _fmSelectSubIdx = -1;
+
     let sessionClicks = 0;
     let toastSlots = [];
     let lastGachaData = null;
@@ -718,6 +835,7 @@
         if(!state.totalSessions) state.totalSessions = 0;
         if(!state.maxSessionClicks) state.maxSessionClicks = 0;
         if(!state.lastTrackedDay) state.lastTrackedDay = "";
+        if(!state.team) state.team = { main: null, subs: [null, null, null, null] };
 
         // Session count
         state.totalSessions++;
@@ -852,6 +970,10 @@
         let power = calcPower();
 
         if (typeof cardData !== 'undefined') {
+            if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
+            const _mainId = state.team.main !== null ? Number(state.team.main) : null;
+            const _subIds = new Set(state.team.subs.filter(id => id !== null).map(Number));
+
             for (let id in state.inv) {
                 const card = cardData.find(x => x.id == id);
                 if(!card) continue;
@@ -860,11 +982,16 @@
                 
                 let bonus = (card.bonus !== undefined && !isNaN(card.bonus)) ? card.bonus : 0.001;
 
-                if (card.attr === "fire") p += bonus * l;
-                if (card.attr === "water") m += bonus * l;
-                if (card.attr === "earth") c += bonus * l;
-                if (card.attr === "sky") raw_r += bonus * l;
-                if (card.attr === "evil") evilBonusSum += bonus * l;
+                const numId = Number(id);
+                let mult = SUB_EFFECT_MULT;
+                if (numId === _mainId) mult = FORMATION_MAIN_MULT;
+                else if (_subIds.has(numId)) mult = FORMATION_SUB_MULT;
+
+                if (card.attr === "fire") p += bonus * l * mult;
+                if (card.attr === "water") m += bonus * l * mult;
+                if (card.attr === "earth") c += bonus * l * mult;
+                if (card.attr === "sky") raw_r += bonus * l * mult;
+                if (card.attr === "evil") evilBonusSum += bonus * l * mult;
             }
         }
         
@@ -1591,6 +1718,9 @@
             save();
             renderAchievements();
         }
+        if (id === 'formation') {
+            renderFormation();
+        }
     }
     
     // ====== 実績システム ======
@@ -1906,6 +2036,284 @@
             renderAchievements();
         }
     }, 5000);
+
+    // ====== 編成システム ======
+
+    function getTeamCardIds() {
+        if (!state.team) return new Set();
+        const ids = new Set();
+        if (state.team.main !== null) ids.add(Number(state.team.main));
+        for (const s of state.team.subs) { if (s !== null) ids.add(Number(s)); }
+        return ids;
+    }
+
+    function getAttrColor(attr) {
+        return { fire: 'var(--fire)', water: 'var(--water)', earth: 'var(--earth)', sky: 'var(--sky)', evil: 'var(--evil)' }[attr] || '#fff';
+    }
+
+    function getFormationBonusText(card, level, slot) {
+        if (!level || level === 0) return '-';
+        const mult = slot === 'main' ? FORMATION_MAIN_MULT : FORMATION_SUB_MULT;
+        const bonus = card.bonus * level * mult;
+        if (card.attr === 'earth' || card.attr === 'sky') {
+            return `${getEffectName(card.attr)} +${(bonus * 100).toFixed(1)}%`;
+        }
+        return `${getEffectName(card.attr)} +${bonus.toFixed(2)}`;
+    }
+
+    function openFormationSelect(slot, subIndex) {
+        if (typeof cardData === 'undefined') return;
+        _fmSelectSlot = slot;
+        _fmSelectSubIdx = subIndex;
+
+        const slotName = slot === 'main' ? '主神' : `眷属 ${subIndex + 1}`;
+        document.getElementById('formation-select-title').innerText = `⚔ ${slotName}に編成する神を選択`;
+
+        const teamIds = getTeamCardIds();
+        let currentSlotId = null;
+        if (slot === 'main' && state.team) currentSlotId = state.team.main !== null ? Number(state.team.main) : null;
+        if (slot === 'sub' && state.team) currentSlotId = state.team.subs[subIndex] !== null ? Number(state.team.subs[subIndex]) : null;
+
+        let ownedCards = [];
+        for (let id in state.inv) {
+            if ((state.inv[id].l || 0) > 0) {
+                const c = cardData.find(x => x.id == id);
+                if (c) ownedCards.push({ card: c, info: state.inv[id] });
+            }
+        }
+        ownedCards.sort((a, b) => b.card.rare !== a.card.rare ? b.card.rare - a.card.rare : a.card.id - b.card.id);
+
+        let html = '';
+        if (ownedCards.length === 0) {
+            html = '<div style="text-align:center; color:#555; padding:20px 0; font-size:0.8rem;">所持している神がいません</div>';
+        }
+
+        for (const { card: c, info } of ownedCards) {
+            const cId = Number(c.id);
+            const inTeam = teamIds.has(cId) && cId !== currentSlotId;
+            const isCurrentSlot = cId === currentSlotId;
+            const bonusStr = getFormationBonusText(c, info.l, slot);
+            const attrCol = getAttrColor(c.attr);
+            const rareCols = { 1: '#8b4513', 2: '#a9a9a9', 3: '#e0e0e0', 4: '#ffaa00', 5: '#ff00ff' };
+            const rareCol = rareCols[c.rare] || '#fff';
+
+            html += `
+                <div class="fm-card-list-item ${inTeam ? 'in-team' : ''}"
+                     onclick="${!inTeam ? `selectFormationCard(${c.id})` : ''}"
+                     ${inTeam ? 'aria-disabled="true"' : ''}>
+                    <div style="width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,0.6);border:1px solid ${rareCol};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.55rem;color:${rareCol};">${c.rare}★</div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:0.8rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${getAttrIcon(c.attr)} ${c.name}</div>
+                        <div style="font-size:0.6rem;color:${attrCol};margin-top:1px;">${bonusStr}</div>
+                        ${inTeam ? '<div style="font-size:0.55rem;color:#666;margin-top:1px;">既に編成中</div>' : ''}
+                        ${isCurrentSlot ? '<div style="font-size:0.55rem;color:var(--gold);margin-top:1px;">現在このスロットに編成中</div>' : ''}
+                    </div>
+                    <div style="font-size:0.65rem;color:#888;flex-shrink:0;margin-left:4px;">Lv.${info.l}</div>
+                </div>`;
+        }
+
+        document.getElementById('formation-card-list').innerHTML = html;
+        openOverlay('formation-select-overlay');
+    }
+
+    function selectFormationCard(cardId) {
+        setFormationCard(_fmSelectSlot, _fmSelectSubIdx, Number(cardId));
+        closeOverlay('formation-select-overlay');
+    }
+
+    function setFormationCard(slot, subIndex, cardId) {
+        if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
+        const numId = Number(cardId);
+
+        // Remove from other slots if already in team
+        if (state.team.main === numId) state.team.main = null;
+        for (let i = 0; i < 4; i++) {
+            if (state.team.subs[i] === numId) state.team.subs[i] = null;
+        }
+
+        if (slot === 'main') {
+            state.team.main = numId;
+        } else {
+            state.team.subs[subIndex] = numId;
+        }
+
+        updateStats();
+        renderFormation();
+        save();
+    }
+
+    function removeFromFormation(slot, subIndex) {
+        if (!state.team) return;
+        if (slot === 'main') state.team.main = null;
+        else state.team.subs[subIndex] = null;
+
+        updateStats();
+        renderFormation();
+        save();
+    }
+
+    function showFormationCardMenu(slot, subIndex, cardId) {
+        const c = cardData.find(x => x.id == cardId);
+        if (!c) return;
+        const info = state.inv[cardId] || { l: 0, c: 0 };
+        const slotLabel = slot === 'main' ? '⚔ 主神スロット' : `🌊 眷属スロット ${subIndex + 1}`;
+        const bonusStr = getFormationBonusText(c, info.l, slot);
+
+        document.getElementById('detail-content').innerHTML = `
+            <div style="text-align:center;margin-bottom:10px;"><span style="color:var(--gold);font-size:1.1rem;letter-spacing:2px;">${"★".repeat(c.rare)}</span></div>
+            <h2 style="color:var(--${c.attr});margin-top:0;border-bottom:1px solid var(--syu);padding-bottom:10px;">${getAttrIcon(c.attr)} ${c.name}</h2>
+            <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;margin-bottom:15px;font-size:0.8rem;text-align:center;">
+                <div style="color:#888;font-size:0.7rem;">${slotLabel}に編成中</div>
+                <div style="color:var(--gold);font-weight:bold;margin-top:5px;">${bonusStr}</div>
+            </div>
+            <button onclick="openFormationSelect('${slot}', ${subIndex}); closeOverlay('detail-overlay');" style="width:100%;margin-bottom:10px;">別の神に変更する</button>
+            <button onclick="removeFromFormation('${slot}', ${subIndex}); closeOverlay('detail-overlay');" style="width:100%;background:rgba(74,0,0,0.8);border-color:#ff4500;">編成から外す</button>
+            <button onclick="closeOverlay('detail-overlay')" style="width:100%;margin-top:10px;background:#222;border-color:#444;color:#888;">閉じる</button>
+        `;
+        openOverlay('detail-overlay');
+    }
+
+    function renderFormation() {
+        if (typeof cardData === 'undefined') return;
+        if (!state.team) state.team = { main: null, subs: [null, null, null, null] };
+
+        const mainSlot = document.getElementById('formation-main-slot');
+        if (!mainSlot) return;
+
+        // === Main Slot ===
+        const mainId = state.team.main !== null ? Number(state.team.main) : null;
+        if (mainId !== null && state.inv[mainId] && (state.inv[mainId].l || 0) > 0) {
+            const c = cardData.find(x => x.id == mainId);
+            const info = state.inv[mainId];
+            if (c) {
+                mainSlot.className = `formation-main-slot occupied rare-${c.rare} bg-${c.attr}`;
+                mainSlot.setAttribute('onclick', `showFormationCardMenu('main', -1, ${mainId})`);
+                const bonusStr = getFormationBonusText(c, info.l, 'main');
+                mainSlot.innerHTML = `
+                    <div class="attr-icon">${getAttrIcon(c.attr)}</div>
+                    <div class="formation-leader-badge">リーダースキル ×${FORMATION_MAIN_MULT}</div>
+                    <div class="formation-card-inner">
+                        <div style="font-size:0.5rem;color:var(--gold);letter-spacing:1px;text-shadow:0 0 3px var(--gold);">${"★".repeat(c.rare)}</div>
+                        <div style="font-size:2.4rem;margin:4px 0;filter:drop-shadow(0 0 8px var(--${c.attr}));">📜</div>
+                        <div class="fm-card-name">${c.name}</div>
+                        <div style="font-size:0.55rem;color:#aaa;margin:2px 0;">Lv.${info.l}</div>
+                        <div class="fm-bonus-text" style="color:var(--${c.attr});">${bonusStr}</div>
+                    </div>`;
+            }
+        } else {
+            mainSlot.className = 'formation-main-slot';
+            mainSlot.setAttribute('onclick', "openFormationSelect('main', -1)");
+            mainSlot.innerHTML = `<div class="formation-empty-hint">タップして主神を編成</div>`;
+        }
+
+        // === Sub Slots ===
+        for (let i = 0; i < 4; i++) {
+            const subSlot = document.getElementById(`formation-sub-slot-${i}`);
+            if (!subSlot) continue;
+            const subId = state.team.subs[i] !== null ? Number(state.team.subs[i]) : null;
+
+            if (subId !== null && state.inv[subId] && (state.inv[subId].l || 0) > 0) {
+                const c = cardData.find(x => x.id == subId);
+                const info = state.inv[subId];
+                if (c) {
+                    subSlot.className = `formation-sub-slot occupied rare-${c.rare} bg-${c.attr}`;
+                    subSlot.setAttribute('onclick', `showFormationCardMenu('sub', ${i}, ${subId})`);
+                    const bonusStr = getFormationBonusText(c, info.l, 'sub');
+                    subSlot.innerHTML = `
+                        <div class="attr-icon" style="font-size:0.65rem;">${getAttrIcon(c.attr)}</div>
+                        <div class="formation-card-inner">
+                            <div style="font-size:0.4rem;color:var(--gold);letter-spacing:1px;">${"★".repeat(c.rare)}</div>
+                            <div style="font-size:1.6rem;filter:drop-shadow(0 0 5px var(--${c.attr}));">📜</div>
+                            <div class="fm-card-name" style="font-size:0.5rem;">${c.name}</div>
+                            <div class="fm-bonus-text" style="color:var(--${c.attr});font-size:0.48rem;">${bonusStr}</div>
+                        </div>`;
+                }
+            } else {
+                subSlot.className = 'formation-sub-slot';
+                subSlot.setAttribute('onclick', `openFormationSelect('sub', ${i})`);
+                subSlot.innerHTML = `<div class="formation-empty-hint">編成</div>`;
+            }
+        }
+
+        updateFormationEffectsDisplay();
+        updateFormationStatNumbers();
+    }
+
+    function updateFormationEffectsDisplay() {
+        const el = document.getElementById('formation-effect-list');
+        if (!el || !state.team || typeof cardData === 'undefined') return;
+
+        let fP = 0, fM = 0, fC = 0, fRawR = 0, fEvil = 0;
+        let sP = 0, sM = 0, sC = 0, sRawR = 0, sEvil = 0;
+        const mainId = state.team.main !== null ? Number(state.team.main) : null;
+        const subIds = new Set(state.team.subs.filter(id => id !== null).map(Number));
+
+        for (let id in state.inv) {
+            const c = cardData.find(x => x.id == id);
+            if (!c) continue;
+            const l = state.inv[id].l;
+            if (!l || l === 0) continue;
+            const bonus = (c.bonus !== undefined && !isNaN(c.bonus)) ? c.bonus : 0.001;
+            const numId = Number(id);
+
+            if (numId === mainId) {
+                const v = bonus * l * FORMATION_MAIN_MULT;
+                if (c.attr === 'fire') fP += v; else if (c.attr === 'water') fM += v;
+                else if (c.attr === 'earth') fC += v; else if (c.attr === 'sky') fRawR += v;
+                else if (c.attr === 'evil') fEvil += v;
+            } else if (subIds.has(numId)) {
+                const v = bonus * l * FORMATION_SUB_MULT;
+                if (c.attr === 'fire') fP += v; else if (c.attr === 'water') fM += v;
+                else if (c.attr === 'earth') fC += v; else if (c.attr === 'sky') fRawR += v;
+                else if (c.attr === 'evil') fEvil += v;
+            } else {
+                const v = bonus * l * SUB_EFFECT_MULT;
+                if (c.attr === 'fire') sP += v; else if (c.attr === 'water') sM += v;
+                else if (c.attr === 'earth') sC += v; else if (c.attr === 'sky') sRawR += v;
+                else if (c.attr === 'evil') sEvil += v;
+            }
+        }
+
+        const teamSize = (mainId !== null ? 1 : 0) + subIds.size;
+        if (teamSize === 0) {
+            el.innerHTML = '<div style="text-align:center;color:#555;font-size:0.75rem;padding:8px 0;">神を編成すると効果が表示されます</div>';
+            return;
+        }
+
+        const rowStyle = 'display:flex;justify-content:space-between;padding:3px 0;';
+        let html = '';
+
+        if (fP > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🔥 効率 <small style="color:#666;">(編成)</small></span><span style="color:var(--fire);font-weight:bold;font-size:0.78rem;">+${fP.toFixed(2)}</span></div>`;
+        if (fM > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">💧 倍率 <small style="color:#666;">(編成)</small></span><span style="color:var(--water);font-weight:bold;font-size:0.78rem;">+${fM.toFixed(2)}</span></div>`;
+        if (fC > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">⛰️ 会心 <small style="color:#666;">(編成)</small></span><span style="color:var(--earth);font-weight:bold;font-size:0.78rem;">+${(fC*100).toFixed(2)}%</span></div>`;
+        if (fRawR > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🪽 結晶 <small style="color:#666;">(編成)</small></span><span style="color:var(--sky);font-weight:bold;font-size:0.78rem;">+${(fRawR*100).toFixed(3)}%</span></div>`;
+        if (fEvil > 0) html += `<div style="${rowStyle}"><span style="color:#aaa;font-size:0.78rem;">🔯 深淵 <small style="color:#666;">(編成)</small></span><span style="color:var(--evil);font-weight:bold;font-size:0.78rem;">+${fEvil.toFixed(2)}</span></div>`;
+
+        const hasSub = sP + sM + sC + sRawR + sEvil > 0;
+        if (hasSub) {
+            html += `<div style="border-top:1px dashed #2a1a1a;margin:7px 0 4px;padding-top:4px;font-size:0.6rem;color:#555;">未編成カードのサブ効果 (×${SUB_EFFECT_MULT})</div>`;
+            if (sP > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">🔥 効率 <small>(サブ)</small></span><span style="color:#aa5533;font-size:0.72rem;">+${sP.toFixed(2)}</span></div>`;
+            if (sM > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">💧 倍率 <small>(サブ)</small></span><span style="color:#336699;font-size:0.72rem;">+${sM.toFixed(2)}</span></div>`;
+            if (sC > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">⛰️ 会心 <small>(サブ)</small></span><span style="color:#aa7733;font-size:0.72rem;">+${(sC*100).toFixed(2)}%</span></div>`;
+            if (sRawR > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">🪽 結晶 <small>(サブ)</small></span><span style="color:#336699;font-size:0.72rem;">+${(sRawR*100).toFixed(3)}%</span></div>`;
+            if (sEvil > 0) html += `<div style="${rowStyle}"><span style="color:#666;font-size:0.72rem;">🔯 深淵 <small>(サブ)</small></span><span style="color:#7733aa;font-size:0.72rem;">+${sEvil.toFixed(2)}</span></div>`;
+        }
+
+        el.innerHTML = html;
+    }
+
+    function updateFormationStatNumbers() {
+        const fmP = document.getElementById('fm-st-p');
+        const fmM = document.getElementById('fm-st-m');
+        const fmC = document.getElementById('fm-st-c');
+        const fmR = document.getElementById('fm-st-r');
+        const fmE = document.getElementById('fm-st-e');
+        if (fmP) fmP.innerText = state.stats.p.toLocaleString();
+        if (fmM) fmM.innerText = state.stats.m.toLocaleString(undefined, {maximumFractionDigits:2}) + 'x';
+        if (fmC) fmC.innerText = (state.stats.c * 100).toLocaleString(undefined, {maximumFractionDigits:1}) + '%';
+        if (fmR) fmR.innerText = (state.stats.r * 100).toLocaleString(undefined, {maximumFractionDigits:3}) + '%';
+        if (fmE) fmE.innerText = state.stats.e.toLocaleString(undefined, {maximumFractionDigits:2}) + 'x';
+    }
 
     window.addEventListener('DOMContentLoaded', initGame);
 </script>
