@@ -442,6 +442,12 @@
 
                 <div class="stat-box"><div class="stat-label">★5 招集回数</div><div id="stat-total-star5" class="stat-val" style="color:#ff00ff;">0</div></div>
                 <div class="stat-box"><div class="stat-label">実績結晶発見</div><div id="stat-real-rare" class="stat-val">0%</div></div>
+
+                <div class="stat-box"><div class="stat-label">累計プレイ日数</div><div id="stat-total-play-days" class="stat-val" style="color:#88aaff;">0</div></div>
+                <div class="stat-box"><div class="stat-label">連続ログイン日数</div><div id="stat-consec-days" class="stat-val" style="color:#88aaff;">0</div></div>
+
+                <div class="stat-box"><div class="stat-label">累計起動回数</div><div id="stat-total-sessions" class="stat-val" style="color:#aaddff;">0</div></div>
+                <div class="stat-box"><div class="stat-label">最高セッション観測</div><div id="stat-max-session-clicks" class="stat-val" style="color:#aaddff;">0</div></div>
             </div>
         </div>
         
@@ -564,8 +570,11 @@
         lastPlayDate: new Date().toDateString(),
         hoursObserved: [], weekdaysObserved: [],
         lastClickTime: 0, idleTimeSec: 0,
-        batteryLevel: 100, batteryCharging: false
+        batteryLevel: 100, batteryCharging: false,
+        totalPlayDays: 0, weekdayPlayDays: [0,0,0,0,0,0,0],
+        totalSessions: 0, maxSessionClicks: 0, lastTrackedDay: ""
     };
+    let sessionClicks = 0;
     let curPage = 0, showAll = true;
     let gachaSummaryHtml = "";
     let isShowingSummary = true;
@@ -694,9 +703,24 @@
         if(!state.idleTimeSec) state.idleTimeSec = 0;
         if(state.batteryLevel === undefined) state.batteryLevel = 100;
         if(state.batteryCharging === undefined) state.batteryCharging = false;
+        if(state.totalPlayDays === undefined) state.totalPlayDays = 0;
+        if(!state.weekdayPlayDays) state.weekdayPlayDays = [0,0,0,0,0,0,0];
+        if(!state.totalSessions) state.totalSessions = 0;
+        if(!state.maxSessionClicks) state.maxSessionClicks = 0;
+        if(!state.lastTrackedDay) state.lastTrackedDay = "";
+
+        // Session count
+        state.totalSessions++;
 
         // Consecutive days tracking
         const todayStr = new Date().toDateString();
+        const todayDow = new Date().getDay();
+        // Track total play days and per-weekday play days (once per calendar day)
+        if (state.lastTrackedDay !== todayStr) {
+            state.lastTrackedDay = todayStr;
+            state.totalPlayDays++;
+            state.weekdayPlayDays[todayDow] = (state.weekdayPlayDays[todayDow] || 0) + 1;
+        }
         if (state.lastPlayDate && state.lastPlayDate !== todayStr) {
             const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
             if (state.lastPlayDate === yesterday.toDateString()) {
@@ -860,7 +884,7 @@
         let cRate = state.stats.c;
         let isCrit = false;
 
-        // Track CPS, idle time, hours/weekdays
+        // Track CPS, idle time, hours/weekdays, session clicks
         const nowTs = Date.now();
         if (!isAuto) {
             if (state.lastClickTime > 0) {
@@ -876,6 +900,9 @@
             const h = nowDate.getHours(), d = nowDate.getDay();
             if (!state.hoursObserved.includes(h)) state.hoursObserved.push(h);
             if (!state.weekdaysObserved.includes(d)) state.weekdaysObserved.push(d);
+            // Track session clicks
+            sessionClicks++;
+            if (sessionClicks > (state.maxSessionClicks || 0)) state.maxSessionClicks = sessionClicks;
         }
         
         if (cRate > 1.0) { isCrit = true; } 
@@ -1457,6 +1484,11 @@
         document.getElementById('stat-total-rare').innerText = Math.floor(state.totalRare || 0).toLocaleString();
         document.getElementById('stat-spent-rare').innerText = Math.floor(state.spentRareCoins || 0).toLocaleString();
 
+        document.getElementById('stat-total-play-days').innerText = (state.totalPlayDays || 0).toLocaleString();
+        document.getElementById('stat-consec-days').innerText = (state.consecutiveDays || 0).toLocaleString();
+        document.getElementById('stat-total-sessions').innerText = (state.totalSessions || 0).toLocaleString();
+        document.getElementById('stat-max-session-clicks').innerText = (state.maxSessionClicks || 0).toLocaleString();
+
         let totalCards = typeof cardData !== 'undefined' ? cardData.length : 460;
         let collectedCount = Object.keys(state.inv).length;
         let collectionRate = ((collectedCount / totalCards) * 100).toFixed(1);
@@ -1603,8 +1635,25 @@
         ctx.battery_level = state.batteryLevel || 0;
         ctx.battery_charging = state.batteryCharging || false;
 
+        // New tracking variables
+        ctx.total_crit = state.totalCrit || 0;
+        ctx.max_gain = Math.floor(state.maxGain || 0);
+        ctx.total_rare_coins = Math.floor(state.totalRare || 0);
+        ctx.spent_coins = Math.floor(state.spentCoins || 0);
+        ctx.spent_rare_coins = Math.floor(state.spentRareCoins || 0);
+        ctx.max_p = state.maxP || 1;
+        ctx.max_m = state.maxM || 1.0;
+        ctx.total_star5 = state.totalStar5 || 0;
+        ctx.total_play_days = state.totalPlayDays || 0;
+        ctx.total_sessions = state.totalSessions || 0;
+        ctx.max_session_clicks = state.maxSessionClicks || 0;
+        const wdp = state.weekdayPlayDays || [0,0,0,0,0,0,0];
+        for (let i = 0; i < 7; i++) ctx[`weekday_login_${i}`] = wdp[i] || 0;
+
         const hoursSet = new Set(state.hoursObserved || []);
         const daysSet = new Set(state.weekdaysObserved || []);
+        ctx.hours_observed_count = hoursSet.size;
+        ctx.weekdays_observed_count = daysSet.size;
         ctx.all_hours_observed = hoursSet.size >= 24;
         ctx.all_weekdays_observed = daysSet.size >= 7;
         ctx.all_species_collected = typeof cardData !== 'undefined' && ctx.total_cards >= cardData.length;

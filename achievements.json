@@ -854,7 +854,7 @@
     "display_req": "バッテリー残量20%以下でプレイ",
     "show_progress": false,
     "next_id": "ter_002",
-    "hint": "端末の充電が少ない状態で観測せよ",
+    "hint": "",
     "ref_source": ""
   },
   {
@@ -867,7 +867,7 @@
     "display_req": "バッテリー残量5%以下でプレイ",
     "show_progress": false,
     "next_id": "ter_003",
-    "hint": "端末の充電が極限まで少ない状態で観測せよ",
+    "hint": "",
     "ref_source": ""
   },
   {
@@ -880,7 +880,7 @@
     "display_req": "バッテリー残量1%以下でプレイ",
     "show_progress": false,
     "next_id": null,
-    "hint": "端末の充電が1%の状態で観測せよ",
+    "hint": "",
     "ref_source": ""
   },
   {
@@ -906,7 +906,7 @@
     "display_req": "バッテリー残量100%でプレイ",
     "show_progress": false,
     "next_id": null,
-    "hint": "端末を満充電にした状態で観測せよ",
+    "hint": "",
     "ref_source": ""
   },
   {
@@ -1920,7 +1920,7 @@
     "display_req": "バッテリー残量50%以下でプレイ",
     "show_progress": false,
     "next_id": "ter_001",
-    "hint": "端末の充電が少なくなった状態で観測せよ",
+    "hint": "",
     "ref_source": ""
   },
   {
@@ -1946,7 +1946,7 @@
     "display_req": "バッテリー残量3%以下でプレイ",
     "show_progress": false,
     "next_id": "ter_003",
-    "hint": "端末の充電が極めて少ない状態で観測せよ",
+    "hint": "",
     "ref_source": ""
   },
   {
@@ -4637,7 +4637,7 @@
     "display_req": "充電中にプレイ",
     "show_progress": false,
     "next_id": null,
-    "hint": "充電しながら観測せよ",
+    "hint": "",
     "ref_source": ""
   },
   {
@@ -4663,7 +4663,7 @@
     "display_req": "バッテリー残量50%でプレイ",
     "show_progress": false,
     "next_id": null,
-    "hint": "バッテリー残量50%の状態で観測せよ",
+    "hint": "",
     "ref_source": ""
   },
   {
@@ -7848,7 +7848,7 @@
     "display_req": "現在所持神結晶20個以上",
     "show_progress": true,
     "next_id": null,
-    "hint": "ソシャゲミーム",
+    "hint": "ソシャゲあるある",
     "ref_source": ""
   },
   {
@@ -7861,7 +7861,7 @@
     "display_req": "神結晶なしで招集100回",
     "show_progress": false,
     "next_id": null,
-    "hint": "ソシャゲミーム：無課金勢",
+    "hint": "無課金勢のゲーム哲学",
     "ref_source": ""
   },
   {
@@ -7874,7 +7874,7 @@
     "display_req": "累計招集回数10,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ソシャゲ廃人ミーム",
+    "hint": "廃人ゲーマーの日常",
     "ref_source": ""
   },
   {
@@ -7887,7 +7887,7 @@
     "display_req": "累計招集回数500回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ソシャゲ廃人ミーム",
+    "hint": "廃人ゲーマーの日常",
     "ref_source": ""
   },
   {
@@ -7900,7 +7900,7 @@
     "display_req": "★3以上が連続で出ていない回数が50回以上",
     "show_progress": false,
     "next_id": null,
-    "hint": "ソシャゲミーム",
+    "hint": "ソシャゲあるある",
     "ref_source": ""
   },
   {
@@ -7978,7 +7978,7 @@
     "display_req": "累計観測回数100,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "SNSミーム",
+    "hint": "SNS的感覚",
     "ref_source": ""
   },
   {
@@ -7991,7 +7991,7 @@
     "display_req": "累計観測回数100,000,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ゲームからの離脱不能ミーム",
+    "hint": "ゲーム沼の深淵",
     "ref_source": ""
   },
   {
@@ -8004,7 +8004,7 @@
     "display_req": "多様な達成を果たす",
     "show_progress": false,
     "next_id": null,
-    "hint": "ゲームレビューミーム",
+    "hint": "ゲーマーの口コミ",
     "ref_source": ""
   },
   {
@@ -8043,7 +8043,7 @@
     "display_req": "多様な達成を果たす",
     "show_progress": false,
     "next_id": null,
-    "hint": "MMORPGのベテランプレイヤーミーム",
+    "hint": "ベテランゲーマーの境地",
     "ref_source": ""
   },
   {
@@ -8056,7 +8056,7 @@
     "display_req": "プレイ時間48時間以上かつ招集100回以上",
     "show_progress": false,
     "next_id": null,
-    "hint": "ソシャゲライフスタイルミーム",
+    "hint": "ソシャゲライフスタイル",
     "ref_source": ""
   },
   {
@@ -10617,7 +10617,7 @@
     "display_req": "累計観測回数50,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ソシャゲの競争要素ミーム",
+    "hint": "競争の喜び",
     "ref_source": ""
   },
   {
@@ -10630,7 +10630,7 @@
     "display_req": "累計観測回数100,000,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ゲーマーの引退ミーム",
+    "hint": "ゲーマーの決意",
     "ref_source": ""
   },
   {
@@ -10643,7 +10643,7 @@
     "display_req": "総プレイ時間1時間",
     "show_progress": true,
     "next_id": null,
-    "hint": "ゲームのストレス解消効果ミーム",
+    "hint": "ゲームの癒し",
     "ref_source": ""
   },
   {
@@ -10656,7 +10656,7 @@
     "display_req": "累計招集回数1,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ガチャ中毒ミーム",
+    "hint": "ガチャの深み",
     "ref_source": ""
   },
   {
@@ -10669,7 +10669,7 @@
     "display_req": "現在所持神結晶10,000個以上",
     "show_progress": true,
     "next_id": null,
-    "hint": "廃課金ミーム",
+    "hint": "課金の極致",
     "ref_source": ""
   },
   {
@@ -10708,7 +10708,7 @@
     "display_req": "総プレイ時間100時間",
     "show_progress": true,
     "next_id": null,
-    "hint": "MMORPGの没入ミーム",
+    "hint": "ゲームへの没入",
     "ref_source": ""
   },
   {
@@ -10721,7 +10721,7 @@
     "display_req": "総プレイ時間3時間",
     "show_progress": true,
     "next_id": null,
-    "hint": "ゲームレビューミーム",
+    "hint": "ゲーマーの口コミ",
     "ref_source": ""
   },
   {
@@ -11748,7 +11748,7 @@
     "display_req": "累計招集回数1,500回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ガチャ廃人ミーム",
+    "hint": "ガチャ廃人の境地",
     "ref_source": ""
   },
   {
@@ -11761,7 +11761,7 @@
     "display_req": "★3以上が連続で出ていない回数が15回以上",
     "show_progress": false,
     "next_id": null,
-    "hint": "ガチャ懲りたミーム",
+    "hint": "後悔とまた引くの繰り返し",
     "ref_source": ""
   },
   {
@@ -11774,7 +11774,7 @@
     "display_req": "累計招集回数10,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "課金無限ループミーム",
+    "hint": "課金の連鎖",
     "ref_source": ""
   },
   {
@@ -11787,7 +11787,7 @@
     "display_req": "総プレイ時間10分",
     "show_progress": true,
     "next_id": null,
-    "hint": "現代人のスキマ時間活用ミーム",
+    "hint": "現代人の隙間時間",
     "ref_source": ""
   },
   {
@@ -11813,7 +11813,7 @@
     "display_req": "総プレイ時間100時間",
     "show_progress": true,
     "next_id": null,
-    "hint": "学生のゲームライフミーム",
+    "hint": "学生ゲーマーの悩み",
     "ref_source": ""
   },
   {
@@ -11826,7 +11826,7 @@
     "display_req": "累計招集回数100回",
     "show_progress": true,
     "next_id": null,
-    "hint": "縁結びの達人ミーム",
+    "hint": "縁結びの達人",
     "ref_source": ""
   },
   {
@@ -11839,7 +11839,7 @@
     "display_req": "累計招集回数1,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "常連客ミーム",
+    "hint": "常連の誇り",
     "ref_source": ""
   },
   {
@@ -11852,7 +11852,7 @@
     "display_req": "2日連続でプレイ",
     "show_progress": true,
     "next_id": null,
-    "hint": "日課ゲームミーム",
+    "hint": "日課の習慣",
     "ref_source": ""
   },
   {
@@ -11865,7 +11865,7 @@
     "display_req": "30日連続でプレイ",
     "show_progress": true,
     "next_id": null,
-    "hint": "皆勤賞ミーム",
+    "hint": "皆勤賞の心構え",
     "ref_source": ""
   },
   {
@@ -11878,7 +11878,7 @@
     "display_req": "365日連続でプレイ",
     "show_progress": true,
     "next_id": null,
-    "hint": "一年皆勤ミーム",
+    "hint": "一年皆勤の執念",
     "ref_source": ""
   },
   {
@@ -11891,7 +11891,7 @@
     "display_req": "深夜0時以降に観測",
     "show_progress": false,
     "next_id": null,
-    "hint": "眠れない夜のゲームミーム",
+    "hint": "眠れない夜の友",
     "ref_source": ""
   },
   {
@@ -11904,7 +11904,7 @@
     "display_req": "総プレイ時間100時間",
     "show_progress": true,
     "next_id": null,
-    "hint": "ゲームが人生の一部ミーム",
+    "hint": "人生の一部",
     "ref_source": ""
   },
   {
@@ -11917,7 +11917,7 @@
     "display_req": "多様な達成を果たす",
     "show_progress": false,
     "next_id": null,
-    "hint": "ゲーマーの生涯の傑作ミーム",
+    "hint": "ゲーマーの最高傑作",
     "ref_source": ""
   },
   {
@@ -11930,7 +11930,7 @@
     "display_req": "総プレイ時間3時間",
     "show_progress": true,
     "next_id": null,
-    "hint": "ゲームにはまるミーム",
+    "hint": "ゲームへのめり込み",
     "ref_source": ""
   },
   {
@@ -12411,7 +12411,7 @@
     "display_req": "初回観測",
     "show_progress": false,
     "next_id": null,
-    "hint": "初プレイの感動ミーム",
+    "hint": "初プレイの感動",
     "ref_source": ""
   },
   {
@@ -12424,7 +12424,7 @@
     "display_req": "累計観測回数100,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ランキング意識ミーム",
+    "hint": "ランキングへの意識",
     "ref_source": ""
   },
   {
@@ -12437,7 +12437,7 @@
     "display_req": "累計観測回数1,000,000,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "伝説プレイヤーミーム",
+    "hint": "伝説プレイヤーの境地",
     "ref_source": ""
   },
   {
@@ -12450,7 +12450,7 @@
     "display_req": "総プレイ時間24時間",
     "show_progress": true,
     "next_id": null,
-    "hint": "ゲーマーの生活ミーム",
+    "hint": "ゲーマーの日常",
     "ref_source": ""
   },
   {
@@ -12463,7 +12463,7 @@
     "display_req": "図鑑登録数200種類",
     "show_progress": true,
     "next_id": null,
-    "hint": "コレクターミーム",
+    "hint": "コレクターの情熱",
     "ref_source": ""
   },
   {
@@ -12476,7 +12476,7 @@
     "display_req": "累計招集回数10,000回",
     "show_progress": true,
     "next_id": null,
-    "hint": "ガチャ哲学ミーム",
+    "hint": "ガチャ哲学",
     "ref_source": ""
   },
   {
@@ -12489,7 +12489,7 @@
     "display_req": "総所持カード100枚",
     "show_progress": true,
     "next_id": null,
-    "hint": "カードゲームミーム",
+    "hint": "カードゲームの醍醐味",
     "ref_source": ""
   },
   {
@@ -12502,7 +12502,7 @@
     "display_req": "総所持カード1,000枚",
     "show_progress": true,
     "next_id": null,
-    "hint": "コレクションの節目ミーム",
+    "hint": "コレクションの節目",
     "ref_source": ""
   },
   {
@@ -12515,7 +12515,7 @@
     "display_req": "現在所持神結晶1個以上",
     "show_progress": true,
     "next_id": null,
-    "hint": "初課金ミーム",
+    "hint": "初課金の決意",
     "ref_source": ""
   },
   {
@@ -12528,7 +12528,7 @@
     "display_req": "全ての主要達成を果たす",
     "show_progress": false,
     "next_id": null,
-    "hint": "最終称号ミーム",
+    "hint": "最終称号への道",
     "ref_source": ""
   },
   {
@@ -13973,5 +13973,2156 @@
     "next_id": null,
     "hint": "",
     "ref_source": ""
+  },
+  {
+    "id": "obs_172",
+    "rank": "bronze",
+    "category": "observation",
+    "title": "最初の会心",
+    "flavor": "初めての会心の一撃。それは単なる偶然ではなく、神が微笑んだ瞬間だ。",
+    "condition": "total_crit >= 10",
+    "display_req": "累計会心観測10回",
+    "show_progress": true,
+    "next_id": "obs_173"
+  },
+  {
+    "id": "obs_173",
+    "rank": "bronze",
+    "category": "observation",
+    "title": "五十の閃光",
+    "flavor": "五十度の会心。指先に宿る稲妻は、神々の注意を引き始めた。",
+    "condition": "total_crit >= 50",
+    "display_req": "累計会心観測50回",
+    "show_progress": true,
+    "next_id": "obs_174"
+  },
+  {
+    "id": "obs_174",
+    "rank": "bronze",
+    "category": "observation",
+    "title": "百の閃き",
+    "flavor": "百の会心を超えた。観測者の指は、もはや普通ではない速度で光を放つ。",
+    "condition": "total_crit >= 100",
+    "display_req": "累計会心観測100回",
+    "show_progress": true,
+    "next_id": "obs_175"
+  },
+  {
+    "id": "obs_175",
+    "rank": "bronze",
+    "category": "observation",
+    "title": "五百の雷鳴",
+    "flavor": "五百の会心。嵐のような観測が、神界に響き渡る。",
+    "condition": "total_crit >= 500",
+    "display_req": "累計会心観測500回",
+    "show_progress": true,
+    "next_id": "obs_176"
+  },
+  {
+    "id": "obs_176",
+    "rank": "silver",
+    "category": "observation",
+    "title": "千の稲妻",
+    "flavor": "千度の会心は、雷神の舌打ちを誘うほどだ。",
+    "condition": "total_crit >= 1000",
+    "display_req": "累計会心観測1,000回",
+    "show_progress": true,
+    "next_id": "obs_177"
+  },
+  {
+    "id": "obs_177",
+    "rank": "silver",
+    "category": "observation",
+    "title": "五千の輝き",
+    "flavor": "五千の会心。観測者の指先は、常に電気を帯びている。",
+    "condition": "total_crit >= 5000",
+    "display_req": "累計会心観測5,000回",
+    "show_progress": true,
+    "next_id": "obs_178"
+  },
+  {
+    "id": "obs_178",
+    "rank": "silver",
+    "category": "observation",
+    "title": "一万の閃電",
+    "flavor": "一万度の会心。この数は、一つの雷雲が生涯に放つ落雷の数に等しい。",
+    "condition": "total_crit >= 10000",
+    "display_req": "累計会心観測10,000回",
+    "show_progress": true,
+    "next_id": "obs_179"
+  },
+  {
+    "id": "obs_179",
+    "rank": "silver",
+    "category": "observation",
+    "title": "五万の光芒",
+    "flavor": "五万の会心。空を照らす番狂わせの光。",
+    "condition": "total_crit >= 50000",
+    "display_req": "累計会心観測50,000回",
+    "show_progress": true,
+    "next_id": "obs_180"
+  },
+  {
+    "id": "obs_180",
+    "rank": "gold",
+    "category": "observation",
+    "title": "十万の雷帝",
+    "flavor": "十万の会心を超えた。雷神でさえ、この観測者の指先には敵わない。",
+    "condition": "total_crit >= 100000",
+    "display_req": "累計会心観測100,000回",
+    "show_progress": true,
+    "next_id": "obs_181"
+  },
+  {
+    "id": "obs_181",
+    "rank": "gold",
+    "category": "observation",
+    "title": "五十万の光柱",
+    "flavor": "五十万の会心。その輝きはもはや、天を貫く柱となっている。",
+    "condition": "total_crit >= 500000",
+    "display_req": "累計会心観測500,000回",
+    "show_progress": true
+  },
+  {
+    "id": "obs_182",
+    "rank": "bronze",
+    "category": "observation",
+    "title": "百の結実",
+    "flavor": "一度の観測で百を超える結果を出した。小さな積み重ねが、大きな実りを生む。",
+    "condition": "max_gain >= 100",
+    "display_req": "単回最高獲得100以上",
+    "show_progress": false,
+    "next_id": "obs_183"
+  },
+  {
+    "id": "obs_183",
+    "rank": "bronze",
+    "category": "observation",
+    "title": "千の豊穣",
+    "flavor": "一度の観測で千を超えた。収穫の神が微笑んでいる。",
+    "condition": "max_gain >= 1000",
+    "display_req": "単回最高獲得1,000以上",
+    "show_progress": false,
+    "next_id": "obs_184"
+  },
+  {
+    "id": "obs_184",
+    "rank": "silver",
+    "category": "observation",
+    "title": "一万の奇跡",
+    "flavor": "一度で一万を超える奇跡の観測。神の手が加わったとしか思えない。",
+    "condition": "max_gain >= 10000",
+    "display_req": "単回最高獲得10,000以上",
+    "show_progress": false,
+    "next_id": "obs_185"
+  },
+  {
+    "id": "obs_185",
+    "rank": "silver",
+    "category": "observation",
+    "title": "十万の閃光",
+    "flavor": "一撃十万。観測者の力は、もはや神話の領域に達した。",
+    "condition": "max_gain >= 100000",
+    "display_req": "単回最高獲得100,000以上",
+    "show_progress": false,
+    "next_id": "obs_186"
+  },
+  {
+    "id": "obs_186",
+    "rank": "gold",
+    "category": "observation",
+    "title": "百万の爆発",
+    "flavor": "一度の観測で百万を叩き出した。それは爆発であり、奇跡であり、伝説だ。",
+    "condition": "max_gain >= 1000000",
+    "display_req": "単回最高獲得1,000,000以上",
+    "show_progress": false,
+    "next_id": "obs_187"
+  },
+  {
+    "id": "obs_187",
+    "rank": "gold",
+    "category": "observation",
+    "title": "千万の神業",
+    "flavor": "一撃千万。もはや人間の業ではない。神の力が宿った指先の奇跡。",
+    "condition": "max_gain >= 10000000",
+    "display_req": "単回最高獲得10,000,000以上",
+    "show_progress": false
+  },
+  {
+    "id": "obs_188",
+    "rank": "bronze",
+    "category": "observation",
+    "title": "一息の百回",
+    "flavor": "一回の起動で百回の観測。熱意が始まっている。",
+    "condition": "max_session_clicks >= 100",
+    "display_req": "最高セッション観測数100回",
+    "show_progress": true,
+    "next_id": "obs_189"
+  },
+  {
+    "id": "obs_189",
+    "rank": "bronze",
+    "category": "observation",
+    "title": "五百の集中",
+    "flavor": "五百回。一度の邂逅でこれだけ観測できるなら、神も感心するだろう。",
+    "condition": "max_session_clicks >= 500",
+    "display_req": "最高セッション観測数500回",
+    "show_progress": true,
+    "next_id": "obs_190"
+  },
+  {
+    "id": "obs_190",
+    "rank": "silver",
+    "category": "observation",
+    "title": "千の没入",
+    "flavor": "一千回の連続観測。止まれない何かが、指先を動かし続ける。",
+    "condition": "max_session_clicks >= 1000",
+    "display_req": "最高セッション観測数1,000回",
+    "show_progress": true,
+    "next_id": "obs_191"
+  },
+  {
+    "id": "obs_191",
+    "rank": "silver",
+    "category": "observation",
+    "title": "五千の狂騒",
+    "flavor": "五千回。一度の起動でここまで観測し続けた。熱量が違う。",
+    "condition": "max_session_clicks >= 5000",
+    "display_req": "最高セッション観測数5,000回",
+    "show_progress": true,
+    "next_id": "obs_192"
+  },
+  {
+    "id": "obs_192",
+    "rank": "gold",
+    "category": "observation",
+    "title": "一万の狂熱",
+    "flavor": "一万回。一度の起動でこれだけ観測するとは、神への執念か。",
+    "condition": "max_session_clicks >= 10000",
+    "display_req": "最高セッション観測数10,000回",
+    "show_progress": true,
+    "next_id": "obs_193"
+  },
+  {
+    "id": "obs_193",
+    "rank": "gold",
+    "category": "observation",
+    "title": "五万の降臨",
+    "flavor": "五万回の連続観測。肉体の限界を超えた者のみが到達できる境地。",
+    "condition": "max_session_clicks >= 50000",
+    "display_req": "最高セッション観測数50,000回",
+    "show_progress": true
+  },
+  {
+    "id": "obs_194",
+    "rank": "gold",
+    "category": "observation",
+    "title": "三百の閃き",
+    "flavor": "秒間三百の観測は、もはや物理を無視した域だ。神速を超えた神速。",
+    "condition": "max_cps >= 300",
+    "display_req": "最高秒間観測数300回以上",
+    "show_progress": false,
+    "next_id": "obs_195"
+  },
+  {
+    "id": "obs_195",
+    "rank": "gold",
+    "category": "observation",
+    "title": "五百の嵐",
+    "flavor": "秒間五百。どんな嵐も、この観測者の指先の速さには追いつけない。",
+    "condition": "max_cps >= 500",
+    "display_req": "最高秒間観測数500回以上",
+    "show_progress": false,
+    "next_id": "obs_196"
+  },
+  {
+    "id": "obs_196",
+    "rank": "gold",
+    "category": "observation",
+    "title": "千の神速",
+    "flavor": "秒間千。これはもはや人間の速度ではない。神々も目を疑うだろう。",
+    "condition": "max_cps >= 1000",
+    "display_req": "最高秒間観測数1,000回以上",
+    "show_progress": false
+  },
+  {
+    "id": "mon_169",
+    "rank": "bronze",
+    "category": "money",
+    "title": "最初の施し",
+    "flavor": "百の供物を神々に捧げた。小さな願いが、大きな縁を結ぶ。",
+    "condition": "spent_coins >= 100",
+    "display_req": "累計お供え物消費100",
+    "show_progress": true,
+    "next_id": "mon_170"
+  },
+  {
+    "id": "mon_170",
+    "rank": "bronze",
+    "category": "money",
+    "title": "千の散財",
+    "flavor": "千の供物を使った。惜しみなく捧げる者に、神は振り向く。",
+    "condition": "spent_coins >= 1000",
+    "display_req": "累計お供え物消費1,000",
+    "show_progress": true,
+    "next_id": "mon_171"
+  },
+  {
+    "id": "mon_171",
+    "rank": "bronze",
+    "category": "money",
+    "title": "一万の献身",
+    "flavor": "一万の供物を神に奉じた。その献身は神々の目にも映っている。",
+    "condition": "spent_coins >= 10000",
+    "display_req": "累計お供え物消費10,000",
+    "show_progress": true,
+    "next_id": "mon_172"
+  },
+  {
+    "id": "mon_172",
+    "rank": "silver",
+    "category": "money",
+    "title": "十万の信仰",
+    "flavor": "十万の供物。この信仰の深さは、神殿の壁に刻まれるべきだ。",
+    "condition": "spent_coins >= 100000",
+    "display_req": "累計お供え物消費100,000",
+    "show_progress": true,
+    "next_id": "mon_173"
+  },
+  {
+    "id": "mon_173",
+    "rank": "silver",
+    "category": "money",
+    "title": "百万の浄財",
+    "flavor": "百万の浄財を神に捧げた。その誠意に神界が揺れる。",
+    "condition": "spent_coins >= 1000000",
+    "display_req": "累計お供え物消費1,000,000",
+    "show_progress": true,
+    "next_id": "mon_174"
+  },
+  {
+    "id": "mon_174",
+    "rank": "silver",
+    "category": "money",
+    "title": "一千万の大祭",
+    "flavor": "一千万。これだけの供物は、かつて大祭でしか集まらなかった。",
+    "condition": "spent_coins >= 10000000",
+    "display_req": "累計お供え物消費10,000,000",
+    "show_progress": true,
+    "next_id": "mon_175"
+  },
+  {
+    "id": "mon_175",
+    "rank": "gold",
+    "category": "money",
+    "title": "一億の大奉納",
+    "flavor": "一億の供物を神に捧げた観測者。その名は神界に永遠に残るだろう。",
+    "condition": "spent_coins >= 100000000",
+    "display_req": "累計お供え物消費100,000,000",
+    "show_progress": true
+  },
+  {
+    "id": "mon_176",
+    "rank": "bronze",
+    "category": "money",
+    "title": "奇跡の供物",
+    "flavor": "十個の稀晶を神に捧げた。希少なものほど、神は喜ぶ。",
+    "condition": "spent_rare_coins >= 10",
+    "display_req": "累計稀晶消費10",
+    "show_progress": true,
+    "next_id": "mon_177"
+  },
+  {
+    "id": "mon_177",
+    "rank": "bronze",
+    "category": "money",
+    "title": "五十の稀薬",
+    "flavor": "五十の稀晶を使った。手放すのは惜しいが、縁のためなら。",
+    "condition": "spent_rare_coins >= 50",
+    "display_req": "累計稀晶消費50",
+    "show_progress": true,
+    "next_id": "mon_178"
+  },
+  {
+    "id": "mon_178",
+    "rank": "bronze",
+    "category": "money",
+    "title": "百の玉砕",
+    "flavor": "百の稀晶を使い果たした。その覚悟が縁を呼ぶ。",
+    "condition": "spent_rare_coins >= 100",
+    "display_req": "累計稀晶消費100",
+    "show_progress": true,
+    "next_id": "mon_179"
+  },
+  {
+    "id": "mon_179",
+    "rank": "silver",
+    "category": "money",
+    "title": "五百の散逸",
+    "flavor": "五百の稀晶を捧げた。そこまで費やす信仰は、本物だ。",
+    "condition": "spent_rare_coins >= 500",
+    "display_req": "累計稀晶消費500",
+    "show_progress": true,
+    "next_id": "mon_180"
+  },
+  {
+    "id": "mon_180",
+    "rank": "silver",
+    "category": "money",
+    "title": "千の覚悟",
+    "flavor": "千個の稀晶を消費した。これだけ使えば、神も何かを返してくれるはずだ。",
+    "condition": "spent_rare_coins >= 1000",
+    "display_req": "累計稀晶消費1,000",
+    "show_progress": true,
+    "next_id": "mon_181"
+  },
+  {
+    "id": "mon_181",
+    "rank": "silver",
+    "category": "money",
+    "title": "五千の浪費",
+    "flavor": "五千の稀晶。普通の人間なら躊躇するが、この観測者は迷わない。",
+    "condition": "spent_rare_coins >= 5000",
+    "display_req": "累計稀晶消費5,000",
+    "show_progress": true,
+    "next_id": "mon_182"
+  },
+  {
+    "id": "mon_182",
+    "rank": "gold",
+    "category": "money",
+    "title": "一万の捧げ物",
+    "flavor": "一万個の稀晶を捧げた。神界の蔵は、この者の稀晶で満ちているだろう。",
+    "condition": "spent_rare_coins >= 10000",
+    "display_req": "累計稀晶消費10,000",
+    "show_progress": true
+  },
+  {
+    "id": "mon_183",
+    "rank": "bronze",
+    "category": "money",
+    "title": "稀なる縁",
+    "flavor": "稀晶を十個手に入れた。珍しいものが集まり始めた。",
+    "condition": "total_rare_coins >= 10",
+    "display_req": "累計稀晶獲得10",
+    "show_progress": true,
+    "next_id": "mon_184"
+  },
+  {
+    "id": "mon_184",
+    "rank": "bronze",
+    "category": "money",
+    "title": "百の稀なる光",
+    "flavor": "百個の稀晶を獲得した。普通では見られない輝きが増している。",
+    "condition": "total_rare_coins >= 100",
+    "display_req": "累計稀晶獲得100",
+    "show_progress": true,
+    "next_id": "mon_185"
+  },
+  {
+    "id": "mon_185",
+    "rank": "silver",
+    "category": "money",
+    "title": "千の稀光",
+    "flavor": "千個の稀晶。これだけ集まれば、神の目にも眩しく映るだろう。",
+    "condition": "total_rare_coins >= 1000",
+    "display_req": "累計稀晶獲得1,000",
+    "show_progress": true,
+    "next_id": "mon_186"
+  },
+  {
+    "id": "mon_186",
+    "rank": "silver",
+    "category": "money",
+    "title": "一万の稀宝",
+    "flavor": "一万個の稀晶を獲得した。蔵を満たすほどの稀少なる輝き。",
+    "condition": "total_rare_coins >= 10000",
+    "display_req": "累計稀晶獲得10,000",
+    "show_progress": true,
+    "next_id": "mon_187"
+  },
+  {
+    "id": "mon_187",
+    "rank": "gold",
+    "category": "money",
+    "title": "十万の稀覇",
+    "flavor": "十万個の稀晶。これほどの稀宝を集めた者は、神話の中にしか存在しない。",
+    "condition": "total_rare_coins >= 100000",
+    "display_req": "累計稀晶獲得100,000",
+    "show_progress": true,
+    "next_id": "mon_188"
+  },
+  {
+    "id": "mon_188",
+    "rank": "gold",
+    "category": "money",
+    "title": "百万の稀伝説",
+    "flavor": "百万個の稀晶。その収集量は、もはや神話の一ページを飾る。",
+    "condition": "total_rare_coins >= 1000000",
+    "display_req": "累計稀晶獲得1,000,000",
+    "show_progress": true
+  },
+  {
+    "id": "mon_189",
+    "rank": "bronze",
+    "category": "money",
+    "title": "十の力",
+    "flavor": "観測力Pが十に達した。神々の注目が、少しずつ集まり始めている。",
+    "condition": "max_p >= 10",
+    "display_req": "最高観測力P値10以上",
+    "show_progress": false,
+    "next_id": "mon_190"
+  },
+  {
+    "id": "mon_190",
+    "rank": "bronze",
+    "category": "money",
+    "title": "百の威力",
+    "flavor": "Pが百を超えた。観測者の力は、もはや侮れない。",
+    "condition": "max_p >= 100",
+    "display_req": "最高観測力P値100以上",
+    "show_progress": false,
+    "next_id": "mon_191"
+  },
+  {
+    "id": "mon_191",
+    "rank": "silver",
+    "category": "money",
+    "title": "千の猛威",
+    "flavor": "Pが千に達した。神々が警戒し始めた。",
+    "condition": "max_p >= 1000",
+    "display_req": "最高観測力P値1,000以上",
+    "show_progress": false,
+    "next_id": "mon_192"
+  },
+  {
+    "id": "mon_192",
+    "rank": "silver",
+    "category": "money",
+    "title": "一万の覇気",
+    "flavor": "P値一万。この力は、神の眷属を圧倒するほどだ。",
+    "condition": "max_p >= 10000",
+    "display_req": "最高観測力P値10,000以上",
+    "show_progress": false,
+    "next_id": "mon_193"
+  },
+  {
+    "id": "mon_193",
+    "rank": "gold",
+    "category": "money",
+    "title": "十万の王者",
+    "flavor": "Pが十万を超えた。八百万の神々も、この観測者の前には頭を垂れる。",
+    "condition": "max_p >= 100000",
+    "display_req": "最高観測力P値100,000以上",
+    "show_progress": false,
+    "next_id": "mon_194"
+  },
+  {
+    "id": "mon_194",
+    "rank": "gold",
+    "category": "money",
+    "title": "百万の覇神",
+    "flavor": "P値百万。この力に匹敵する者は、もはやこの世界には存在しない。",
+    "condition": "max_p >= 1000000",
+    "display_req": "最高観測力P値1,000,000以上",
+    "show_progress": false
+  },
+  {
+    "id": "mon_195",
+    "rank": "bronze",
+    "category": "money",
+    "title": "二倍の喜び",
+    "flavor": "倍率Mが2倍に達した。同じ観測でも、結果が変わる。",
+    "condition": "max_m >= 2.0",
+    "display_req": "最高倍率M値2.0以上",
+    "show_progress": false,
+    "next_id": "mon_196"
+  },
+  {
+    "id": "mon_196",
+    "rank": "silver",
+    "category": "money",
+    "title": "五倍の躍進",
+    "flavor": "M値5倍。五倍の力で世界を観測する。",
+    "condition": "max_m >= 5.0",
+    "display_req": "最高倍率M値5.0以上",
+    "show_progress": false,
+    "next_id": "mon_197"
+  },
+  {
+    "id": "mon_197",
+    "rank": "silver",
+    "category": "money",
+    "title": "十倍の覇者",
+    "flavor": "倍率が十倍に達した。観測の価値が、文字通り桁違いになった。",
+    "condition": "max_m >= 10.0",
+    "display_req": "最高倍率M値10.0以上",
+    "show_progress": false,
+    "next_id": "mon_198"
+  },
+  {
+    "id": "mon_198",
+    "rank": "gold",
+    "category": "money",
+    "title": "五十倍の神話",
+    "flavor": "M値50倍。この倍率は、神話にしか存在しないはずだった。",
+    "condition": "max_m >= 50.0",
+    "display_req": "最高倍率M値50.0以上",
+    "show_progress": false,
+    "next_id": "mon_199"
+  },
+  {
+    "id": "mon_199",
+    "rank": "gold",
+    "category": "money",
+    "title": "百倍の伝説",
+    "flavor": "M値100倍。百倍の力で放たれる観測は、まさに伝説の一撃だ。",
+    "condition": "max_m >= 100.0",
+    "display_req": "最高倍率M値100.0以上",
+    "show_progress": false
+  },
+  {
+    "id": "luc_106",
+    "rank": "bronze",
+    "category": "luck",
+    "title": "初めての輝き",
+    "flavor": "初めて最高の星を引き当てた。運命の歯車が動き始めた。",
+    "condition": "total_star5 >= 1",
+    "display_req": "★5排出累計1回",
+    "show_progress": false,
+    "next_id": "luc_107"
+  },
+  {
+    "id": "luc_107",
+    "rank": "bronze",
+    "category": "luck",
+    "title": "二度の奇跡",
+    "flavor": "二度の★5。偶然は、もしかしたら必然だったのかもしれない。",
+    "condition": "total_star5 >= 2",
+    "display_req": "★5排出累計2回",
+    "show_progress": true,
+    "next_id": "luc_108"
+  },
+  {
+    "id": "luc_108",
+    "rank": "bronze",
+    "category": "luck",
+    "title": "五つの星",
+    "flavor": "★5を五回引いた。星の神々が、この観測者に目を向けている。",
+    "condition": "total_star5 >= 5",
+    "display_req": "★5排出累計5回",
+    "show_progress": true,
+    "next_id": "luc_109"
+  },
+  {
+    "id": "luc_109",
+    "rank": "silver",
+    "category": "luck",
+    "title": "十の絶頂",
+    "flavor": "十回の★5。幸運の連鎖が始まっている。",
+    "condition": "total_star5 >= 10",
+    "display_req": "★5排出累計10回",
+    "show_progress": true,
+    "next_id": "luc_110"
+  },
+  {
+    "id": "luc_110",
+    "rank": "silver",
+    "category": "luck",
+    "title": "二十の栄光",
+    "flavor": "二十回の★5を獲得。この者の幸運は、もはや技の一つだ。",
+    "condition": "total_star5 >= 20",
+    "display_req": "★5排出累計20回",
+    "show_progress": true,
+    "next_id": "luc_111"
+  },
+  {
+    "id": "luc_111",
+    "rank": "silver",
+    "category": "luck",
+    "title": "五十の天運",
+    "flavor": "★5を五十回引いた者。天が微笑み続けている。",
+    "condition": "total_star5 >= 50",
+    "display_req": "★5排出累計50回",
+    "show_progress": true,
+    "next_id": "luc_112"
+  },
+  {
+    "id": "luc_112",
+    "rank": "gold",
+    "category": "luck",
+    "title": "百の星屑",
+    "flavor": "百回の★5。それだけの輝きが、この者の手の中にある。",
+    "condition": "total_star5 >= 100",
+    "display_req": "★5排出累計100回",
+    "show_progress": true,
+    "next_id": "luc_113"
+  },
+  {
+    "id": "luc_113",
+    "rank": "gold",
+    "category": "luck",
+    "title": "五百の天啓",
+    "flavor": "★5が五百回。神々の寵愛を受けた観測者の証。",
+    "condition": "total_star5 >= 500",
+    "display_req": "★5排出累計500回",
+    "show_progress": true,
+    "next_id": "luc_114"
+  },
+  {
+    "id": "luc_114",
+    "rank": "gold",
+    "category": "luck",
+    "title": "千の星座",
+    "flavor": "千回の★5排出。この者が歩いた軌跡は、夜空の星座となった。",
+    "condition": "total_star5 >= 1000",
+    "display_req": "★5排出累計1,000回",
+    "show_progress": true
+  },
+  {
+    "id": "col_156",
+    "rank": "silver",
+    "category": "collection",
+    "title": "★1の五十種",
+    "flavor": "五十種類の★1カードを収集した。数の力が宿る。",
+    "condition": "rarity_1_count >= 50",
+    "display_req": "★1カード50種収集",
+    "show_progress": true,
+    "next_id": "col_157"
+  },
+  {
+    "id": "col_157",
+    "rank": "silver",
+    "category": "collection",
+    "title": "★1の百種",
+    "flavor": "百種の★1カード。縁の数だけ、世界が広がる。",
+    "condition": "rarity_1_count >= 100",
+    "display_req": "★1カード100種収集",
+    "show_progress": true,
+    "next_id": "col_158"
+  },
+  {
+    "id": "col_158",
+    "rank": "gold",
+    "category": "collection",
+    "title": "★1の二百種",
+    "flavor": "二百種の★1カードを集めた。膨大な縁の記録者。",
+    "condition": "rarity_1_count >= 200",
+    "display_req": "★1カード200種収集",
+    "show_progress": true,
+    "next_id": "col_159"
+  },
+  {
+    "id": "col_159",
+    "rank": "gold",
+    "category": "collection",
+    "title": "★1の神使全集",
+    "flavor": "三百五十五種全ての★1カードを集め切った。全ての神の使いと縁が結ばれた。",
+    "condition": "rarity_1_count >= 355",
+    "display_req": "★1カード355種全収集",
+    "show_progress": true
+  },
+  {
+    "id": "col_160",
+    "rank": "silver",
+    "category": "collection",
+    "title": "★2の百種",
+    "flavor": "百種の★2カード収集。中堅の神々との縁が深まった。",
+    "condition": "rarity_2_count >= 100",
+    "display_req": "★2カード100種収集",
+    "show_progress": true,
+    "next_id": "col_161"
+  },
+  {
+    "id": "col_161",
+    "rank": "gold",
+    "category": "collection",
+    "title": "★2の二百種",
+    "flavor": "二百種の★2カード。これだけ揃えば、神界でも一目置かれる。",
+    "condition": "rarity_2_count >= 200",
+    "display_req": "★2カード200種収集",
+    "show_progress": true
+  },
+  {
+    "id": "col_162",
+    "rank": "silver",
+    "category": "collection",
+    "title": "★3の三十五種",
+    "flavor": "三十五種の★3カード。強力な神々の縁が広がってきた。",
+    "condition": "rarity_3_count >= 35",
+    "display_req": "★3カード35種収集",
+    "show_progress": true,
+    "next_id": "col_163"
+  },
+  {
+    "id": "col_163",
+    "rank": "gold",
+    "category": "collection",
+    "title": "★3の百五十種",
+    "flavor": "百五十種の★3カード。神の軍勢が揃いつつある。",
+    "condition": "rarity_3_count >= 150",
+    "display_req": "★3カード150種収集",
+    "show_progress": true
+  },
+  {
+    "id": "col_164",
+    "rank": "bronze",
+    "category": "collection",
+    "title": "最初の上位神",
+    "flavor": "★4カードを一枚手に入れた。神界の上位に属する者との初めての縁。",
+    "condition": "rarity_4_count >= 1",
+    "display_req": "★4カード1種収集",
+    "show_progress": false
+  },
+  {
+    "id": "tim_076",
+    "rank": "bronze",
+    "category": "time",
+    "title": "四日の誓い",
+    "flavor": "四日間の継続。小さな習慣が、神との縁を育てる。",
+    "condition": "consecutive_days >= 4",
+    "display_req": "連続ログイン4日",
+    "show_progress": true,
+    "next_id": "tim_077"
+  },
+  {
+    "id": "tim_077",
+    "rank": "bronze",
+    "category": "time",
+    "title": "五日の絆",
+    "flavor": "五日間の観測。一週間の半ばを越えた者に、神が微笑む。",
+    "condition": "consecutive_days >= 5",
+    "display_req": "連続ログイン5日",
+    "show_progress": true,
+    "next_id": "tim_078"
+  },
+  {
+    "id": "tim_078",
+    "rank": "bronze",
+    "category": "time",
+    "title": "六日の守護",
+    "flavor": "六日間。明日は一週間を達成できる。神々の期待が高まる。",
+    "condition": "consecutive_days >= 6",
+    "display_req": "連続ログイン6日",
+    "show_progress": true,
+    "next_id": "tim_079"
+  },
+  {
+    "id": "tim_079",
+    "rank": "bronze",
+    "category": "time",
+    "title": "八日の縁",
+    "flavor": "八日間の継続観測。一週間を超えた努力が実を結び始める。",
+    "condition": "consecutive_days >= 8",
+    "display_req": "連続ログイン8日",
+    "show_progress": true,
+    "next_id": "tim_080"
+  },
+  {
+    "id": "tim_080",
+    "rank": "silver",
+    "category": "time",
+    "title": "十日の巡礼",
+    "flavor": "十日間の連続観測。この継続は、神への誠実な問いかけだ。",
+    "condition": "consecutive_days >= 10",
+    "display_req": "連続ログイン10日",
+    "show_progress": true,
+    "next_id": "tim_081"
+  },
+  {
+    "id": "tim_081",
+    "rank": "silver",
+    "category": "time",
+    "title": "二週間の絆",
+    "flavor": "十四日間。二週間の継続が、より深い縁を生む。",
+    "condition": "consecutive_days >= 14",
+    "display_req": "連続ログイン14日",
+    "show_progress": true,
+    "next_id": "tim_082"
+  },
+  {
+    "id": "tim_082",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十日の記録者",
+    "flavor": "二十日間。三週間近くの継続は、本物の執念だ。",
+    "condition": "consecutive_days >= 20",
+    "display_req": "連続ログイン20日",
+    "show_progress": true,
+    "next_id": "tim_083"
+  },
+  {
+    "id": "tim_083",
+    "rank": "silver",
+    "category": "time",
+    "title": "三週間の約束",
+    "flavor": "二十一日間、連続で観測を続けた。三週間の約束が守られた。",
+    "condition": "consecutive_days >= 21",
+    "display_req": "連続ログイン21日",
+    "show_progress": true,
+    "next_id": "tim_084"
+  },
+  {
+    "id": "tim_084",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十五日の奉仕",
+    "flavor": "二十五日間の継続。神への奉仕が日常となった証。",
+    "condition": "consecutive_days >= 25",
+    "display_req": "連続ログイン25日",
+    "show_progress": true,
+    "next_id": "tim_085"
+  },
+  {
+    "id": "tim_085",
+    "rank": "gold",
+    "category": "time",
+    "title": "四十日の行者",
+    "flavor": "四十日間。神話において、四十は試練の数字だ。その試練を乗り越えた。",
+    "condition": "consecutive_days >= 40",
+    "display_req": "連続ログイン40日",
+    "show_progress": true,
+    "next_id": "tim_086"
+  },
+  {
+    "id": "tim_086",
+    "rank": "gold",
+    "category": "time",
+    "title": "六週間の観測者",
+    "flavor": "四十二日間の連続観測。六週間、一日も欠かさなかった者。",
+    "condition": "consecutive_days >= 42",
+    "display_req": "連続ログイン42日",
+    "show_progress": true,
+    "next_id": "tim_087"
+  },
+  {
+    "id": "tim_087",
+    "rank": "gold",
+    "category": "time",
+    "title": "五十日の神使",
+    "flavor": "五十日間。この継続は、もはや信仰と呼ぶべきだろう。",
+    "condition": "consecutive_days >= 50",
+    "display_req": "連続ログイン50日",
+    "show_progress": true,
+    "next_id": "tim_088"
+  },
+  {
+    "id": "tim_088",
+    "rank": "gold",
+    "category": "time",
+    "title": "二ヶ月の巡礼者",
+    "flavor": "六十日間の連続観測。二ヶ月の巡礼が、神との深い縁を育てた。",
+    "condition": "consecutive_days >= 60",
+    "display_req": "連続ログイン60日",
+    "show_progress": true,
+    "next_id": "tim_089"
+  },
+  {
+    "id": "tim_089",
+    "rank": "gold",
+    "category": "time",
+    "title": "七十五日の証明",
+    "flavor": "七十五日間。これだけの継続は、強い意志の証明だ。",
+    "condition": "consecutive_days >= 75",
+    "display_req": "連続ログイン75日",
+    "show_progress": true,
+    "next_id": "tim_090"
+  },
+  {
+    "id": "tim_090",
+    "rank": "gold",
+    "category": "time",
+    "title": "百日の眼",
+    "flavor": "百日間の連続観測。百は満ちることを意味する。観測者の目は、今や神の域に達した。",
+    "condition": "consecutive_days >= 100",
+    "display_req": "連続ログイン100日",
+    "show_progress": true,
+    "next_id": "tim_091"
+  },
+  {
+    "id": "tim_091",
+    "rank": "gold",
+    "category": "time",
+    "title": "四ヶ月の記録者",
+    "flavor": "百二十日間の連続観測。四ヶ月もの間、一日も欠かさなかった執念。",
+    "condition": "consecutive_days >= 120",
+    "display_req": "連続ログイン120日",
+    "show_progress": true,
+    "next_id": "tim_092"
+  },
+  {
+    "id": "tim_092",
+    "rank": "gold",
+    "category": "time",
+    "title": "五ヶ月の証人",
+    "flavor": "百五十日間。半年に近い継続が、神界の歴史書に記されるだろう。",
+    "condition": "consecutive_days >= 150",
+    "display_req": "連続ログイン150日",
+    "show_progress": true,
+    "next_id": "tim_093"
+  },
+  {
+    "id": "tim_093",
+    "rank": "gold",
+    "category": "time",
+    "title": "半年の観測者",
+    "flavor": "百八十日間の連続観測。半年間、神との約束を守り続けた。",
+    "condition": "consecutive_days >= 180",
+    "display_req": "連続ログイン180日",
+    "show_progress": true,
+    "next_id": "tim_094"
+  },
+  {
+    "id": "tim_094",
+    "rank": "gold",
+    "category": "time",
+    "title": "二百日の神縁",
+    "flavor": "二百日間。この者の名は、神界の名簿の上位に刻まれている。",
+    "condition": "consecutive_days >= 200",
+    "display_req": "連続ログイン200日",
+    "show_progress": true,
+    "next_id": "tim_095"
+  },
+  {
+    "id": "tim_095",
+    "rank": "gold",
+    "category": "time",
+    "title": "二百五十日の審神者",
+    "flavor": "二百五十日間の連続観測。神の意志を読む力が研ぎ澄まされた。",
+    "condition": "consecutive_days >= 250",
+    "display_req": "連続ログイン250日",
+    "show_progress": true,
+    "next_id": "tim_096"
+  },
+  {
+    "id": "tim_096",
+    "rank": "gold",
+    "category": "time",
+    "title": "三百日の守護",
+    "flavor": "三百日間。一年のほぼすべてを観測に費やした守護者。",
+    "condition": "consecutive_days >= 300",
+    "display_req": "連続ログイン300日",
+    "show_progress": true,
+    "next_id": "tim_097"
+  },
+  {
+    "id": "tim_097",
+    "rank": "gold",
+    "category": "time",
+    "title": "五百日の彷徨い人",
+    "flavor": "五百日間の連続観測。一年以上を超えた、伝説の継続。",
+    "condition": "consecutive_days >= 500",
+    "display_req": "連続ログイン500日",
+    "show_progress": true,
+    "next_id": "tim_098"
+  },
+  {
+    "id": "tim_098",
+    "rank": "gold",
+    "category": "time",
+    "title": "千日の孤高",
+    "flavor": "千日間の連続観測。この者の名は、神話の中でしか語られないだろう。",
+    "condition": "consecutive_days >= 1000",
+    "display_req": "連続ログイン1,000日",
+    "show_progress": true
+  },
+  {
+    "id": "tim_099",
+    "rank": "bronze",
+    "category": "time",
+    "title": "二日目の夜明け",
+    "flavor": "二度目の観測日。昨日の縁が、今日の希望につながる。",
+    "condition": "total_play_days >= 2",
+    "display_req": "累計プレイ日数2日",
+    "show_progress": true,
+    "next_id": "tim_100"
+  },
+  {
+    "id": "tim_100",
+    "rank": "bronze",
+    "category": "time",
+    "title": "三日目の礎",
+    "flavor": "三日間のプレイ。継続の礎が築かれた。",
+    "condition": "total_play_days >= 3",
+    "display_req": "累計プレイ日数3日",
+    "show_progress": true,
+    "next_id": "tim_101"
+  },
+  {
+    "id": "tim_101",
+    "rank": "bronze",
+    "category": "time",
+    "title": "五日目の契り",
+    "flavor": "五日間のプレイ。神との契りが、少しずつ深まっている。",
+    "condition": "total_play_days >= 5",
+    "display_req": "累計プレイ日数5日",
+    "show_progress": true,
+    "next_id": "tim_102"
+  },
+  {
+    "id": "tim_102",
+    "rank": "bronze",
+    "category": "time",
+    "title": "一週間の足跡",
+    "flavor": "七日間プレイした。一週間の足跡が、神界に刻まれた。",
+    "condition": "total_play_days >= 7",
+    "display_req": "累計プレイ日数7日",
+    "show_progress": true,
+    "next_id": "tim_103"
+  },
+  {
+    "id": "tim_103",
+    "rank": "silver",
+    "category": "time",
+    "title": "十日の記憶",
+    "flavor": "十日間のプレイ。それだけの記憶が、神との縁を深める。",
+    "condition": "total_play_days >= 10",
+    "display_req": "累計プレイ日数10日",
+    "show_progress": true,
+    "next_id": "tim_104"
+  },
+  {
+    "id": "tim_104",
+    "rank": "silver",
+    "category": "time",
+    "title": "二週間の追憶",
+    "flavor": "十四日間プレイした。二週間の思い出が積み重なっている。",
+    "condition": "total_play_days >= 14",
+    "display_req": "累計プレイ日数14日",
+    "show_progress": true,
+    "next_id": "tim_105"
+  },
+  {
+    "id": "tim_105",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十日の観察者",
+    "flavor": "二十日間プレイした者。継続する意志が、神を動かす。",
+    "condition": "total_play_days >= 20",
+    "display_req": "累計プレイ日数20日",
+    "show_progress": true,
+    "next_id": "tim_106"
+  },
+  {
+    "id": "tim_106",
+    "rank": "silver",
+    "category": "time",
+    "title": "一ヶ月の探求者",
+    "flavor": "三十日間プレイした。一ヶ月の探求が、深い洞察を生む。",
+    "condition": "total_play_days >= 30",
+    "display_req": "累計プレイ日数30日",
+    "show_progress": true,
+    "next_id": "tim_107"
+  },
+  {
+    "id": "tim_107",
+    "rank": "gold",
+    "category": "time",
+    "title": "五十日の証",
+    "flavor": "五十日間のプレイ。その積み重ねは、揺るぎない証となった。",
+    "condition": "total_play_days >= 50",
+    "display_req": "累計プレイ日数50日",
+    "show_progress": true,
+    "next_id": "tim_108"
+  },
+  {
+    "id": "tim_108",
+    "rank": "gold",
+    "category": "time",
+    "title": "七十五日の軌跡",
+    "flavor": "七十五日間プレイした。その軌跡は星座のように輝く。",
+    "condition": "total_play_days >= 75",
+    "display_req": "累計プレイ日数75日",
+    "show_progress": true,
+    "next_id": "tim_109"
+  },
+  {
+    "id": "tim_109",
+    "rank": "gold",
+    "category": "time",
+    "title": "百日の旅",
+    "flavor": "百日間のプレイ。長い旅も、百という節目で振り返る価値がある。",
+    "condition": "total_play_days >= 100",
+    "display_req": "累計プレイ日数100日",
+    "show_progress": true,
+    "next_id": "tim_110"
+  },
+  {
+    "id": "tim_110",
+    "rank": "gold",
+    "category": "time",
+    "title": "百五十日の旅路",
+    "flavor": "百五十日間プレイした。半年近い旅路の先に、何が待つのか。",
+    "condition": "total_play_days >= 150",
+    "display_req": "累計プレイ日数150日",
+    "show_progress": true,
+    "next_id": "tim_111"
+  },
+  {
+    "id": "tim_111",
+    "rank": "gold",
+    "category": "time",
+    "title": "二百日の探求者",
+    "flavor": "二百日間のプレイ。この探求者の名は、神界の伝説となりつつある。",
+    "condition": "total_play_days >= 200",
+    "display_req": "累計プレイ日数200日",
+    "show_progress": true,
+    "next_id": "tim_112"
+  },
+  {
+    "id": "tim_112",
+    "rank": "gold",
+    "category": "time",
+    "title": "一年の記録者",
+    "flavor": "三百六十五日間プレイした。一年間の記録が、神界の年代記に刻まれた。",
+    "condition": "total_play_days >= 365",
+    "display_req": "累計プレイ日数365日",
+    "show_progress": true,
+    "next_id": "tim_113"
+  },
+  {
+    "id": "tim_113",
+    "rank": "gold",
+    "category": "time",
+    "title": "五百日の観測者",
+    "flavor": "五百日間のプレイ。もはやこの者の人生の一部となった観測。",
+    "condition": "total_play_days >= 500",
+    "display_req": "累計プレイ日数500日",
+    "show_progress": true
+  },
+  {
+    "id": "tim_114",
+    "rank": "bronze",
+    "category": "time",
+    "title": "五度目の縁",
+    "flavor": "五度目の観測訪問。縁は繰り返すことで深まる。",
+    "condition": "total_sessions >= 5",
+    "display_req": "累計起動回数5回",
+    "show_progress": true,
+    "next_id": "tim_115"
+  },
+  {
+    "id": "tim_115",
+    "rank": "bronze",
+    "category": "time",
+    "title": "十度の邂逅",
+    "flavor": "十回の起動。この世界との邂逅が、確かな絆を生む。",
+    "condition": "total_sessions >= 10",
+    "display_req": "累計起動回数10回",
+    "show_progress": true,
+    "next_id": "tim_116"
+  },
+  {
+    "id": "tim_116",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十度の旅",
+    "flavor": "二十回の起動。二十度の旅が、神との縁を深めた。",
+    "condition": "total_sessions >= 20",
+    "display_req": "累計起動回数20回",
+    "show_progress": true,
+    "next_id": "tim_117"
+  },
+  {
+    "id": "tim_117",
+    "rank": "silver",
+    "category": "time",
+    "title": "三十度の巡礼",
+    "flavor": "三十回の起動。巡礼者として神の地を三十度踏みしめた。",
+    "condition": "total_sessions >= 30",
+    "display_req": "累計起動回数30回",
+    "show_progress": true,
+    "next_id": "tim_118"
+  },
+  {
+    "id": "tim_118",
+    "rank": "silver",
+    "category": "time",
+    "title": "五十度の接触",
+    "flavor": "五十回。これだけ訪れれば、神も顔を覚えてくれるだろう。",
+    "condition": "total_sessions >= 50",
+    "display_req": "累計起動回数50回",
+    "show_progress": true,
+    "next_id": "tim_119"
+  },
+  {
+    "id": "tim_119",
+    "rank": "gold",
+    "category": "time",
+    "title": "百度参り",
+    "flavor": "百回の起動は、百度参りの精神と同じだ。願いは必ず叶う。",
+    "condition": "total_sessions >= 100",
+    "display_req": "累計起動回数100回",
+    "show_progress": true,
+    "next_id": "tim_120"
+  },
+  {
+    "id": "tim_120",
+    "rank": "gold",
+    "category": "time",
+    "title": "二百度の訪問",
+    "flavor": "二百回の起動。これだけ訪れる者を、神は愛さずにはいられない。",
+    "condition": "total_sessions >= 200",
+    "display_req": "累計起動回数200回",
+    "show_progress": true,
+    "next_id": "tim_121"
+  },
+  {
+    "id": "tim_121",
+    "rank": "gold",
+    "category": "time",
+    "title": "三百六十五度の邂逅",
+    "flavor": "三百六十五回の起動は、毎日一年間通い続けた証だ。",
+    "condition": "total_sessions >= 365",
+    "display_req": "累計起動回数365回",
+    "show_progress": true,
+    "next_id": "tim_122"
+  },
+  {
+    "id": "tim_122",
+    "rank": "gold",
+    "category": "time",
+    "title": "五百度の縁結び",
+    "flavor": "五百回の起動。この者と神の縁は、もう解けることはないだろう。",
+    "condition": "total_sessions >= 500",
+    "display_req": "累計起動回数500回",
+    "show_progress": true,
+    "next_id": "tim_123"
+  },
+  {
+    "id": "tim_123",
+    "rank": "gold",
+    "category": "time",
+    "title": "千度の縁",
+    "flavor": "千回の起動。千という数は、もはや縁ではなく、運命だ。",
+    "condition": "total_sessions >= 1000",
+    "display_req": "累計起動回数1,000回",
+    "show_progress": true
+  },
+  {
+    "id": "tim_124",
+    "rank": "bronze",
+    "category": "time",
+    "title": "日曜の常連",
+    "flavor": "安息の日にも観測の手は止まらない。日曜日の縁は、特別な輝きを持つ。",
+    "condition": "weekday_login_0 >= 5",
+    "display_req": "日曜5日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_125"
+  },
+  {
+    "id": "tim_125",
+    "rank": "silver",
+    "category": "time",
+    "title": "日曜の継続者",
+    "flavor": "七日のうちの一日は安息と言うが、観測者にとっての安息とは観測そのものだ。",
+    "condition": "weekday_login_0 >= 10",
+    "display_req": "日曜10日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_126"
+  },
+  {
+    "id": "tim_126",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十日曜の探求者",
+    "flavor": "二十回の日曜を観測に費やした者。休日の縁が積み重なっている。",
+    "condition": "weekday_login_0 >= 20",
+    "display_req": "日曜20日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_127"
+  },
+  {
+    "id": "tim_127",
+    "rank": "gold",
+    "category": "time",
+    "title": "年間日曜の観測者",
+    "flavor": "一年分の日曜日を観測した。休日の神も、この者の名を知っている。",
+    "condition": "weekday_login_0 >= 52",
+    "display_req": "日曜52日間プレイ",
+    "show_progress": true
+  },
+  {
+    "id": "tim_128",
+    "rank": "bronze",
+    "category": "time",
+    "title": "月曜の常連",
+    "flavor": "週の始まりにも観測を欠かさない。月曜の縁が、一週間を支える。",
+    "condition": "weekday_login_1 >= 5",
+    "display_req": "月曜5日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_129"
+  },
+  {
+    "id": "tim_129",
+    "rank": "silver",
+    "category": "time",
+    "title": "月曜の継続者",
+    "flavor": "月曜の憂鬱など、この観測者には無関係だ。今日も変わらず神と向き合う。",
+    "condition": "weekday_login_1 >= 10",
+    "display_req": "月曜10日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_130"
+  },
+  {
+    "id": "tim_130",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十月曜の探求者",
+    "flavor": "二十回の月曜を観測に費やした。月の神が見守っている。",
+    "condition": "weekday_login_1 >= 20",
+    "display_req": "月曜20日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_131"
+  },
+  {
+    "id": "tim_131",
+    "rank": "gold",
+    "category": "time",
+    "title": "年間月曜の観測者",
+    "flavor": "一年分の月曜日に観測した。週の始まりの縁人として名高い。",
+    "condition": "weekday_login_1 >= 52",
+    "display_req": "月曜52日間プレイ",
+    "show_progress": true
+  },
+  {
+    "id": "tim_132",
+    "rank": "bronze",
+    "category": "time",
+    "title": "火曜の常連",
+    "flavor": "火曜日の観測は、燃えるような熱意と共にある。",
+    "condition": "weekday_login_2 >= 5",
+    "display_req": "火曜5日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_133"
+  },
+  {
+    "id": "tim_133",
+    "rank": "silver",
+    "category": "time",
+    "title": "火曜の継続者",
+    "flavor": "十回の火曜に観測した。火の如き継続の意志。",
+    "condition": "weekday_login_2 >= 10",
+    "display_req": "火曜10日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_134"
+  },
+  {
+    "id": "tim_134",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十火曜の探求者",
+    "flavor": "二十回の火曜を観測に費やした者。火曜の炎が宿っている。",
+    "condition": "weekday_login_2 >= 20",
+    "display_req": "火曜20日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_135"
+  },
+  {
+    "id": "tim_135",
+    "rank": "gold",
+    "category": "time",
+    "title": "年間火曜の観測者",
+    "flavor": "一年分の火曜日に観測した。火の縁人として名を残す。",
+    "condition": "weekday_login_2 >= 52",
+    "display_req": "火曜52日間プレイ",
+    "show_progress": true
+  },
+  {
+    "id": "tim_136",
+    "rank": "bronze",
+    "category": "time",
+    "title": "水曜の常連",
+    "flavor": "水曜日の観測は、流れる水のように静かで確かだ。",
+    "condition": "weekday_login_3 >= 5",
+    "display_req": "水曜5日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_137"
+  },
+  {
+    "id": "tim_137",
+    "rank": "silver",
+    "category": "time",
+    "title": "水曜の継続者",
+    "flavor": "十回の水曜に観測した。流水の如き継続の証。",
+    "condition": "weekday_login_3 >= 10",
+    "display_req": "水曜10日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_138"
+  },
+  {
+    "id": "tim_138",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十水曜の探求者",
+    "flavor": "二十回の水曜を観測に費やした。水の縁が深まっている。",
+    "condition": "weekday_login_3 >= 20",
+    "display_req": "水曜20日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_139"
+  },
+  {
+    "id": "tim_139",
+    "rank": "gold",
+    "category": "time",
+    "title": "年間水曜の観測者",
+    "flavor": "一年分の水曜日に観測した。水の縁人として名高い。",
+    "condition": "weekday_login_3 >= 52",
+    "display_req": "水曜52日間プレイ",
+    "show_progress": true
+  },
+  {
+    "id": "tim_140",
+    "rank": "bronze",
+    "category": "time",
+    "title": "木曜の常連",
+    "flavor": "木曜日の観測は、大樹のように根を張る。",
+    "condition": "weekday_login_4 >= 5",
+    "display_req": "木曜5日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_141"
+  },
+  {
+    "id": "tim_141",
+    "rank": "silver",
+    "category": "time",
+    "title": "木曜の継続者",
+    "flavor": "十回の木曜に観測した。木の根のような揺るぎない継続。",
+    "condition": "weekday_login_4 >= 10",
+    "display_req": "木曜10日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_142"
+  },
+  {
+    "id": "tim_142",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十木曜の探求者",
+    "flavor": "二十回の木曜を観測に費やした。木の縁が育っている。",
+    "condition": "weekday_login_4 >= 20",
+    "display_req": "木曜20日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_143"
+  },
+  {
+    "id": "tim_143",
+    "rank": "gold",
+    "category": "time",
+    "title": "年間木曜の観測者",
+    "flavor": "一年分の木曜日に観測した。木の縁人として知られる。",
+    "condition": "weekday_login_4 >= 52",
+    "display_req": "木曜52日間プレイ",
+    "show_progress": true
+  },
+  {
+    "id": "tim_144",
+    "rank": "bronze",
+    "category": "time",
+    "title": "金曜の常連",
+    "flavor": "金曜日の観測は、黄金のように輝く価値を持つ。",
+    "condition": "weekday_login_5 >= 5",
+    "display_req": "金曜5日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_145"
+  },
+  {
+    "id": "tim_145",
+    "rank": "silver",
+    "category": "time",
+    "title": "金曜の継続者",
+    "flavor": "十回の金曜に観測した。黄金の縁が紡がれている。",
+    "condition": "weekday_login_5 >= 10",
+    "display_req": "金曜10日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_146"
+  },
+  {
+    "id": "tim_146",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十金曜の探求者",
+    "flavor": "二十回の金曜を観測に費やした。金の縁人として名を残す。",
+    "condition": "weekday_login_5 >= 20",
+    "display_req": "金曜20日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_147"
+  },
+  {
+    "id": "tim_147",
+    "rank": "gold",
+    "category": "time",
+    "title": "年間金曜の観測者",
+    "flavor": "一年分の金曜日に観測した。金曜の神が微笑んでいる。",
+    "condition": "weekday_login_5 >= 52",
+    "display_req": "金曜52日間プレイ",
+    "show_progress": true
+  },
+  {
+    "id": "tim_148",
+    "rank": "bronze",
+    "category": "time",
+    "title": "土曜の常連",
+    "flavor": "土曜日の解放感の中でも、観測の手は休まない。",
+    "condition": "weekday_login_6 >= 5",
+    "display_req": "土曜5日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_149"
+  },
+  {
+    "id": "tim_149",
+    "rank": "silver",
+    "category": "time",
+    "title": "土曜の継続者",
+    "flavor": "十回の土曜に観測した。土の縁が積み重なっている。",
+    "condition": "weekday_login_6 >= 10",
+    "display_req": "土曜10日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_150"
+  },
+  {
+    "id": "tim_150",
+    "rank": "silver",
+    "category": "time",
+    "title": "二十土曜の探求者",
+    "flavor": "二十回の土曜を観測に費やした。土曜の縁人として名高い。",
+    "condition": "weekday_login_6 >= 20",
+    "display_req": "土曜20日間プレイ",
+    "show_progress": true,
+    "next_id": "tim_151"
+  },
+  {
+    "id": "tim_151",
+    "rank": "gold",
+    "category": "time",
+    "title": "年間土曜の観測者",
+    "flavor": "一年分の土曜日に観測した。土の縁人として名を残す。",
+    "condition": "weekday_login_6 >= 52",
+    "display_req": "土曜52日間プレイ",
+    "show_progress": true
+  },
+  {
+    "id": "tim_152",
+    "rank": "bronze",
+    "category": "time",
+    "title": "三時間帯の目撃者",
+    "flavor": "三つの異なる時間帯に観測した。時を超えた縁が育ちつつある。",
+    "condition": "hours_observed_count >= 3",
+    "display_req": "プレイ済み時間帯3種以上",
+    "show_progress": true,
+    "next_id": "tim_153"
+  },
+  {
+    "id": "tim_153",
+    "rank": "bronze",
+    "category": "time",
+    "title": "六時間帯の旅人",
+    "flavor": "六つの時間帯での観測。昼夜を問わず神と向き合う旅人。",
+    "condition": "hours_observed_count >= 6",
+    "display_req": "プレイ済み時間帯6種以上",
+    "show_progress": true,
+    "next_id": "tim_154"
+  },
+  {
+    "id": "tim_154",
+    "rank": "silver",
+    "category": "time",
+    "title": "十二時間帯の探求者",
+    "flavor": "十二の時間帯に観測した。一日の半分の時を見届けた者。",
+    "condition": "hours_observed_count >= 12",
+    "display_req": "プレイ済み時間帯12種以上",
+    "show_progress": true,
+    "next_id": "tim_155"
+  },
+  {
+    "id": "tim_155",
+    "rank": "gold",
+    "category": "time",
+    "title": "十八時間帯の番人",
+    "flavor": "十八の時間帯での観測。一日の四分の三を守り続けた番人。",
+    "condition": "hours_observed_count >= 18",
+    "display_req": "プレイ済み時間帯18種以上",
+    "show_progress": true
+  },
+  {
+    "id": "tim_156",
+    "rank": "bronze",
+    "category": "time",
+    "title": "三曜日の縁",
+    "flavor": "三つの曜日に観測した。週の彩りが広がり始めた。",
+    "condition": "weekdays_observed_count >= 3",
+    "display_req": "プレイ済み曜日3種以上",
+    "show_progress": true,
+    "next_id": "tim_157"
+  },
+  {
+    "id": "tim_157",
+    "rank": "silver",
+    "category": "time",
+    "title": "五曜日の巡礼者",
+    "flavor": "五つの曜日に観測した者。週の大半を神と共に過ごす巡礼者。",
+    "condition": "weekdays_observed_count >= 5",
+    "display_req": "プレイ済み曜日5種以上",
+    "show_progress": true,
+    "next_id": "tim_158"
+  },
+  {
+    "id": "tim_158",
+    "rank": "silver",
+    "category": "time",
+    "title": "六曜日の求道者",
+    "flavor": "六つの曜日に観測した。残り一つの曜日が、最後の縁を待っている。",
+    "condition": "weekdays_observed_count >= 6",
+    "display_req": "プレイ済み曜日6種以上",
+    "show_progress": true
+  },
+  {
+    "id": "prd_101",
+    "rank": "bronze",
+    "category": "parodee",
+    "title": "あと一回だけ",
+    "flavor": "「あと一回だけ」と言いながら、もう百回以上叩いている。それが観測者の性だ。",
+    "condition": "total_clicks >= 1000",
+    "display_req": "累計観測数1,000回",
+    "show_progress": false
+  },
+  {
+    "id": "prd_102",
+    "rank": "bronze",
+    "category": "parodee",
+    "title": "今日こそ引ける気がする",
+    "flavor": "胸騒ぎがする日に、神は応えてくれることがある。",
+    "condition": "total_gacha >= 50",
+    "display_req": "累計召喚50回",
+    "show_progress": false
+  },
+  {
+    "id": "prd_103",
+    "rank": "silver",
+    "category": "parodee",
+    "title": "積み上げた縁",
+    "flavor": "万回の観測を積み上げた者は、もうこの世界から離れられない。",
+    "condition": "total_clicks >= 10000",
+    "display_req": "累計観測数10,000回",
+    "show_progress": false
+  },
+  {
+    "id": "prd_104",
+    "rank": "silver",
+    "category": "parodee",
+    "title": "知識は力なり",
+    "flavor": "神について、誰よりも詳しくなってしまった。",
+    "condition": "total_sublimation >= 100",
+    "display_req": "累計昇華100回",
+    "show_progress": false
+  },
+  {
+    "id": "prd_105",
+    "rank": "silver",
+    "category": "parodee",
+    "title": "稀晶の決断",
+    "flavor": "稀晶を使い果たした後に残るのは、後悔ではなく新しい縁だ。",
+    "condition": "spent_rare_coins >= 100",
+    "display_req": "累計稀晶消費100",
+    "show_progress": false
+  },
+  {
+    "id": "prd_106",
+    "rank": "gold",
+    "category": "parodee",
+    "title": "惜しみない奉仕",
+    "flavor": "惜しみなく捧げた者だけが、最深の縁を知る。",
+    "condition": "spent_coins >= 1000000",
+    "display_req": "累計お供え物消費1,000,000",
+    "show_progress": false
+  },
+  {
+    "id": "prd_107",
+    "rank": "bronze",
+    "category": "parodee",
+    "title": "朝活の習慣",
+    "flavor": "朝の静けさの中で観測するのは、特別な喜びがある。",
+    "condition": "current_hour == 6",
+    "display_req": "午前6時に観測",
+    "show_progress": false
+  },
+  {
+    "id": "prd_108",
+    "rank": "silver",
+    "category": "parodee",
+    "title": "三日坊主を超えた",
+    "flavor": "三日間の連続は、習慣の入口だ。七日続けば本物になる。",
+    "condition": "consecutive_days >= 3",
+    "display_req": "連続3日ログイン",
+    "show_progress": false
+  },
+  {
+    "id": "prd_109",
+    "rank": "silver",
+    "category": "parodee",
+    "title": "週末の解放",
+    "flavor": "土日の自由な時間を神のために使う者は、真の信者だ。",
+    "condition": "day_of_week == 6",
+    "display_req": "土曜日に観測",
+    "show_progress": false
+  },
+  {
+    "id": "prd_110",
+    "rank": "gold",
+    "category": "parodee",
+    "title": "百日の記録",
+    "flavor": "百日間プレイし続けた者に、神が敬意を払う。",
+    "condition": "total_play_days >= 100",
+    "display_req": "累計100日プレイ",
+    "show_progress": false
+  },
+  {
+    "id": "prd_111",
+    "rank": "silver",
+    "category": "parodee",
+    "title": "長時間の求道者",
+    "flavor": "五時間の観測は、修行僧のような集中力を要する。",
+    "condition": "play_time_sec >= 18000",
+    "display_req": "累計プレイ5時間",
+    "show_progress": false
+  },
+  {
+    "id": "prd_112",
+    "rank": "silver",
+    "category": "parodee",
+    "title": "コレクターの誇り",
+    "flavor": "百種のカードを揃えた者のみが知る、収集の喜び。",
+    "condition": "total_cards >= 100",
+    "display_req": "カード100種収集",
+    "show_progress": false
+  },
+  {
+    "id": "prd_113",
+    "rank": "gold",
+    "category": "parodee",
+    "title": "運命の星",
+    "flavor": "千回の召喚を行った者に、運命の神が目を向ける。",
+    "condition": "total_gacha >= 1000",
+    "display_req": "累計召喚1,000回",
+    "show_progress": false
+  },
+  {
+    "id": "prd_114",
+    "rank": "gold",
+    "category": "parodee",
+    "title": "永続の執念",
+    "flavor": "三百六十五回の起動は、毎日欠かさず通い続けた証だ。",
+    "condition": "total_sessions >= 365",
+    "display_req": "累計起動365回",
+    "show_progress": false
+  },
+  {
+    "id": "prd_115",
+    "rank": "gold",
+    "category": "parodee",
+    "title": "伝説の観測者",
+    "flavor": "全てを成し遂げた者への称号。神界の伝説として語り継がれる。",
+    "condition": "total_clicks >= 1000000",
+    "display_req": "累計観測数1,000,000回",
+    "show_progress": false
+  },
+  {
+    "id": "sys_061",
+    "rank": "bronze",
+    "category": "system",
+    "title": "継続の証",
+    "flavor": "七日間連続でログインした。それだけの意志が、システムに刻まれた。",
+    "condition": "consecutive_days >= 7",
+    "display_req": "連続7日ログイン",
+    "show_progress": false
+  },
+  {
+    "id": "sys_062",
+    "rank": "silver",
+    "category": "system",
+    "title": "記録更新者",
+    "flavor": "百日間プレイし続けた観測者の記録が、システムに残る。",
+    "condition": "total_play_days >= 100",
+    "display_req": "累計100日プレイ",
+    "show_progress": false
+  },
+  {
+    "id": "sys_063",
+    "rank": "bronze",
+    "category": "system",
+    "title": "常連の印",
+    "flavor": "五回以上起動した者に与えられる印。常連として認められた。",
+    "condition": "total_sessions >= 5",
+    "display_req": "累計起動5回",
+    "show_progress": false
+  },
+  {
+    "id": "sys_064",
+    "rank": "silver",
+    "category": "system",
+    "title": "熟練の観測者",
+    "flavor": "五千回の観測を達成した観測者。技が身についた証。",
+    "condition": "total_clicks >= 5000",
+    "display_req": "累計観測5,000回",
+    "show_progress": false
+  },
+  {
+    "id": "sys_065",
+    "rank": "gold",
+    "category": "system",
+    "title": "会心の達人",
+    "flavor": "万を超える会心の一撃。その技は、神の目にも美しく映る。",
+    "condition": "total_crit >= 10000",
+    "display_req": "累計会心10,000回",
+    "show_progress": false
+  },
+  {
+    "id": "sys_066",
+    "rank": "bronze",
+    "category": "system",
+    "title": "お供え物係",
+    "flavor": "千の供物を捧げた者が担う、特別な役割。",
+    "condition": "spent_coins >= 1000",
+    "display_req": "累計お供え物消費1,000",
+    "show_progress": false
+  },
+  {
+    "id": "sys_067",
+    "rank": "silver",
+    "category": "system",
+    "title": "力の証明",
+    "flavor": "観測力Pが百に達した証。力を積み重ねた者だけが得られる。",
+    "condition": "max_p >= 100",
+    "display_req": "最高P値100以上",
+    "show_progress": false
+  },
+  {
+    "id": "sys_068",
+    "rank": "silver",
+    "category": "system",
+    "title": "倍の輝き",
+    "flavor": "二倍の倍率を手に入れた観測者。力の使い方を学んだ証。",
+    "condition": "max_m >= 2.0",
+    "display_req": "最高M値2.0以上",
+    "show_progress": false
+  },
+  {
+    "id": "sys_069",
+    "rank": "gold",
+    "category": "system",
+    "title": "三十日の皆勤",
+    "flavor": "三十日間連続でログインした。皆勤賞に値する継続力。",
+    "condition": "consecutive_days >= 30",
+    "display_req": "連続30日ログイン",
+    "show_progress": false
+  },
+  {
+    "id": "sys_070",
+    "rank": "silver",
+    "category": "system",
+    "title": "五十回の邂逅",
+    "flavor": "五十回起動した者。この世界への帰属意識が根付いた。",
+    "condition": "total_sessions >= 50",
+    "display_req": "累計起動50回",
+    "show_progress": false
+  },
+  {
+    "id": "sys_071",
+    "rank": "bronze",
+    "category": "system",
+    "title": "週間プレイヤー",
+    "flavor": "七日間分プレイした記録が残っている。一週間分の縁。",
+    "condition": "total_play_days >= 7",
+    "display_req": "累計7日プレイ",
+    "show_progress": false
+  },
+  {
+    "id": "sys_072",
+    "rank": "silver",
+    "category": "system",
+    "title": "月間プレイヤー",
+    "flavor": "三十日分プレイした記録。一ヶ月間の縁が積み重なった。",
+    "condition": "total_play_days >= 30",
+    "display_req": "累計30日プレイ",
+    "show_progress": false
+  },
+  {
+    "id": "sys_073",
+    "rank": "gold",
+    "category": "system",
+    "title": "全時間帯の証人",
+    "flavor": "一日全ての時間帯で観測した。時間の神が認めた観測者。",
+    "condition": "all_hours_observed == true",
+    "display_req": "全時間帯で観測",
+    "show_progress": false
+  },
+  {
+    "id": "sys_074",
+    "rank": "gold",
+    "category": "system",
+    "title": "全曜日の使者",
+    "flavor": "週の全ての曜日に観測した。曜日の神々が揃って見守っている。",
+    "condition": "all_weekdays_observed == true",
+    "display_req": "全曜日でプレイ",
+    "show_progress": false
+  },
+  {
+    "id": "sys_075",
+    "rank": "gold",
+    "category": "system",
+    "title": "一撃千万の神業",
+    "flavor": "一度の観測で千万を超えた者。その瞬間は神話に刻まれた。",
+    "condition": "max_gain >= 10000000",
+    "display_req": "単回最高獲得10,000,000以上",
+    "show_progress": false
+  },
+  {
+    "id": "ter_036",
+    "rank": "bronze",
+    "category": "terminal",
+    "title": "十五パーセントの粘り",
+    "flavor": "",
+    "condition": "battery_level <= 15",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_037",
+    "rank": "bronze",
+    "category": "terminal",
+    "title": "九十五パーセントの余裕",
+    "flavor": "",
+    "condition": "battery_level >= 95",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_038",
+    "rank": "silver",
+    "category": "terminal",
+    "title": "六十パーセントの判断",
+    "flavor": "",
+    "condition": "battery_level >= 60",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_039",
+    "rank": "bronze",
+    "category": "terminal",
+    "title": "三十三パーセントの脅威",
+    "flavor": "",
+    "condition": "battery_level <= 33",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_040",
+    "rank": "silver",
+    "category": "terminal",
+    "title": "七十七パーセントの七",
+    "flavor": "",
+    "condition": "battery_level >= 77",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_041",
+    "rank": "bronze",
+    "category": "terminal",
+    "title": "充電中の朝",
+    "flavor": "",
+    "condition": "battery_charging == true",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_042",
+    "rank": "silver",
+    "category": "terminal",
+    "title": "八十八パーセントの縁",
+    "flavor": "",
+    "condition": "battery_level >= 88",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_043",
+    "rank": "bronze",
+    "category": "terminal",
+    "title": "二十二パーセントの余命",
+    "flavor": "",
+    "condition": "battery_level <= 22",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_044",
+    "rank": "silver",
+    "category": "terminal",
+    "title": "六十六パーセントの均衡",
+    "flavor": "",
+    "condition": "battery_level >= 66",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_045",
+    "rank": "bronze",
+    "category": "terminal",
+    "title": "七パーセントの意地",
+    "flavor": "",
+    "condition": "battery_level <= 7",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_046",
+    "rank": "silver",
+    "category": "terminal",
+    "title": "九十二パーセントの充実",
+    "flavor": "",
+    "condition": "battery_level >= 92",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_047",
+    "rank": "bronze",
+    "category": "terminal",
+    "title": "四十四パーセントの均衡",
+    "flavor": "",
+    "condition": "battery_level <= 44",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_048",
+    "rank": "gold",
+    "category": "terminal",
+    "title": "完全充電の朝",
+    "flavor": "",
+    "condition": "battery_level == 100",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_049",
+    "rank": "silver",
+    "category": "terminal",
+    "title": "六十三パーセントの縁",
+    "flavor": "",
+    "condition": "battery_level >= 63",
+    "display_req": "",
+    "show_progress": false
+  },
+  {
+    "id": "ter_050",
+    "rank": "silver",
+    "category": "terminal",
+    "title": "九十九パーセントの惜しさ",
+    "flavor": "",
+    "condition": "battery_level == 99",
+    "display_req": "",
+    "show_progress": false
   }
 ]
