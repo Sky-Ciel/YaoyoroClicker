@@ -16124,5 +16124,49 @@
     "condition": "battery_level == 99",
     "display_req": "",
     "show_progress": false
+  },
+  {
+    "id": "share_001",
+    "rank": "bronze",
+    "category": "system",
+    "title": "口コミの神",
+    "flavor": "一度でも世界に向けて言葉を放った者は、もはや黙っていることができない。",
+    "condition": "total_share >= 1",
+    "display_req": "シェアを1回行う",
+    "show_progress": false,
+    "hint": "シェアボタンを使おう"
+  },
+  {
+    "id": "share_002",
+    "rank": "bronze",
+    "category": "system",
+    "title": "伝道の使徒",
+    "flavor": "三度の布教は、神への確かな誓いだ。言葉が世界に広がっていく。",
+    "condition": "total_share >= 3",
+    "display_req": "シェアを3回行う",
+    "show_progress": true,
+    "hint": "シェアボタンを使おう"
+  },
+  {
+    "id": "share_003",
+    "rank": "silver",
+    "category": "system",
+    "title": "神話の語り部",
+    "flavor": "十度の声は風となり、遠くの地へ届く。観測者の物語が、世界を動かし始める。",
+    "condition": "total_share >= 10",
+    "display_req": "シェアを10回行う",
+    "show_progress": true,
+    "hint": "シェアボタンを使おう"
+  },
+  {
+    "id": "share_004",
+    "rank": "gold",
+    "category": "system",
+    "title": "八百万の伝道師",
+    "flavor": "五十の声が世界を変える。観測者の名は、今や神々の間でも語り継がれている。",
+    "condition": "total_share >= 50",
+    "display_req": "シェアを50回行う",
+    "show_progress": true,
+    "hint": "シェアボタンを使おう"
   }
 ]

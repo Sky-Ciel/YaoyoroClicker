@@ -55,6 +55,10 @@
         .crit-flash { position: absolute; inset: 0; background: rgba(255, 69, 0, 0.2); z-index: 100; opacity: 0; pointer-events: none; transition: 0.1s; }
         .crit-flash.show { opacity: 1; }
 
+        /* 戦力変動オーバーレイ */
+        @keyframes powerChangeFadeOut { 0% { opacity: 1; transform: translateX(-50%) translateY(0); } 70% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-30px); } }
+        .power-change-overlay { position: absolute; left: 50%; transform: translateX(-50%); top: 62%; pointer-events: none; z-index: 3000; animation: powerChangeFadeOut 1.8s ease-out forwards; text-align: center; background: rgba(0,0,0,0.75); border-radius: 12px; padding: 10px 20px; border: 1px solid var(--gold); }
+
         #header { 
             background: linear-gradient(180deg, #1f0808, #120404); padding: 15px 10px; 
             border-bottom: 2px solid var(--gold); position: absolute; top:0; width:100%; z-index:1000;
@@ -64,6 +68,7 @@
 
         /* 【修正】メニュー(50px)＋スマホ広告(50px)＝下部100pxの余白を確保 */
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 75px 5px calc(100px + env(safe-area-inset-bottom, 0px)); opacity: 0; overflow-y: auto; touch-action: pan-y; z-index: 2; position: relative;}
+        @media (min-width: 1150px) { .screen { padding-bottom: calc(50px + env(safe-area-inset-bottom, 0px)); } }
         .screen.active { display: flex; animation: fadeIn 0.4s forwards; }
         @keyframes fadeIn { from { opacity: 0; filter: sepia(1); } to { opacity: 1; filter: sepia(0); } }
 
@@ -80,6 +85,19 @@
         }
         #auto-click-btn.active { background: linear-gradient(45deg, #ff4500, #a62e2e); color: #fff; animation: pulse 1s infinite alternate; }
         @keyframes pulse { from { box-shadow: 0 0 5px #ff4500; } to { box-shadow: 0 0 20px #ff4500; } }
+
+        /* 神結晶ゲット時の虹色グロー */
+        @keyframes crystalGlow { 
+            0%   { box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4), 0 0 30px #ff4444, 0 0 60px #ff4444; border-color: #ff4444; }
+            14%  { box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4), 0 0 30px #ff8800, 0 0 60px #ff8800; border-color: #ff8800; }
+            28%  { box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4), 0 0 30px #ffff00, 0 0 60px #ffff00; border-color: #ffff00; }
+            42%  { box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4), 0 0 30px #00ff88, 0 0 60px #00ff88; border-color: #00ff88; }
+            57%  { box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4), 0 0 30px #00ffff, 0 0 60px #00ffff; border-color: #00ffff; }
+            71%  { box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4), 0 0 30px #8844ff, 0 0 60px #8844ff; border-color: #8844ff; }
+            85%  { box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4), 0 0 30px #ff44ff, 0 0 60px #ff44ff; border-color: #ff44ff; }
+            100% { box-shadow: 0 10px 20px rgba(0,0,0,0.9), inset 0 0 20px rgba(212,175,55,0.4), 0 0 30px #ff4444, 0 0 60px #ff4444; border-color: #ff4444; }
+        }
+        #main-btn.crystal-glow { animation: crystalGlow 0.6s linear 3; }
 
         .gacha-box { width: 100%; background: linear-gradient(135deg, #1f0808, #120404); border: 2px solid var(--gold); border-radius: 12px; padding: 20px 15px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.8); margin: auto; }
         .dyn-btn { width: 100%; background: linear-gradient(45deg, var(--syu), #000); font-size: 1rem; padding: 15px 5px; margin-top: 10px; border-color: var(--gold); color: #fff; text-shadow: 0 0 5px var(--gold); transition: 0.2s;}
@@ -179,14 +197,11 @@
             100% { color: #ff4444; text-shadow: 0 0 8px #ff4444; }
         }
         @keyframes rainbowBar {
-            0%   { background: linear-gradient(90deg, #ff4444, #ffaa00); }
-            25%  { background: linear-gradient(90deg, #44ff44, #44ffff); }
-            50%  { background: linear-gradient(90deg, #44ffff, #aa44ff); }
-            75%  { background: linear-gradient(90deg, #aa44ff, #ff4444); }
-            100% { background: linear-gradient(90deg, #ff4444, #ffaa00); }
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
         .rainbow-text { animation: rainbowGlow 2s infinite linear !important; }
-        .rainbow-bar  { animation: rainbowBar  2s infinite linear !important; }
+        .rainbow-bar  { background: linear-gradient(90deg, #ff4444, #ffaa00, #ffff00, #44ff44, #44ffff, #aa44ff, #ff4444, #ffaa00, #ffff00) !important; background-size: 200% 100% !important; animation: rainbowBar 3s infinite linear !important; }
         
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; line-height: 1.4; }
         .stat-box { background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; border: 1px solid #444; display: flex; flex-direction: column; justify-content: center; }
@@ -209,6 +224,7 @@
 
         /* 【修正】メニューバーを下部固定し、スマホ広告をそのすぐ下に隔離 */
         #menu-bar { position: absolute; bottom: calc(50px + env(safe-area-inset-bottom, 0px)); width: 100%; background: #080202; display: flex; border-top: 2px solid var(--gold); z-index: 2000; height: 50px;}
+        @media (min-width: 1150px) { #menu-bar { bottom: 0; } }
         .menu-item { flex: 1; padding: 15px 0; color: #666; font-size: 0.73rem; text-align: center; cursor: pointer; line-height: 1;}
         .menu-item.active { color: var(--gold); font-weight: bold; background: #1a0a0a; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); }
 
@@ -274,7 +290,7 @@
         .formation-card-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 6px 4px; pointer-events: none; }
         .fm-card-name { font-size: 0.55rem; font-weight: bold; text-align: center; width: 94%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .fm-bonus-text { font-size: 0.5rem; margin-top: 2px; font-weight: bold; text-align: center; }
-        .formation-leader-badge { position: absolute; top: 4px; right: 5px; font-size: 0.48rem; color: var(--gold); background: rgba(0,0,0,0.75); padding: 2px 5px; border-radius: 4px; font-weight: bold; border: 1px solid var(--gold); white-space: nowrap; }
+        .formation-leader-badge { position: absolute; top: 4px; right: 5px; font-size: 0.6rem; color: var(--gold); background: rgba(0,0,0,0.85); padding: 3px 6px; border-radius: 6px; font-weight: bold; border: 1px solid var(--gold); white-space: nowrap; box-shadow: 0 0 6px rgba(212,175,55,0.4); }
         #formation-select-overlay { z-index: 7500; }
         .fm-card-list-item { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 6px; background: #111; border: 1px solid #333; cursor: pointer; transition: 0.15s; margin-bottom: 6px; }
         .fm-card-list-item:active { transform: scale(0.98); background: #1a0a0a; }
@@ -650,9 +666,10 @@
             </div>
         </div>
 
-        <!-- Formation Share -->
-        <div style="margin-top:5px; text-align:center; width:100%;">
-            <button onclick="shareFormation()" class="btn-share" style="display:inline-block;padding:10px 20px;font-size:0.78rem;border-radius:20px;width:100%;">📤 編成をシェアする</button>
+        <!-- Formation Share / Clear All -->
+        <div style="margin-top:5px; text-align:center; width:100%; display:flex; gap:8px;">
+            <button onclick="shareFormation()" class="btn-share" style="display:inline-block;padding:10px 20px;font-size:0.78rem;border-radius:20px;flex:1;">📤 編成をシェアする</button>
+            <button onclick="clearAllFormation()" style="padding:10px 14px;font-size:0.78rem;border-radius:20px;background:rgba(74,0,0,0.8);border:1px solid #ff4500;color:#ff9988;flex:0 0 auto;">🗑 全解除</button>
         </div>
 
     </div>
@@ -749,7 +766,7 @@
         stats: { p: 1, m: 1.0, c: 0, r: 0.005, e: 1.0, critPower: 2.0 }, 
         totalCoins: 0, totalClicks: 0, totalCrit: 0, totalGacha: 0, totalRare: 0,
         spentCoins: 0, spentRareCoins: 0, totalSublimation: 0, maxGain: 0,
-        maxP: 1, maxM: 1.0, totalStar5: 0,
+        maxP: 1, maxM: 1.0, totalStar5: 0, totalShare: 0,
         playerName: "名もなき観測者", startTime: Date.now(),
         lastSaveTime: Date.now(), autoClickUses: 0, lastAutoDate: "",
         unlockedAchievements: {},
@@ -758,7 +775,7 @@
         lastPlayDate: new Date().toDateString(),
         hoursObserved: [], weekdaysObserved: [],
         lastClickTime: 0, idleTimeSec: 0,
-        batteryLevel: 100, batteryCharging: false,
+        batteryLevel: 100, batteryCharging: false, batteryApiAvailable: false,
         totalPlayDays: 0, weekdayPlayDays: [0,0,0,0,0,0,0],
         totalSessions: 0, maxSessionClicks: 0, lastTrackedDay: "",
         team: { main: null, subs: [null, null, null, null] }
@@ -918,6 +935,7 @@
         state.maxP = state.maxP || 1;
         state.maxM = state.maxM || 1.0;
         state.totalStar5 = state.totalStar5 || 0;
+        state.totalShare = state.totalShare || 0;
         if(!state.startTime) state.startTime = Date.now();
         if(!state.invOrder) state.invOrder = Object.keys(state.inv).map(Number); 
 
@@ -931,6 +949,7 @@
         if(!state.idleTimeSec) state.idleTimeSec = 0;
         if(state.batteryLevel === undefined) state.batteryLevel = 100;
         if(state.batteryCharging === undefined) state.batteryCharging = false;
+        if(state.batteryApiAvailable === undefined) state.batteryApiAvailable = false;
         if(state.totalPlayDays === undefined) state.totalPlayDays = 0;
         if(!state.weekdayPlayDays) state.weekdayPlayDays = [0,0,0,0,0,0,0];
         if(!state.totalSessions) state.totalSessions = 0;
@@ -965,6 +984,7 @@
         // Battery API
         if (navigator.getBattery) {
             navigator.getBattery().then(bat => {
+                state.batteryApiAvailable = true;
                 state.batteryLevel = Math.floor(bat.level * 100);
                 state.batteryCharging = bat.charging;
                 bat.addEventListener('levelchange', () => { state.batteryLevel = Math.floor(bat.level * 100); });
@@ -1191,7 +1211,14 @@
 
         state.coins += gain; state.totalCoins += gain;
         if (isCrit) state.totalCrit++;
-        if (Math.random() < state.stats.r) { state.rareCoins++; state.totalRare++; }
+        if (Math.random() < state.stats.r) {
+            state.rareCoins++; state.totalRare++;
+            // 神結晶ゲット演出: ボタン周囲が虹色に発光
+            mainBtn.classList.remove('crystal-glow');
+            void mainBtn.offsetWidth;
+            mainBtn.classList.add('crystal-glow');
+            setTimeout(() => mainBtn.classList.remove('crystal-glow'), 1900);
+        }
         
         mainBtn.classList.remove('btn-pressed');
         void mainBtn.offsetWidth; 
@@ -1725,15 +1752,22 @@
         document.getElementById('detail-content').innerHTML = `
             <h3 style="color:var(--gold);margin-top:0;border-bottom:1px solid var(--syu);padding-bottom:10px;">📤 シェアする</h3>
             <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:15px;">
-                <button onclick="window.open('https://twitter.com/intent/tweet?text=${enc}','_blank')" style="background:#000;border:1px solid #fff;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">𝕏 (Twitter) でシェア</button>
-                <button onclick="window.open('https://bsky.app/intent/compose?text=${enc}','_blank')" style="background:#0085ff;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">🦋 Bluesky でシェア</button>
-                <button onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${encUrl}','_blank')" style="background:#1877f2;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">📘 Facebook でシェア</button>
-                <button onclick="window.open('https://social-plugins.line.me/lineit/share?url=${encUrl}&text=${enc}','_blank')" style="background:#00b900;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">💬 LINE でシェア</button>
+                <button onclick="trackShareAndOpen('https://twitter.com/intent/tweet?text=${enc}')" style="background:#000;border:1px solid #fff;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">𝕏 (Twitter) でシェア</button>
+                <button onclick="trackShareAndOpen('https://bsky.app/intent/compose?text=${enc}')" style="background:#0085ff;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">🦋 Bluesky でシェア</button>
+                <button onclick="trackShareAndOpen('https://www.facebook.com/sharer/sharer.php?u=${encUrl}&quote=${enc}')" style="background:#1877f2;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">📘 Facebook でシェア</button>
+                <button onclick="trackShareAndOpen('https://line.me/R/msg/text/?${enc}')" style="background:#00b900;border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:bold;">💬 LINE でシェア</button>
                 <button onclick="copyShareText(_pendingShareText)" style="background:#444;border:1px solid #888;color:#ccc;padding:12px;border-radius:8px;font-size:0.9rem;">📋 テキストをコピー</button>
             </div>
             <button onclick="closeOverlay('detail-overlay')" style="width:100%;background:#222;border-color:#444;color:#888;">閉じる</button>
         `;
         openOverlay('detail-overlay');
+    }
+
+    function trackShareAndOpen(url) {
+        state.totalShare = (state.totalShare || 0) + 1;
+        save();
+        checkAchievements();
+        window.open(url, '_blank');
     }
 
     let _pendingShareText = '';
@@ -2012,8 +2046,8 @@
         ctx.unlucky_streak = state.unluckyStreak || 0;
         ctx.consecutive_days = state.consecutiveDays || 0;
         ctx.idle_time = state.idleTimeSec || 0;
-        ctx.battery_level = state.batteryLevel || 0;
-        ctx.battery_charging = state.batteryCharging || false;
+        ctx.battery_level = state.batteryApiAvailable ? (state.batteryLevel || 0) : undefined;
+        ctx.battery_charging = state.batteryApiAvailable ? (state.batteryCharging || false) : undefined;
 
         // New tracking variables
         ctx.total_crit = state.totalCrit || 0;
@@ -2024,6 +2058,7 @@
         ctx.max_p = state.maxP || 1;
         ctx.max_m = state.maxM || 1.0;
         ctx.total_star5 = state.totalStar5 || 0;
+        ctx.total_share = state.totalShare || 0;
         ctx.total_play_days = state.totalPlayDays || 0;
         ctx.total_sessions = state.totalSessions || 0;
         ctx.max_session_clicks = state.maxSessionClicks || 0;
@@ -2052,7 +2087,7 @@
             if (!m) return { unlocked: false, progress: 0, total: 1 };
             const [, varName, op, rightStr] = m;
             let leftVal = ctx[varName];
-            if (leftVal === undefined) leftVal = false;
+            if (leftVal === undefined) return { unlocked: false, progress: 0, total: 1 };
             let rightVal = rightStr === 'true' ? true : rightStr === 'false' ? false : parseFloat(rightStr.replace(/,/g, ''));
             let unlocked = false;
             if (op === '>=') unlocked = leftVal >= rightVal;
@@ -2457,6 +2492,17 @@
         updateFormationComparePanel();
     }
 
+    function clearAllFormation() {
+        if (!confirm('編成を全て外しますか？')) return;
+        if (!_pendingTeam) _pendingTeam = JSON.parse(JSON.stringify(state.team || { main: null, subs: [null, null, null, null] }));
+        _pendingTeam.main = null;
+        _pendingTeam.subs = [null, null, null, null];
+        _formationDirty = true;
+        renderFormation();
+        updateFormationComparePanel();
+        showFormationConfirmToast('🗑 編成を全て外しました（まだ未確定）');
+    }
+
     function confirmFormation() {
         const oldPower = Math.floor(calcPower().total);
         state.team = JSON.parse(JSON.stringify(_pendingTeam));
@@ -2465,6 +2511,7 @@
         const newPower = Math.floor(calcPower().total);
         if (oldPower !== newPower) {
             animateValue('stat-total-power', oldPower, newPower, 1000);
+            showPowerChangeOverlay(oldPower, newPower);
         }
         updateDisplay();
         renderFormation();
@@ -2479,6 +2526,19 @@
         renderFormation();
         updateFormationComparePanel();
         showFormationConfirmToast('↩ 変更を破棄しました');
+    }
+
+    function showPowerChangeOverlay(oldPower, newPower) {
+        const container = document.getElementById('game-container');
+        if (!container) return;
+        const diff = newPower - oldPower;
+        const sign = diff > 0 ? '+' : '';
+        const color = diff > 0 ? '#00ff88' : '#ff4444';
+        const el = document.createElement('div');
+        el.className = 'power-change-overlay';
+        el.innerHTML = `<div style="font-size:0.7rem;color:#aaa;margin-bottom:3px;">⚔ 総合神力</div><div style="font-size:1.3rem;font-weight:900;color:${color};text-shadow:0 0 10px ${color};">${sign}${diff.toLocaleString()}</div><div style="font-size:0.75rem;color:#fff;margin-top:2px;">${newPower.toLocaleString()}</div>`;
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 1900);
     }
 
     function showFormationConfirmToast(msg) {
@@ -2602,7 +2662,7 @@
                 mainSlot.innerHTML = `
                     <div class="attr-icon">${getAttrIcon(c.attr)}</div>
                     <div class="formation-leader-badge" style="color:${badgeColor};border-color:${badgeColor};">${badgeText}</div>
-                    ${badgeDesc ? `<div style="font-size:0.55rem;color:#cc88ff;text-align:center;padding:0 4px;line-height:1.4;margin-bottom:2px;">${badgeDesc}</div>` : ''}
+                    ${badgeDesc ? `<div style="font-size:0.65rem;color:#cc88ff;text-align:center;padding:2px 4px;line-height:1.5;margin-bottom:2px;background:rgba(170,68,255,0.12);border-radius:4px;border:1px solid rgba(170,68,255,0.3);">${badgeDesc}</div>` : ''}
                     <div class="formation-card-inner">
                         <div style="font-size:0.5rem;color:var(--gold);letter-spacing:1px;text-shadow:0 0 3px var(--gold);">${"★".repeat(c.rare)}</div>
                         <div style="font-size:2.4rem;margin:4px 0;filter:drop-shadow(0 0 8px var(--${c.attr}));">📜</div>
